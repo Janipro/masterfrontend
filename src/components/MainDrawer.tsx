@@ -19,6 +19,7 @@ import { useState } from "react";
 import Collapse from "@mui/material/Collapse";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
+import SettingsIcon from '@mui/icons-material/Settings';
 
 const drawerWidth = 200;
 
@@ -94,6 +95,14 @@ export default function MainDrawer() {
             </List>
           </Collapse>
         </List>
+        <ListItem key={"Settings"} disablePadding sx={{position: "fixed", bottom: 0, width: drawerWidth}}>
+            <ListItemButton>
+              <ListItemIcon>
+                <SettingsIcon />
+              </ListItemIcon>
+              <ListItemText primary={"Settings"} />
+            </ListItemButton>
+          </ListItem>
         <Divider />
       </Drawer>
       <Box>
