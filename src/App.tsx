@@ -1,8 +1,8 @@
 import "./App.css";
-import MainDrawer from "./components/MainDrawer";
+import Home from "./pages/Home";
 
 function App() {
-  return <MainDrawer />;
+  return <Home />;
 }
 
 export default App;

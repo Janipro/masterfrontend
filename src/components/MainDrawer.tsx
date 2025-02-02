@@ -147,7 +147,7 @@ export default function MainDrawer() {
           <Typography
             sx={{ marginBottom: 2, border: "1px solid black", borderRadius: 2 }}
           >
-            Editor
+            TODO: Add Editor component
           </Typography>
         </Box>
       </Box>
