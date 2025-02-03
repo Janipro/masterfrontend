@@ -13,6 +13,7 @@ import PopUp from "./PopUp";
 import PlayArrowIcon from "@mui/icons-material/PlayArrow";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import SettingsIcon from "@mui/icons-material/Settings";
+import { Link } from "react-router-dom";
 
 const functions = ["Kjør", "Hjelp", "Lever"];
 const settings = ["Profile", "Logout"];
@@ -90,9 +91,17 @@ export default function NavBar() {
             >
               {settings.map((setting) => (
                 <MenuItem key={setting} onClick={handleCloseUserMenu}>
-                  <Typography sx={{ textAlign: "center" }}>
-                    {setting}
-                  </Typography>
+                  {setting === "Logout" ? (
+                    <Link to="/signin">
+                      <Typography sx={{ textAlign: "center" }}>
+                        {setting}
+                      </Typography>
+                    </Link>
+                  ) : (
+                    <Typography sx={{ textAlign: "center" }}>
+                      {setting}
+                    </Typography>
+                  )}
                 </MenuItem>
               ))}
             </Menu>
