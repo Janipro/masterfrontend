@@ -1,26 +1,8 @@
 import Box from "@mui/material/Box";
-import Drawer from "@mui/material/Drawer";
 import CssBaseline from "@mui/material/CssBaseline";
-import AppBar from "@mui/material/AppBar";
 import Toolbar from "@mui/material/Toolbar";
-import List from "@mui/material/List";
 import Typography from "@mui/material/Typography";
-import Divider from "@mui/material/Divider";
-import ListItem from "@mui/material/ListItem";
-import ListItemButton from "@mui/material/ListItemButton";
-import ListItemIcon from "@mui/material/ListItemIcon";
-import ListItemText from "@mui/material/ListItemText";
-import HomeIcon from "@mui/icons-material/Home";
-import AssignmentIcon from "@mui/icons-material/Assignment";
-import ExpandLess from "@mui/icons-material/ExpandLess";
-import ExpandMore from "@mui/icons-material/ExpandMore";
-import { green, orange, red } from "@mui/material/colors";
-import { useState } from "react";
-import Collapse from "@mui/material/Collapse";
-import CheckCircleIcon from "@mui/icons-material/CheckCircle";
-import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
-import SettingsIcon from "@mui/icons-material/Settings";
-import PopUp from "./PopUp";
+import { orange, red } from "@mui/material/colors";
 import NavBar from "./Navbar";
 
 const fakeData = {
@@ -29,12 +11,6 @@ const fakeData = {
 };
 
 export default function MainContent() {
-  const [open, setOpen] = useState(true);
-
-  const handleClick = () => {
-    setOpen(!open);
-  };
-
   return (
     <>
       <NavBar />
@@ -65,7 +41,7 @@ export default function MainContent() {
                   borderRadius: 2,
                 }}
               >
-                for-loop
+                for-løkke
               </Typography>
               <Typography
                 variant="h6"
@@ -77,7 +53,7 @@ export default function MainContent() {
                   borderRadius: 2,
                 }}
               >
-                if-statement
+                if-setning
               </Typography>
             </Toolbar>
             <Typography sx={{ marginBottom: 2 }}>
@@ -95,7 +71,7 @@ export default function MainContent() {
                 borderRadius: 2,
               }}
             >
-              TODO: Add Editor component
+              TODO: Legg til codemirror
             </Typography>
           </Box>
         </Box>

@@ -12,7 +12,7 @@ import HomeIcon from "@mui/icons-material/Home";
 import AssignmentIcon from "@mui/icons-material/Assignment";
 import ExpandLess from "@mui/icons-material/ExpandLess";
 import ExpandMore from "@mui/icons-material/ExpandMore";
-import { green, orange, red } from "@mui/material/colors";
+import { green } from "@mui/material/colors";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
 import { useState } from "react";
@@ -70,7 +70,7 @@ export default function PopUp() {
 
   return (
     <div>
-      <Button onClick={toggleDrawer(true)}>Meny</Button>
+      <Button onClick={toggleDrawer(true)} sx={{color: "#3f3f3f"}}>Meny</Button>
       <Drawer open={open} onClose={toggleDrawer(false)}>
         {DrawerList}
       </Drawer>
