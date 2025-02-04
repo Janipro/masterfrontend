@@ -1,5 +1,5 @@
-import MainDrawer from "../components/MainDrawer";
+import MainContent from "../components/MainContent";
 
 export default function Home() {
-  return <MainDrawer />;
+  return <MainContent />;
 }
