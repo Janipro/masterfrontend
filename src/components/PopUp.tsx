@@ -17,20 +17,22 @@ import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
 import { useState } from "react";
 import Collapse from "@mui/material/Collapse";
+import { Typography } from "@mui/material";
 
 export default function PopUp() {
   const [open, setOpen] = useState(false);
+  const [openAssignments, setOpenAssignments] = useState(false);
 
   const toggleDrawer = (newOpen: boolean) => () => {
     setOpen(newOpen);
   };
 
   const handleClick = () => {
-    setOpen(!open);
+    setOpenAssignments(!openAssignments);
   };
 
   const DrawerList = (
-    <Box sx={{ width: 250 }} role="presentation" onClick={toggleDrawer(false)}>
+    <Box sx={{ width: 250 }} role="presentation" onClick={toggleDrawer(true)}>
       <List>
         <ListItem key={"Dashboard"} disablePadding>
           <ListItemButton>
@@ -45,9 +47,9 @@ export default function PopUp() {
             <AssignmentIcon />
           </ListItemIcon>
           <ListItemText primary="Oppgaver" />
-          {open ? <ExpandLess /> : <ExpandMore />}
+          {openAssignments ? <ExpandLess /> : <ExpandMore />}
         </ListItemButton>
-        <Collapse in={open} timeout="auto" unmountOnExit>
+        <Collapse in={openAssignments} timeout="auto" unmountOnExit>
           <List component="div" disablePadding>
             {["Oppgave 1", "Oppgave 2", "Oppgave 3"].map((text, index) => (
               <ListItemButton sx={{ pl: 4 }}>
@@ -70,7 +72,9 @@ export default function PopUp() {
 
   return (
     <div>
-      <Button onClick={toggleDrawer(true)} sx={{color: "#3f3f3f"}}>Meny</Button>
+      <Button onClick={toggleDrawer(true)} sx={{ color: "#3f3f3f" }}>
+        <Typography sx={{ textTransform: "none" }}>Meny</Typography>
+      </Button>
       <Drawer open={open} onClose={toggleDrawer(false)}>
         {DrawerList}
       </Drawer>

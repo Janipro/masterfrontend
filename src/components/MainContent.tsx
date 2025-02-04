@@ -39,6 +39,7 @@ export default function MainContent() {
                   marginLeft: 2,
                   backgroundColor: fakeData.forLoop[400],
                   borderRadius: 2,
+                  padding: 0.25
                 }}
               >
                 for-løkke
@@ -51,6 +52,7 @@ export default function MainContent() {
                   marginLeft: 2,
                   backgroundColor: fakeData.ifStatement[400],
                   borderRadius: 2,
+                  padding: 0.25
                 }}
               >
                 if-setning
