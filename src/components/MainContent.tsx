@@ -3,7 +3,7 @@ import CssBaseline from "@mui/material/CssBaseline";
 import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
 import { orange, red } from "@mui/material/colors";
-import NavBar from "./Navbar";
+import NavBar from "./NavBar";
 
 const fakeData = {
   forLoop: orange,
@@ -53,6 +53,7 @@ export default function MainContent() {
                   backgroundColor: fakeData.ifStatement[400],
                   borderRadius: 2,
                   padding: 0.25
+
                 }}
               >
                 if-setning
