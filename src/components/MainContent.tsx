@@ -3,10 +3,10 @@ import CssBaseline from "@mui/material/CssBaseline";
 import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
 import { orange, red } from "@mui/material/colors";
-import CodeMirror from "@uiw/react-codemirror";
-import { python } from "@codemirror/lang-python";
 import NavBar from "./NavBar";
-import { useCallback, useState } from "react";
+import CodeIcon from "@mui/icons-material/Code";
+import Editor from "./Editor";
+import { Stack } from "@mui/material";
 
 const fakeData = {
   forLoop: orange,
@@ -14,11 +14,6 @@ const fakeData = {
 };
 
 export default function MainContent() {
-  const [value, setValue] = useState("print(Hello World!)");
-  const onChange = useCallback((val, viewUpdate) => {
-    console.log("val:", val);
-    setValue(val);
-  }, []);
   return (
     <>
       <NavBar />
@@ -81,17 +76,14 @@ export default function MainContent() {
           >
             <Typography
               sx={{
-                marginBottom: 2,
                 border: "1px solid #3f3f3f",
               }}
             >
-              <CodeMirror
-                value={value}
-                height="300px"
-                width="600px"
-                extensions={[python()]}
-                onChange={onChange}
-              />
+              <Stack direction="row" gap={0.5}>
+                <CodeIcon />
+                <Typography>Python Kode</Typography>
+              </Stack>
+              <Editor />
             </Typography>
           </Box>
         </Box>
