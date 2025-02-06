@@ -3,7 +3,10 @@ import CssBaseline from "@mui/material/CssBaseline";
 import Toolbar from "@mui/material/Toolbar";
 import Typography from "@mui/material/Typography";
 import { orange, red } from "@mui/material/colors";
+import CodeMirror from "@uiw/react-codemirror";
+import { python } from "@codemirror/lang-python";
 import NavBar from "./NavBar";
+import { useCallback, useState } from "react";
 
 const fakeData = {
   forLoop: orange,
@@ -11,6 +14,11 @@ const fakeData = {
 };
 
 export default function MainContent() {
+  const [value, setValue] = useState("print(Hello World!)");
+  const onChange = useCallback((val, viewUpdate) => {
+    console.log("val:", val);
+    setValue(val);
+  }, []);
   return (
     <>
       <NavBar />
@@ -39,7 +47,7 @@ export default function MainContent() {
                   marginLeft: 2,
                   backgroundColor: fakeData.forLoop[400],
                   borderRadius: 2,
-                  padding: 0.25
+                  padding: 0.25,
                 }}
               >
                 for-løkke
@@ -52,8 +60,7 @@ export default function MainContent() {
                   marginLeft: 2,
                   backgroundColor: fakeData.ifStatement[400],
                   borderRadius: 2,
-                  padding: 0.25
-
+                  padding: 0.25,
                 }}
               >
                 if-setning
@@ -65,16 +72,26 @@ export default function MainContent() {
           </Box>
           <Box
             component="main"
-            sx={{ flexGrow: 1, bgcolor: "background.default", p: 3 }}
+            sx={{
+              flexGrow: 1,
+              bgcolor: "background.default",
+              p: 3,
+              textAlign: "left",
+            }}
           >
             <Typography
               sx={{
                 marginBottom: 2,
-                border: "1px solid black",
-                borderRadius: 2,
+                border: "1px solid #3f3f3f",
               }}
             >
-              TODO: Legg til codemirror
+              <CodeMirror
+                value={value}
+                height="300px"
+                width="600px"
+                extensions={[python()]}
+                onChange={onChange}
+              />
             </Typography>
           </Box>
         </Box>
