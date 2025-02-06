@@ -80,12 +80,11 @@ export default function MainContent() {
               }}
             >
               <Stack direction="row" gap={0.5} bgcolor={"#EDEBEB"}>
-                <CodeIcon sx={{color: "#4CCC17"}}/>
+                <CodeIcon sx={{ color: "#4CCC17" }} />
                 <Typography>Python Kode</Typography>
               </Stack>
               <Editor />
             </Typography>
-
           </Box>
         </Box>
       </Box>
