@@ -1,12 +1,12 @@
-import Box from "@mui/material/Box";
-import CssBaseline from "@mui/material/CssBaseline";
-import Toolbar from "@mui/material/Toolbar";
-import Typography from "@mui/material/Typography";
-import { orange, red } from "@mui/material/colors";
-import NavBar from "./NavBar";
-import CodeIcon from "@mui/icons-material/Code";
-import Editor from "./Editor";
-import { Stack } from "@mui/material";
+import Box from '@mui/material/Box';
+import CssBaseline from '@mui/material/CssBaseline';
+import Toolbar from '@mui/material/Toolbar';
+import Typography from '@mui/material/Typography';
+import { orange, red } from '@mui/material/colors';
+import NavBar from './NavBar';
+import CodeIcon from '@mui/icons-material/Code';
+import Editor from './Editor';
+import { Stack } from '@mui/material';
 
 const fakeData = {
   forLoop: orange,
@@ -17,16 +17,16 @@ export default function MainContent() {
   return (
     <>
       <NavBar />
-      <Box sx={{ display: "flex" }}>
+      <Box sx={{ display: 'flex' }}>
         <CssBaseline />
-        <Box sx={{ display: "flex" }}>
+        <Box sx={{ display: 'flex' }}>
           <Box
             component="main"
             sx={{
               flexGrow: 1,
-              bgcolor: "background.default",
+              bgcolor: 'background.default',
               p: 3,
-              border: "1px solid black",
+              border: '1px solid black',
               borderRadius: 2,
             }}
           >
@@ -61,26 +61,24 @@ export default function MainContent() {
                 if-setning
               </Typography>
             </Toolbar>
-            <Typography sx={{ marginBottom: 2 }}>
-              Oppgavetekst til opppgave 1
-            </Typography>
+            <Typography sx={{ marginBottom: 2 }}>Oppgavetekst til opppgave 1</Typography>
           </Box>
           <Box
             component="main"
             sx={{
               flexGrow: 1,
-              bgcolor: "background.default",
+              bgcolor: 'background.default',
               p: 3,
-              textAlign: "left",
+              textAlign: 'left',
             }}
           >
             <Typography
               sx={{
-                border: "1px solid #3f3f3f",
+                border: '1px solid #3f3f3f',
               }}
             >
-              <Stack direction="row" gap={0.5} bgcolor={"#EDEBEB"}>
-                <CodeIcon sx={{ color: "#4CCC17" }} />
+              <Stack direction="row" gap={0.5} bgcolor={'#EDEBEB'}>
+                <CodeIcon sx={{ color: '#4CCC17' }} />
                 <Typography>Python Kode</Typography>
               </Stack>
               <Editor />
