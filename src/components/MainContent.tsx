@@ -16,7 +16,7 @@ const fakeData = {
 export default function MainContent() {
   return (
     <>
-      <NavBar />
+      <NavBar isEditor />
       <Box sx={{ display: 'flex' }}>
         <CssBaseline />
         <Box sx={{ display: 'flex' }}>

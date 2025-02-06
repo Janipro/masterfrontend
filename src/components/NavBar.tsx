@@ -17,7 +17,7 @@ import { Link } from 'react-router-dom';
 const functions = ['Kjør', 'Hjelp', 'Lever'];
 const settings = ['Profil', 'Logg ut'];
 
-export default function NavBar() {
+export default function NavBar({ isEditor }: { isEditor: boolean }) {
   const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(null);
 
   const handleOpenUserMenu = (event: React.MouseEvent<HTMLElement>) => {
@@ -40,31 +40,33 @@ export default function NavBar() {
             }}
           />
           <PopUp />
-          <Box
-            sx={{
-              flexGrow: 1,
-              display: { xs: 'none', md: 'flex' },
-              justifyContent: 'center',
-            }}
-          >
-            {functions.map((f) => (
-              <Button
-                key={f}
-                sx={{
-                  my: 2,
-                  color: '#3f3f3f',
-                  display: 'block',
-                  backgroundColor: 'white',
-                  borderRadius: 6,
-                  mx: 0.5,
-                  textTransform: 'none',
-                }}
-              >
-                <Typography>{f}</Typography>
-              </Button>
-            ))}
-          </Box>
-          <Box sx={{ flexGrow: 0 }}>
+          {isEditor ? (
+            <Box
+              sx={{
+                flexGrow: 1,
+                display: { xs: 'none', md: 'flex' },
+                justifyContent: 'center',
+              }}
+            >
+              {functions.map((f) => (
+                <Button
+                  key={f}
+                  sx={{
+                    my: 2,
+                    color: '#3f3f3f',
+                    display: 'block',
+                    backgroundColor: 'white',
+                    borderRadius: 6,
+                    mx: 0.5,
+                    textTransform: 'none',
+                  }}
+                >
+                  <Typography>{f}</Typography>
+                </Button>
+              ))}
+            </Box>
+          ) : null}
+          <Box sx={{ flexGrow: 0, ml: 'auto' }}>
             <IconButton>
               <SettingsIcon />
             </IconButton>
