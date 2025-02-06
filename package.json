@@ -9,7 +9,7 @@
     "lint": "eslint .",
     "preview": "vite preview",
     "format": "npx prettier --write .",
-    "prepare": "husky install .husky"
+    "prepare": "husky install ./.husky"
   },
   "dependencies": {
     "@apollo/client": "^3.12.7",
