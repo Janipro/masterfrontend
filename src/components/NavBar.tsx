@@ -31,7 +31,7 @@ export default function NavBar() {
   };
 
   return (
-    <AppBar position="fixed" sx={{ backgroundColor: "#D3D3D3" }}>
+    <AppBar position="fixed" sx={{ backgroundColor: "#EDEBEB" }}>
       <Container maxWidth="xl">
         <Toolbar disableGutters>
           <SchoolIcon
