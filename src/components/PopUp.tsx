@@ -52,7 +52,7 @@ export default function PopUp() {
         <Collapse in={openAssignments} timeout="auto" unmountOnExit>
           <List component="div" disablePadding>
             {['Oppgave 1', 'Oppgave 2', 'Oppgave 3'].map((text, index) => (
-              <ListItemButton sx={{ pl: 4 }}>
+              <ListItemButton sx={{ pl: 4 }} key={index}>
                 <ListItemIcon>
                   {index <= 1 ? <CheckCircleIcon sx={{ color: green[400] }} /> : <CheckCircleOutlineIcon />}
                 </ListItemIcon>

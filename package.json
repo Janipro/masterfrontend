@@ -17,6 +17,7 @@
     "@emotion/styled": "^11.14.0",
     "@mui/icons-material": "^6.4.2",
     "@mui/material": "^6.4.2",
+    "@mui/x-data-grid": "^7.25.0",
     "@uiw/codemirror-extensions-basic-setup": "^4.23.8",
     "@uiw/codemirror-extensions-langs": "^4.23.8",
     "@uiw/codemirror-themes": "^4.23.8",
