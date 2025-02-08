@@ -1,5 +1,12 @@
-import MainContent from '../components/MainContent';
+import { Box } from '@mui/material';
+import HomeContent from '../components/HomeContent';
+import NavBar from '../components/NavBar';
 
 export default function Home() {
-  return <MainContent />;
+  return (
+    <Box>
+      <NavBar isEditor />
+      <HomeContent />
+    </Box>
+  );
 }
