@@ -41,7 +41,7 @@ export default function PopUp() {
               <ListItemIcon>
                 <HomeIcon />
               </ListItemIcon>
-              <ListItemText primary={'Dashboard'} />
+              <ListItemText primary={'Oversikt'} />
             </ListItemButton>
           </ListItem>
         </Link>
