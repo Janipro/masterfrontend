@@ -1,4 +1,3 @@
-import * as React from 'react';
 import Box from '@mui/material/Box';
 import Drawer from '@mui/material/Drawer';
 import Button from '@mui/material/Button';
@@ -15,9 +14,11 @@ import ExpandMore from '@mui/icons-material/ExpandMore';
 import { green } from '@mui/material/colors';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
+import CodeIcon from '@mui/icons-material/Code';
 import { useState } from 'react';
 import Collapse from '@mui/material/Collapse';
 import { Typography } from '@mui/material';
+import { Link } from 'react-router-dom';
 
 export default function PopUp() {
   const [open, setOpen] = useState(false);
@@ -34,14 +35,16 @@ export default function PopUp() {
   const DrawerList = (
     <Box sx={{ width: 250 }} role="presentation" onClick={toggleDrawer(true)}>
       <List>
-        <ListItem key={'Dashboard'} disablePadding>
-          <ListItemButton>
-            <ListItemIcon>
-              <HomeIcon />
-            </ListItemIcon>
-            <ListItemText primary={'Dashboard'} />
-          </ListItemButton>
-        </ListItem>
+        <Link to="/" style={{ color: 'inherit' }}>
+          <ListItem key={'Dashboard'} disablePadding>
+            <ListItemButton>
+              <ListItemIcon>
+                <CodeIcon />
+              </ListItemIcon>
+              <ListItemText primary={'Dashboard'} />
+            </ListItemButton>
+          </ListItem>
+        </Link>
         <ListItemButton onClick={handleClick}>
           <ListItemIcon>
             <AssignmentIcon />
@@ -61,6 +64,16 @@ export default function PopUp() {
             ))}
           </List>
         </Collapse>
+        <Link to="/mypage" style={{ color: 'inherit' }}>
+          <ListItem key={'My page'} disablePadding>
+            <ListItemButton>
+              <ListItemIcon>
+                <HomeIcon />
+              </ListItemIcon>
+              <ListItemText primary={'Min side'} />
+            </ListItemButton>
+          </ListItem>
+        </Link>
       </List>
       <Divider />
     </Box>
