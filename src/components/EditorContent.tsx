@@ -2,15 +2,10 @@ import Box from '@mui/material/Box';
 import CssBaseline from '@mui/material/CssBaseline';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
-import { orange, red } from '@mui/material/colors';
 import CodeIcon from '@mui/icons-material/Code';
 import Editor from './Editor';
 import { Container, Stack } from '@mui/material';
-
-const fakeData = {
-  forLoop: orange,
-  ifStatement: red,
-};
+import Requirement from './Requirement';
 
 export default function EditorContent() {
   return (
@@ -31,32 +26,8 @@ export default function EditorContent() {
             <Typography variant="h5" noWrap component="div">
               Oppgave 1
             </Typography>
-            <Typography
-              variant="h6"
-              noWrap
-              component="div"
-              sx={{
-                marginLeft: 2,
-                backgroundColor: fakeData.forLoop[400],
-                borderRadius: 2,
-                padding: 0.25,
-              }}
-            >
-              for-løkke
-            </Typography>
-            <Typography
-              variant="h6"
-              noWrap
-              component="div"
-              sx={{
-                marginLeft: 2,
-                backgroundColor: fakeData.ifStatement[400],
-                borderRadius: 2,
-                padding: 0.25,
-              }}
-            >
-              if-setning
-            </Typography>
+            <Requirement value="for-løkke" size="large" />
+            <Requirement value="if-setning" size="large" />
           </Toolbar>
           <Typography sx={{ marginBottom: 2 }}>Oppgavetekst til opppgave 1</Typography>
         </Box>

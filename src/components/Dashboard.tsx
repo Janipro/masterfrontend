@@ -1,8 +1,8 @@
-import { Box, Container, CssBaseline, Grid2, List, ListItem, ListItemText, Typography } from '@mui/material';
+import { Box, Container, CssBaseline, Grid2, List, ListItem, Typography } from '@mui/material';
 import Table from './Table';
 import InfoCard from './InfoCard';
 import Calendar from './Calendar';
-import { orange, red } from '@mui/material/colors';
+import Requirement from './Requirement';
 
 const subjects = [1, 2, 3, 4, 5, 6];
 
@@ -39,24 +39,13 @@ export default function Dashboard() {
           <Grid2 container sx={{ justifyContent: 'center', alignItems: 'center' }}>
             <List dense sx={{ listStyle: 'decimal', pl: 4 }}>
               <ListItem sx={{ display: 'list-item' }}>
-                <ListItemText
-                  primary="for-løkke"
-                  sx={{
-                    backgroundColor: orange[400],
-                    borderRadius: 2,
-                    padding: 0.25,
-                  }}
-                />
+                <Requirement value="for-løkke" size="medium" />
               </ListItem>
               <ListItem sx={{ display: 'list-item' }}>
-                <ListItemText
-                  primary="if-setning"
-                  sx={{
-                    backgroundColor: red[400],
-                    borderRadius: 2,
-                    padding: 0.25,
-                  }}
-                />
+                <Requirement value="if-setning" size="medium" />
+              </ListItem>
+              <ListItem sx={{ display: 'list-item' }}>
+                <Requirement value="while-løkke" size="medium" />
               </ListItem>
             </List>
           </Grid2>
