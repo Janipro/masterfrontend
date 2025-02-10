@@ -12,7 +12,7 @@ const fakeData = {
   ifStatement: red,
 };
 
-export default function HomeContent() {
+export default function EditorContent() {
   return (
     <Box sx={{ display: 'flex' }}>
       <CssBaseline />

@@ -39,7 +39,7 @@ export default function PopUp() {
           <ListItem key={'Dashboard'} disablePadding>
             <ListItemButton>
               <ListItemIcon>
-                <CodeIcon />
+                <HomeIcon />
               </ListItemIcon>
               <ListItemText primary={'Dashboard'} />
             </ListItemButton>
@@ -64,13 +64,13 @@ export default function PopUp() {
             ))}
           </List>
         </Collapse>
-        <Link to="/mypage" style={{ color: 'inherit' }}>
-          <ListItem key={'My page'} disablePadding>
+        <Link to="/editor" style={{ color: 'inherit' }}>
+          <ListItem key={'Editor'} disablePadding>
             <ListItemButton>
               <ListItemIcon>
-                <HomeIcon />
+                <CodeIcon />
               </ListItemIcon>
-              <ListItemText primary={'Min side'} />
+              <ListItemText primary={'Editor'} />
             </ListItemButton>
           </ListItem>
         </Link>

@@ -6,7 +6,7 @@ import { orange, red } from '@mui/material/colors';
 
 const subjects = [1, 2, 3, 4, 5, 6];
 
-export default function MyPageContent() {
+export default function Dashboard() {
   return (
     <Box component={'main'} sx={{ bgcolor: 'background.default' }}>
       <CssBaseline />

@@ -1,12 +1,12 @@
 import { Box } from '@mui/material';
-import HomeContent from '../components/HomeContent';
 import NavBar from '../components/NavBar';
+import Dashboard from '../components/Dashboard';
 
 export default function Home() {
   return (
     <Box>
-      <NavBar isEditor />
-      <HomeContent />
+      <NavBar isEditor={false} />
+      <Dashboard />
     </Box>
   );
 }
