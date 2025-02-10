@@ -1,5 +1,6 @@
 import { Paper } from '@mui/material';
 import { DataGrid, GridActionsCellItem, GridColDef, GridRowId } from '@mui/x-data-grid';
+import { nbNO } from '@mui/x-data-grid/locales/nbNO';
 import CheckBoxIcon from '@mui/icons-material/CheckBox';
 import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
 import IndeterminateCheckBoxIcon from '@mui/icons-material/IndeterminateCheckBox';
@@ -124,6 +125,7 @@ export default function Table() {
           initialState={{ pagination: { paginationModel } }}
           pageSizeOptions={[5, 10]}
           sx={{ border: 0 }}
+          localeText={nbNO.components.MuiDataGrid.defaultProps.localeText}
         />
       </Paper>
     </>
