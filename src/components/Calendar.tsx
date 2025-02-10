@@ -11,7 +11,7 @@ export default function Calendar() {
       adapterLocale="nb"
       localeText={nbNO.components.MuiLocalizationProvider.defaultProps.localeText}
     >
-      <DateCalendar />
+      <DateCalendar sx={{ scale: 0.8 }} />
     </LocalizationProvider>
   );
 }

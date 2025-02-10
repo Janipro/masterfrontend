@@ -31,21 +31,22 @@ export default function Dashboard() {
           component="main"
           sx={{
             flexGrow: 1,
+            mt: 10,
           }}
         >
-          <Typography variant="h5" noWrap component="div" sx={{ mt: 10 }}>
+          <Typography variant="h5" noWrap component="div">
             Progresjon
           </Typography>
           <Grid2 container sx={{ justifyContent: 'center', alignItems: 'center' }}>
             <List dense sx={{ listStyle: 'decimal', pl: 4 }}>
               <ListItem sx={{ display: 'list-item' }}>
-                <Requirement value="for-løkke" size="medium" />
+                <Requirement value="for-løkke" size="small" />
               </ListItem>
               <ListItem sx={{ display: 'list-item' }}>
-                <Requirement value="if-setning" size="medium" />
+                <Requirement value="if-setning" size="small" />
               </ListItem>
               <ListItem sx={{ display: 'list-item' }}>
-                <Requirement value="while-løkke" size="medium" />
+                <Requirement value="while-løkke" size="small" />
               </ListItem>
             </List>
           </Grid2>
