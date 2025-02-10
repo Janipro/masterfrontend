@@ -82,8 +82,8 @@ export default function Table() {
     []
   );
   const columns: GridColDef[] = [
-    { field: 'title', headerName: 'Tittel', width: 130 },
-    { field: 'requirement', headerName: 'Krav', width: 130 },
+    { field: 'title', headerName: 'Tittel', width: 220 },
+    { field: 'requirement', headerName: 'Krav', width: 220 },
     { field: 'level', headerName: 'Nivå', width: 60 },
     { field: 'course', headerName: 'Fag', width: 100 },
     { field: 'type', headerName: 'Type', width: 100 },
