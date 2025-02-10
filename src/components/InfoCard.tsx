@@ -6,15 +6,12 @@ import CardActionArea from '@mui/material/CardActionArea';
 
 export default function InfoCard() {
   return (
-    <Card sx={{ maxWidth: 200 }}>
+    <Card sx={{ maxWidth: 170 }}>
       <CardActionArea>
-        <CardMedia component="img" height="80" image="src/assets/math.jpg" alt="math" />
+        <CardMedia component="img" height="60" image="src/assets/math.jpg" alt="math" />
         <CardContent>
-          <Typography gutterBottom variant="h5" component="div">
+          <Typography gutterBottom variant="h6" component="div">
             Matematikk 1T
-          </Typography>
-          <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-            I dette faget skal du lære om funksjoner
           </Typography>
         </CardContent>
       </CardActionArea>

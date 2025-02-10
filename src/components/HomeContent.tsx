@@ -5,7 +5,7 @@ import Typography from '@mui/material/Typography';
 import { orange, red } from '@mui/material/colors';
 import CodeIcon from '@mui/icons-material/Code';
 import Editor from './Editor';
-import { Stack } from '@mui/material';
+import { Container, Stack } from '@mui/material';
 
 const fakeData = {
   forLoop: orange,
@@ -16,7 +16,7 @@ export default function HomeContent() {
   return (
     <Box sx={{ display: 'flex' }}>
       <CssBaseline />
-      <Box sx={{ display: 'flex' }}>
+      <Container sx={{ display: 'flex' }}>
         <Box
           component="main"
           sx={{
@@ -81,7 +81,7 @@ export default function HomeContent() {
             <Editor />
           </Typography>
         </Box>
-      </Box>
+      </Container>
     </Box>
   );
 }
