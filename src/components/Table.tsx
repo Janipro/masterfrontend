@@ -1,5 +1,4 @@
 import { Paper } from '@mui/material';
-import NavBar from '../components/NavBar';
 import { DataGrid, GridActionsCellItem, GridColDef, GridRowId } from '@mui/x-data-grid';
 import CheckBoxIcon from '@mui/icons-material/CheckBox';
 import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
@@ -118,7 +117,6 @@ export default function Table() {
 
   return (
     <>
-      <NavBar isEditor={false} />
       <Paper sx={{ height: 400, width: '100%' }}>
         <DataGrid
           rows={rows}
