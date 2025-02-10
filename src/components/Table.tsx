@@ -10,7 +10,7 @@ const initialRows = [
   {
     id: 1,
     title: 'Chicken Nuggets',
-    requirement: 'For-løkke',
+    requirement: 'for-løkke',
     level: 'VG1',
     course: 'Matematikk',
     type: 'Obligatorisk',
@@ -40,7 +40,7 @@ const initialRows = [
   {
     id: 4,
     title: 'Peter Grizzler',
-    requirement: 'For-løkke',
+    requirement: 'for-løkke',
     level: '9',
     course: 'Matematikk',
     type: 'Obligatorisk',
