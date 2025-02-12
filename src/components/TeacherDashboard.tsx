@@ -1,4 +1,7 @@
-import { Box, Container, CssBaseline, Grid2, Typography } from '@mui/material';
+import { Box, Button, Container, CssBaseline, Grid2, Stack, Typography } from '@mui/material';
+import DeleteIcon from '@mui/icons-material/Delete';
+import VisibilityIcon from '@mui/icons-material/Visibility';
+import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 import Table from './Table';
 import InfoCard from './InfoCard';
 
@@ -102,9 +105,37 @@ export default function TeacherDashboard() {
           textAlign: 'left',
         }}
       >
-        <Typography variant="h5" noWrap component="div">
-          Tildelte oppgaver
-        </Typography>
+        <Stack direction="row" sx={{ mb: 0.5 }}>
+          <Typography variant="h5" noWrap component="div">
+            Tildelte oppgaver
+          </Typography>
+          <Grid2 container direction={'row'} sx={{ flexGrow: 0, ml: 'auto' }}>
+            <Button
+              variant="contained"
+              startIcon={<VisibilityIcon />}
+              sx={{ backgroundColor: '#EDEBEB', color: '#3F3F3F', textTransform: 'none', scale: 0.8 }}
+              disabled
+            >
+              Aktiver
+            </Button>
+            <Button
+              variant="contained"
+              startIcon={<VisibilityOffIcon />}
+              sx={{ backgroundColor: '#EDEBEB', color: '#3F3F3F', textTransform: 'none', scale: 0.8 }}
+              disabled
+            >
+              Deaktiver
+            </Button>
+            <Button
+              variant="contained"
+              startIcon={<DeleteIcon />}
+              sx={{ backgroundColor: '#EDEBEB', color: '#3F3F3F', textTransform: 'none', scale: 0.8 }}
+              disabled
+            >
+              Slett
+            </Button>
+          </Grid2>
+        </Stack>
         <Table rows={rows} selectable />
       </Box>
     </Box>

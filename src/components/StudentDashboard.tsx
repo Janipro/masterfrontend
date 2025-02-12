@@ -124,7 +124,7 @@ export default function StudentDashboard() {
           mt: -4,
         }}
       >
-        <Typography variant="h5" noWrap component="div">
+        <Typography variant="h5" noWrap component="div" sx={{ mb: 0.5 }}>
           Utvalgte oppgaver
         </Typography>
         <Table rows={rows} selectable={false} />
