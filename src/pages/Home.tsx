@@ -4,7 +4,7 @@ import StudentDashboard from '../components/StudentDashboard';
 import TeacherDashboard from '../components/TeacherDashboard';
 
 export default function Home() {
-  const isStudent = false;
+  const isStudent = true;
   return (
     <Box>
       <NavBar isEditor={false} />

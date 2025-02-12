@@ -107,7 +107,7 @@ export default function TeacherDashboard() {
       >
         <Stack direction="row" sx={{ mb: 0.5 }}>
           <Typography variant="h5" noWrap component="div">
-            Tildelte oppgaver
+            Utdelte oppgaver
           </Typography>
           <Grid2 container direction={'row'} sx={{ flexGrow: 0, ml: 'auto' }}>
             <Button
