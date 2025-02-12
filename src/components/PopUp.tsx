@@ -13,6 +13,7 @@ import ExpandLess from '@mui/icons-material/ExpandLess';
 import ExpandMore from '@mui/icons-material/ExpandMore';
 import { green } from '@mui/material/colors';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
+import SettingsIcon from '@mui/icons-material/Settings';
 import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
 import CodeIcon from '@mui/icons-material/Code';
 import { useState } from 'react';
@@ -74,6 +75,14 @@ export default function PopUp() {
             </ListItemButton>
           </ListItem>
         </Link>
+        <ListItem key={'Settings'} disablePadding>
+          <ListItemButton>
+            <ListItemIcon>
+              <SettingsIcon />
+            </ListItemIcon>
+            <ListItemText primary={'Innstillinger'} />
+          </ListItemButton>
+        </ListItem>
       </List>
       <Divider />
     </Box>
