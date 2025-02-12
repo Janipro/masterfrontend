@@ -2,13 +2,14 @@ import { Box } from '@mui/material';
 import NavBar from '../components/NavBar';
 import StudentDashboard from '../components/StudentDashboard';
 import TeacherDashboard from '../components/TeacherDashboard';
+import useTeacherStore from '../stores/useTeacherStore';
 
 export default function Home() {
-  const isStudent = true;
+  const { isTeacher } = useTeacherStore();
   return (
     <Box>
       <NavBar isEditor={false} />
-      {isStudent ? <StudentDashboard /> : <TeacherDashboard />}
+      {isTeacher ? <TeacherDashboard /> : <StudentDashboard />}
     </Box>
   );
 }
