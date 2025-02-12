@@ -13,12 +13,15 @@ import PopUp from './PopUp';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import SettingsIcon from '@mui/icons-material/Settings';
 import { Link } from 'react-router-dom';
+import { FormControlLabel, FormGroup, Stack, Switch } from '@mui/material';
+import useTeacherStore from '../stores/useTeacherStore';
 
 const functions = ['Kjør', 'Hjelp', 'Lever'];
 const settings = ['Profil', 'Logg ut'];
 
 export default function NavBar({ isEditor }: { isEditor: boolean }) {
   const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(null);
+  const { isTeacher, setTeacher } = useTeacherStore();
 
   const handleOpenUserMenu = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorElUser(event.currentTarget);
@@ -66,7 +69,14 @@ export default function NavBar({ isEditor }: { isEditor: boolean }) {
               ))}
             </Box>
           ) : null}
-          <Box sx={{ flexGrow: 0, ml: 'auto' }}>
+          <Stack direction="row" sx={{ flexGrow: 0, ml: 'auto' }}>
+            <FormGroup>
+              <FormControlLabel
+                control={<Switch defaultChecked={isTeacher} onChange={() => setTeacher(!isTeacher)} />}
+                label="Lærermodus"
+                sx={{ color: '#3F3F3F' }}
+              />
+            </FormGroup>
             <IconButton>
               <SettingsIcon />
             </IconButton>
@@ -101,7 +111,7 @@ export default function NavBar({ isEditor }: { isEditor: boolean }) {
                 </MenuItem>
               ))}
             </Menu>
-          </Box>
+          </Stack>
         </Toolbar>
       </Container>
     </AppBar>

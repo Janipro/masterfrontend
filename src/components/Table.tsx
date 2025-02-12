@@ -4,77 +4,26 @@ import { nbNO } from '@mui/x-data-grid/locales/nbNO';
 import CheckBoxIcon from '@mui/icons-material/CheckBox';
 import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
 import IndeterminateCheckBoxIcon from '@mui/icons-material/IndeterminateCheckBox';
-import { useCallback, useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import { renderRequirement } from './renderRequirement';
 
-const initialRows = [
-  {
-    id: 1,
-    title: 'Chicken Nuggets',
-    requirement: ['for-løkke', 'if-setning'],
-    level: 'VG1',
-    course: 'Matematikk',
-    type: 'Obligatorisk',
-    due: '14.02.2025 13:00',
-    status: 'Uncomplete',
-  },
-  {
-    id: 2,
-    title: 'Peter Griffith',
-    requirement: ['for-løkke'],
-    level: '10',
-    course: 'Matematikk',
-    type: 'Obligatorisk',
-    due: '14.02.2025 13:00',
-    status: 'Uncomplete',
-  },
-  {
-    id: 3,
-    title: 'Peter Griffin',
-    requirement: ['for-løkke', 'while-løkke'],
-    level: '9',
-    course: 'Matematikk',
-    type: 'Anbefalt',
-    due: '17.02.2025 13:00',
-    status: 'Uncomplete',
-  },
-  {
-    id: 4,
-    title: 'Peter Grizzler',
-    requirement: ['if-setning'],
-    level: '9',
-    course: 'Matematikk',
-    type: 'Obligatorisk',
-    due: '15.02.2025 15:00',
-    status: 'Uncomplete',
-  },
-  {
-    id: 5,
-    title: 'Peter Nuggets',
-    requirement: ['if-setning', 'while-løkke'],
-    level: '8',
-    course: 'Matematikk',
-    type: 'Anbefalt',
-    due: '14.02.2025 14:00',
-    status: 'Uncomplete',
-  },
-  {
-    id: 6,
-    title: 'Peter Gooner',
-    requirement: ['for-løkke', 'if-setning'],
-    level: '8',
-    course: 'Matematikk',
-    type: 'Anbefalt',
-    due: '14.02.2025 14:00',
-    status: 'Uncomplete',
-  },
-];
+type tableProps = {
+  id: number;
+  title: string;
+  requirement: string[];
+  level: string;
+  course: string;
+  type: string;
+  due: string;
+  status: string;
+  assigned?: string;
+};
 
 const paginationModel = { page: 0, pageSize: 5 };
-type Row = (typeof initialRows)[number];
 
-export default function Table() {
-  const [rows, setRows] = useState<Row[]>(initialRows);
+export default function Table({ rows, selectable }: { rows: tableProps[]; selectable: boolean }) {
+  type Row = (typeof rows)[number];
+  const [initialRows, setRows] = useState<Row[]>(rows);
   const toggleStatus = useCallback(
     (id: GridRowId, status: string) => () => {
       setRows((prevRows) => prevRows.map((row) => (row.id === id ? { ...row, status: status } : row)));
@@ -83,6 +32,7 @@ export default function Table() {
     []
   );
   const columns: GridColDef[] = [
+    { field: 'assigned', headerName: 'Tildelt', width: 100 },
     { field: 'title', headerName: 'Tittel', width: 220 },
     {
       field: 'requirement',
@@ -126,16 +76,29 @@ export default function Table() {
     },
   ];
 
+  const columnVisibilityModel = useMemo(() => {
+    if (selectable) {
+      return {
+        assigned: true,
+      };
+    }
+    return {
+      assigned: false,
+    };
+  }, [selectable]);
+
   return (
     <>
       <Paper sx={{ height: 400, width: '100%' }}>
         <DataGrid
-          rows={rows}
+          rows={initialRows}
           columns={columns}
           initialState={{ pagination: { paginationModel } }}
           pageSizeOptions={[5, 10]}
           sx={{ border: 0 }}
           localeText={nbNO.components.MuiDataGrid.defaultProps.localeText}
+          checkboxSelection={selectable}
+          columnVisibilityModel={columnVisibilityModel}
         />
       </Paper>
     </>
