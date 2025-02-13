@@ -9,19 +9,19 @@ import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import HomeIcon from '@mui/icons-material/Home';
 import AssignmentIcon from '@mui/icons-material/Assignment';
-import ExpandLess from '@mui/icons-material/ExpandLess';
+/*import ExpandLess from '@mui/icons-material/ExpandLess';
 import ExpandMore from '@mui/icons-material/ExpandMore';
 import { green } from '@mui/material/colors';
-import CheckCircleIcon from '@mui/icons-material/CheckCircle';
+import CheckCircleIcon from '@mui/icons-material/CheckCircle';*/
 import SettingsIcon from '@mui/icons-material/Settings';
-import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
+/*import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';*/
 import CodeIcon from '@mui/icons-material/Code';
 import { useState } from 'react';
-import Collapse from '@mui/material/Collapse';
+/*import Collapse from '@mui/material/Collapse';*/
 import { Typography } from '@mui/material';
 import { Link } from 'react-router-dom';
 
-export default function PopUp() {
+export default function Menu() {
   const [open, setOpen] = useState(false);
   const [openAssignments, setOpenAssignments] = useState(false);
 
@@ -46,14 +46,18 @@ export default function PopUp() {
             </ListItemButton>
           </ListItem>
         </Link>
-        <ListItemButton onClick={handleClick}>
-          <ListItemIcon>
-            <AssignmentIcon />
-          </ListItemIcon>
-          <ListItemText primary="Oppgaver" />
-          {openAssignments ? <ExpandLess /> : <ExpandMore />}
-        </ListItemButton>
-        <Collapse in={openAssignments} timeout="auto" unmountOnExit>
+        <Link to="/tasks" style={{ color: 'inherit' }}>
+          <ListItem key={'Tasks'} disablePadding>
+            <ListItemButton onClick={handleClick}>
+              <ListItemIcon>
+                <AssignmentIcon />
+              </ListItemIcon>
+              <ListItemText primary="Oppgaver" />
+              {/*openAssignments ? <ExpandLess /> : <ExpandMore />*/}
+            </ListItemButton>
+          </ListItem>
+        </Link>
+        {/*<Collapse in={openAssignments} timeout="auto" unmountOnExit>
           <List component="div" disablePadding>
             {['Oppgave 1', 'Oppgave 2', 'Oppgave 3'].map((text, index) => (
               <ListItemButton sx={{ pl: 4 }} key={index}>
@@ -64,9 +68,9 @@ export default function PopUp() {
               </ListItemButton>
             ))}
           </List>
-        </Collapse>
-        <Link to="/editor" style={{ color: 'inherit' }}>
-          <ListItem key={'Editor'} disablePadding>
+        </Collapse>*/}
+        <Link to="/playground" style={{ color: 'inherit' }}>
+          <ListItem key={'Playground'} disablePadding>
             <ListItemButton>
               <ListItemIcon>
                 <CodeIcon />
@@ -89,13 +93,13 @@ export default function PopUp() {
   );
 
   return (
-    <div>
+    <Box>
       <Button onClick={toggleDrawer(true)} sx={{ color: '#3f3f3f' }}>
         <Typography sx={{ textTransform: 'none' }}>Meny</Typography>
       </Button>
       <Drawer open={open} onClose={toggleDrawer(false)}>
         {DrawerList}
       </Drawer>
-    </div>
+    </Box>
   );
 }

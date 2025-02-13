@@ -1,12 +1,12 @@
 import { Box } from '@mui/material';
-import EditorContent from '../components/EditorContent';
+import PlaygroundContent from '../components/PlaygroundContent';
 import NavBar from '../components/NavBar';
 
 export default function EditorPage() {
   return (
     <Box>
       <NavBar isEditor />
-      <EditorContent />
+      <PlaygroundContent />
     </Box>
   );
 }

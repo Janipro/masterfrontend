@@ -9,7 +9,7 @@ import Container from '@mui/material/Container';
 import Button from '@mui/material/Button';
 import MenuItem from '@mui/material/MenuItem';
 import SchoolIcon from '@mui/icons-material/School';
-import PopUp from './PopUp';
+import PopUpMenu from './PopUpMenu';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import SettingsIcon from '@mui/icons-material/Settings';
 import { Link } from 'react-router-dom';
@@ -42,7 +42,7 @@ export default function NavBar({ isEditor }: { isEditor: boolean }) {
               color: '#3f3f3f',
             }}
           />
-          <PopUp />
+          <PopUpMenu />
           {isEditor ? (
             <Box
               sx={{

@@ -4,7 +4,8 @@ import './index.css';
 import App from './App.tsx';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import SignIn from './pages/SignIn.tsx';
-import EditorPage from './pages/EditorPage.tsx';
+import Playground from './pages/Playground.tsx';
+import Tasks from './pages/Tasks.tsx';
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
@@ -12,7 +13,8 @@ createRoot(document.getElementById('root')!).render(
       <Routes>
         <Route path="/" element={<App />} />
         <Route path="/signin" element={<SignIn />} />
-        <Route path="/editor" element={<EditorPage />} />
+        <Route path="/playground" element={<Playground />} />
+        <Route path="/tasks" element={<Tasks />} />
       </Routes>
     </BrowserRouter>
   </StrictMode>
