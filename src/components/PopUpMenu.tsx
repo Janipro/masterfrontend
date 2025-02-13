@@ -2,7 +2,6 @@ import Box from '@mui/material/Box';
 import Drawer from '@mui/material/Drawer';
 import Button from '@mui/material/Button';
 import List from '@mui/material/List';
-import Divider from '@mui/material/Divider';
 import ListItem from '@mui/material/ListItem';
 import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
@@ -20,6 +19,7 @@ import { useState } from 'react';
 /*import Collapse from '@mui/material/Collapse';*/
 import { Typography } from '@mui/material';
 import { Link } from 'react-router-dom';
+import { NAV_COLORS } from '../types/navColors';
 
 export default function Menu() {
   const [open, setOpen] = useState(false);
@@ -34,30 +34,39 @@ export default function Menu() {
   };
 
   const DrawerList = (
-    <Box sx={{ width: 250 }} role="presentation" onClick={toggleDrawer(true)}>
+    <Box
+      sx={{
+        width: 250,
+        backgroundColor: NAV_COLORS.background,
+        height: '100%',
+        color: NAV_COLORS.text,
+      }}
+      onClick={toggleDrawer(true)}
+    >
       <List>
-        <Link to="/" style={{ color: 'inherit' }}>
-          <ListItem key={'Dashboard'} disablePadding>
-            <ListItemButton>
-              <ListItemIcon>
-                <HomeIcon />
-              </ListItemIcon>
-              <ListItemText primary={'Oversikt'} />
-            </ListItemButton>
-          </ListItem>
-        </Link>
-        <Link to="/tasks" style={{ color: 'inherit' }}>
-          <ListItem key={'Tasks'} disablePadding>
-            <ListItemButton onClick={handleClick}>
-              <ListItemIcon>
-                <AssignmentIcon />
-              </ListItemIcon>
-              <ListItemText primary="Oppgaver" />
-              {/*openAssignments ? <ExpandLess /> : <ExpandMore />*/}
-            </ListItemButton>
-          </ListItem>
-        </Link>
-        {/*<Collapse in={openAssignments} timeout="auto" unmountOnExit>
+        <Typography textTransform="none" typography="h6" fontWeight="medium">
+          <Link to="/" style={{ color: 'inherit' }}>
+            <ListItem key={'Dashboard'} disablePadding>
+              <ListItemButton>
+                <ListItemIcon>
+                  <HomeIcon sx={{ color: NAV_COLORS.text }} />
+                </ListItemIcon>
+                <ListItemText primary={'Oversikt'} disableTypography />
+              </ListItemButton>
+            </ListItem>
+          </Link>
+          <Link to="/tasks" style={{ color: 'inherit' }}>
+            <ListItem key={'Tasks'} disablePadding>
+              <ListItemButton onClick={handleClick}>
+                <ListItemIcon>
+                  <AssignmentIcon sx={{ color: NAV_COLORS.text }} />
+                </ListItemIcon>
+                <ListItemText primary="Oppgaver" disableTypography />
+                {/*openAssignments ? <ExpandLess /> : <ExpandMore />*/}
+              </ListItemButton>
+            </ListItem>
+          </Link>
+          {/*<Collapse in={openAssignments} timeout="auto" unmountOnExit>
           <List component="div" disablePadding>
             {['Oppgave 1', 'Oppgave 2', 'Oppgave 3'].map((text, index) => (
               <ListItemButton sx={{ pl: 4 }} key={index}>
@@ -69,33 +78,35 @@ export default function Menu() {
             ))}
           </List>
         </Collapse>*/}
-        <Link to="/playground" style={{ color: 'inherit' }}>
-          <ListItem key={'Playground'} disablePadding>
+          <Link to="/playground" style={{ color: 'inherit' }}>
+            <ListItem key={'Playground'} disablePadding>
+              <ListItemButton>
+                <ListItemIcon>
+                  <CodeIcon sx={{ color: NAV_COLORS.text }} />
+                </ListItemIcon>
+                <ListItemText primary={'Editor'} disableTypography />
+              </ListItemButton>
+            </ListItem>
+          </Link>
+          <ListItem key={'Settings'} disablePadding>
             <ListItemButton>
               <ListItemIcon>
-                <CodeIcon />
+                <SettingsIcon sx={{ color: NAV_COLORS.text }} />
               </ListItemIcon>
-              <ListItemText primary={'Editor'} />
+              <ListItemText primary={'Innstillinger'} disableTypography />
             </ListItemButton>
           </ListItem>
-        </Link>
-        <ListItem key={'Settings'} disablePadding>
-          <ListItemButton>
-            <ListItemIcon>
-              <SettingsIcon />
-            </ListItemIcon>
-            <ListItemText primary={'Innstillinger'} />
-          </ListItemButton>
-        </ListItem>
+        </Typography>
       </List>
-      <Divider />
     </Box>
   );
 
   return (
     <Box>
-      <Button onClick={toggleDrawer(true)} sx={{ color: '#3f3f3f' }}>
-        <Typography sx={{ textTransform: 'none' }}>Meny</Typography>
+      <Button onClick={toggleDrawer(true)} sx={{ color: NAV_COLORS.text }}>
+        <Typography textTransform="none" typography="h6" fontWeight="medium">
+          Meny
+        </Typography>
       </Button>
       <Drawer open={open} onClose={toggleDrawer(false)}>
         {DrawerList}
