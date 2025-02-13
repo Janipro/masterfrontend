@@ -1,10 +1,10 @@
-import { Box, Container, CssBaseline, Grid2, List, ListItem, Typography } from '@mui/material';
+import { Box, Button, Container, CssBaseline, Grid2, Typography } from '@mui/material';
 import Table from './Table';
-import InfoCard from './InfoCard';
-import Calendar from './Calendar';
-import Requirement from './Requirement';
-
-const subjects = [1, 2, 3, 4, 5, 6];
+import SearchBar from './SearchBar';
+import DeleteIcon from '@mui/icons-material/Delete';
+import VisibilityIcon from '@mui/icons-material/Visibility';
+import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
+import ShareIcon from '@mui/icons-material/Share';
 
 const rows = [
   {
@@ -71,64 +71,64 @@ const rows = [
 
 export default function TeacherTasks() {
   return (
-    <Box component={'main'} sx={{ bgcolor: 'background.default' }}>
+    <Box>
       <CssBaseline />
-      <Container sx={{ display: 'flex' }}>
-        <Box
-          component="main"
-          sx={{
-            flexGrow: 1,
-            textAlign: 'left',
-          }}
-        >
-          <Typography variant="h5" noWrap component="div" sx={{ mt: 10, ml: -3 }}>
-            Mine fag
-          </Typography>
-          <Grid2 container direction={'row'} spacing={2} sx={{ m: 2, p: 1, maxWidth: 600 }}>
-            {subjects.map(() => (
-              <InfoCard />
-            ))}
+      <Container component={'main'} sx={{ bgcolor: 'background.default' }}>
+        <Grid2 direction="column" container spacing={2} mt={10}>
+          <Grid2 direction="row" container sx={{ mb: 0.5 }}>
+            <Typography variant="h5" noWrap component="div">
+              Utdelte oppgaver
+            </Typography>
+            <Grid2 direction="row" sx={{ flexGrow: 0, ml: 'auto' }}>
+              <Button
+                variant="contained"
+                startIcon={<VisibilityIcon />}
+                sx={{ backgroundColor: '#EDEBEB', color: '#3F3F3F', textTransform: 'none', scale: 0.8 }}
+                disabled
+              >
+                Aktiver
+              </Button>
+              <Button
+                variant="contained"
+                startIcon={<VisibilityOffIcon />}
+                sx={{ backgroundColor: '#EDEBEB', color: '#3F3F3F', textTransform: 'none', scale: 0.8 }}
+                disabled
+              >
+                Deaktiver
+              </Button>
+              <Button
+                variant="contained"
+                startIcon={<DeleteIcon />}
+                sx={{ backgroundColor: '#EDEBEB', color: '#3F3F3F', textTransform: 'none', scale: 0.8 }}
+                disabled
+              >
+                Slett
+              </Button>
+            </Grid2>
           </Grid2>
-        </Box>
-        <Box
-          component="main"
-          sx={{
-            flexGrow: 1,
-            mt: 10,
-          }}
-        >
-          <Typography variant="h5" noWrap component="div">
-            Progresjon
-          </Typography>
-          <Grid2 container sx={{ justifyContent: 'center', alignItems: 'center' }}>
-            <List dense sx={{ listStyle: 'decimal', pl: 4 }}>
-              <ListItem sx={{ display: 'list-item' }}>
-                <Requirement value="for-løkke" size="small" />
-              </ListItem>
-              <ListItem sx={{ display: 'list-item' }}>
-                <Requirement value="if-setning" size="small" />
-              </ListItem>
-              <ListItem sx={{ display: 'list-item' }}>
-                <Requirement value="while-løkke" size="small" />
-              </ListItem>
-            </List>
+          <Table rows={rows} selectable />
+
+          <Grid2 spacing={2} container direction="column">
+            <Typography variant="h5" noWrap component="div" sx={{ textAlign: 'left' }}>
+              Alle oppgaver
+            </Typography>
+            <Grid2 container direction="row">
+              <SearchBar options={rows} />
+              <Grid2 sx={{ flexGrow: 0, ml: 'auto', mt: 'auto' }}>
+                <Button
+                  variant="contained"
+                  startIcon={<ShareIcon />}
+                  sx={{ backgroundColor: '#EDEBEB', color: '#3F3F3F', textTransform: 'none', scale: 0.8 }}
+                  disabled
+                >
+                  Del
+                </Button>
+              </Grid2>
+            </Grid2>
           </Grid2>
-          <Calendar />
-        </Box>
+          <Table rows={rows} selectable />
+        </Grid2>
       </Container>
-      <Box
-        component="main"
-        sx={{
-          flexGrow: 1,
-          textAlign: 'left',
-          mt: -4,
-        }}
-      >
-        <Typography variant="h5" noWrap component="div" sx={{ mb: 0.5 }}>
-          Anbefalte oppgaver
-        </Typography>
-        <Table rows={rows} selectable={false} />
-      </Box>
     </Box>
   );
 }

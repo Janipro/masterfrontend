@@ -93,13 +93,13 @@ export default function Menu() {
   );
 
   return (
-    <div>
+    <Box>
       <Button onClick={toggleDrawer(true)} sx={{ color: '#3f3f3f' }}>
         <Typography sx={{ textTransform: 'none' }}>Meny</Typography>
       </Button>
       <Drawer open={open} onClose={toggleDrawer(false)}>
         {DrawerList}
       </Drawer>
-    </div>
+    </Box>
   );
 }

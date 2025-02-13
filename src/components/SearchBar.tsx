@@ -8,7 +8,7 @@ export default function SearchBar({ options }: { options: tableProps[] }) {
       disablePortal
       options={options}
       sx={{ width: 300 }}
-      renderInput={(params) => <TextField {...params} label="Søk etter oppgaver" />}
+      renderInput={(params) => <TextField {...params} label="Søk etter oppgave" />}
       getOptionLabel={(option: tableProps) => option.title}
     />
   );

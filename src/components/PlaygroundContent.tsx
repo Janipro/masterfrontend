@@ -3,14 +3,14 @@ import CssBaseline from '@mui/material/CssBaseline';
 import Typography from '@mui/material/Typography';
 import CodeIcon from '@mui/icons-material/Code';
 import Editor from './Editor';
-import { Container, Stack } from '@mui/material';
+import { Container, Grid2 } from '@mui/material';
 
 export default function PlaygroundContent() {
   return (
-    <Box sx={{ display: 'flex' }}>
+    <Box>
       <CssBaseline />
-      <Container sx={{ display: 'flex' }}>
-        <Box
+      <Container component={'main'} sx={{ bgcolor: 'background.default' }}>
+        <Grid2
           component="main"
           sx={{
             flexGrow: 1,
@@ -24,13 +24,13 @@ export default function PlaygroundContent() {
               border: '1px solid #3f3f3f',
             }}
           >
-            <Stack direction="row" gap={0.5} bgcolor={'#EDEBEB'}>
+            <Grid2 container direction="row" gap={0.5} bgcolor={'#EDEBEB'}>
               <CodeIcon sx={{ color: '#4CCC17' }} />
               <Typography>Python Kode</Typography>
-            </Stack>
+            </Grid2>
             <Editor />
           </Typography>
-        </Box>
+        </Grid2>
       </Container>
     </Box>
   );

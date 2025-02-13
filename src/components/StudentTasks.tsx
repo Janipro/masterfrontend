@@ -1,4 +1,4 @@
-import { Box, CssBaseline, Grid2, Stack, Typography } from '@mui/material';
+import { Box, Container, CssBaseline, Grid2, Typography } from '@mui/material';
 import Table from './Table';
 import SearchBar from './SearchBar';
 
@@ -67,22 +67,24 @@ const rows = [
 
 export default function StudentTasks() {
   return (
-    <Box component={'main'} sx={{ bgcolor: 'background.default' }}>
+    <Box>
       <CssBaseline />
-      <Grid2 direction="column" container spacing={2} mt={10}>
-        <Typography variant="h5" noWrap component="div" sx={{ textAlign: 'left' }}>
-          Anbefalte oppgaver
-        </Typography>
-        <Table rows={rows} selectable={false} />
-
-        <Stack spacing={2}>
+      <Container component={'main'} sx={{ bgcolor: 'background.default' }}>
+        <Grid2 direction="column" container spacing={2} mt={10}>
           <Typography variant="h5" noWrap component="div" sx={{ textAlign: 'left' }}>
-            Alle oppgaver
+            Anbefalte oppgaver
           </Typography>
-          <SearchBar options={rows} />
-        </Stack>
-        <Table rows={rows} selectable={false} />
-      </Grid2>
+          <Table rows={rows} selectable={false} />
+
+          <Grid2 container spacing={2} direction="column">
+            <Typography variant="h5" noWrap component="div" sx={{ textAlign: 'left' }}>
+              Alle oppgaver
+            </Typography>
+            <SearchBar options={rows} />
+          </Grid2>
+          <Table rows={rows} selectable={false} />
+        </Grid2>
+      </Container>
     </Box>
   );
 }

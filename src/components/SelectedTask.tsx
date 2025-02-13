@@ -7,6 +7,7 @@ import Editor from './Editor';
 import { Container, Stack } from '@mui/material';
 import Requirement from './Requirement';
 
+//TODO: Create editor + task page
 export default function SelectedTask() {
   return (
     <Box sx={{ display: 'flex' }}>

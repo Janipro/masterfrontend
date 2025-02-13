@@ -71,64 +71,66 @@ const rows = [
 
 export default function StudentDashboard() {
   return (
-    <Box component={'main'} sx={{ bgcolor: 'background.default' }}>
+    <Box>
       <CssBaseline />
-      <Container sx={{ display: 'flex' }}>
-        <Box
+      <Container component={'main'} sx={{ bgcolor: 'background.default' }}>
+        <Grid2 sx={{ display: 'flex' }}>
+          <Grid2
+            component="main"
+            sx={{
+              flexGrow: 1,
+              textAlign: 'left',
+            }}
+          >
+            <Typography variant="h5" noWrap component="div" sx={{ mt: 10, ml: -3 }}>
+              Mine fag
+            </Typography>
+            <Grid2 container direction={'row'} spacing={2} sx={{ m: 2, p: 1, maxWidth: 600 }}>
+              {subjects.map(() => (
+                <InfoCard />
+              ))}
+            </Grid2>
+          </Grid2>
+          <Grid2
+            component="main"
+            sx={{
+              flexGrow: 1,
+              mt: 10,
+            }}
+          >
+            <Typography variant="h5" noWrap component="div">
+              Progresjon
+            </Typography>
+            <Grid2 container sx={{ justifyContent: 'center', alignItems: 'center' }}>
+              <List dense sx={{ listStyle: 'decimal', pl: 4 }}>
+                <ListItem sx={{ display: 'list-item' }}>
+                  <Requirement value="for-løkke" size="small" />
+                </ListItem>
+                <ListItem sx={{ display: 'list-item' }}>
+                  <Requirement value="if-setning" size="small" />
+                </ListItem>
+                <ListItem sx={{ display: 'list-item' }}>
+                  <Requirement value="while-løkke" size="small" />
+                </ListItem>
+              </List>
+            </Grid2>
+            <Calendar />
+          </Grid2>
+        </Grid2>
+        <Grid2
           component="main"
           sx={{
             flexGrow: 1,
             textAlign: 'left',
+            mt: -4,
           }}
         >
-          <Typography variant="h5" noWrap component="div" sx={{ mt: 10, ml: -3 }}>
-            Mine fag
+          <Typography variant="h5" noWrap component="div" sx={{ mb: 0.5 }}>
+            Anbefalte oppgaver
           </Typography>
-          <Grid2 container direction={'row'} spacing={2} sx={{ m: 2, p: 1, maxWidth: 600 }}>
-            {subjects.map(() => (
-              <InfoCard />
-            ))}
-          </Grid2>
-        </Box>
-        <Box
-          component="main"
-          sx={{
-            flexGrow: 1,
-            mt: 10,
-          }}
-        >
-          <Typography variant="h5" noWrap component="div">
-            Progresjon
-          </Typography>
-          <Grid2 container sx={{ justifyContent: 'center', alignItems: 'center' }}>
-            <List dense sx={{ listStyle: 'decimal', pl: 4 }}>
-              <ListItem sx={{ display: 'list-item' }}>
-                <Requirement value="for-løkke" size="small" />
-              </ListItem>
-              <ListItem sx={{ display: 'list-item' }}>
-                <Requirement value="if-setning" size="small" />
-              </ListItem>
-              <ListItem sx={{ display: 'list-item' }}>
-                <Requirement value="while-løkke" size="small" />
-              </ListItem>
-            </List>
-          </Grid2>
-          <Calendar />
-        </Box>
+          <Table rows={rows} selectable={false} />
+        </Grid2>
       </Container>
-      <Box
-        component="main"
-        sx={{
-          flexGrow: 1,
-          textAlign: 'left',
-          mt: -4,
-        }}
-      >
-        <Typography variant="h5" noWrap component="div" sx={{ mb: 0.5 }}>
-          Anbefalte oppgaver
-        </Typography>
-        <Table rows={rows} selectable={false} />
-      </Box>
     </Box>
   );
 }

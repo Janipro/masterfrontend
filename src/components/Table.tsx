@@ -1,4 +1,4 @@
-import { Paper } from '@mui/material';
+import { Box, Paper } from '@mui/material';
 import { DataGrid, GridActionsCellItem, GridColDef, GridRowId } from '@mui/x-data-grid';
 import { nbNO } from '@mui/x-data-grid/locales/nbNO';
 import CheckBoxIcon from '@mui/icons-material/CheckBox';
@@ -7,12 +7,14 @@ import IndeterminateCheckBoxIcon from '@mui/icons-material/IndeterminateCheckBox
 import { useCallback, useMemo, useState } from 'react';
 import { renderRequirement } from './renderRequirement';
 import { tableProps } from '../types/tableProps';
+import useTeacherStore from '../stores/useTeacherStore';
 
 const paginationModel = { page: 0, pageSize: 5 };
 
 export default function Table({ rows, selectable }: { rows: tableProps[]; selectable: boolean }) {
   type Row = (typeof rows)[number];
   const [initialRows, setRows] = useState<Row[]>(rows);
+  const { isTeacher } = useTeacherStore();
   const toggleStatus = useCallback(
     (id: GridRowId, status: string) => () => {
       setRows((prevRows) => prevRows.map((row) => (row.id === id ? { ...row, status: status } : row)));
@@ -66,7 +68,7 @@ export default function Table({ rows, selectable }: { rows: tableProps[]; select
   ];
 
   const columnVisibilityModel = useMemo(() => {
-    if (selectable) {
+    if (isTeacher) {
       return {
         assigned: true,
       };
@@ -74,10 +76,10 @@ export default function Table({ rows, selectable }: { rows: tableProps[]; select
     return {
       assigned: false,
     };
-  }, [selectable]);
+  }, [isTeacher]);
 
   return (
-    <>
+    <Box>
       <Paper sx={{ height: 400, width: '100%' }}>
         <DataGrid
           rows={initialRows}
@@ -90,6 +92,6 @@ export default function Table({ rows, selectable }: { rows: tableProps[]; select
           columnVisibilityModel={columnVisibilityModel}
         />
       </Paper>
-    </>
+    </Box>
   );
 }
