@@ -15,6 +15,7 @@ import SettingsIcon from '@mui/icons-material/Settings';
 import { Link } from 'react-router-dom';
 import { FormControlLabel, FormGroup, Stack, Switch } from '@mui/material';
 import useTeacherStore from '../stores/useTeacherStore';
+import { NAV_COLORS } from '../types/navColors';
 
 const functions = ['Kjør', 'Hjelp', 'Lever'];
 const settings = ['Profil', 'Logg ut'];
@@ -32,14 +33,14 @@ export default function NavBar({ isEditor }: { isEditor: boolean }) {
   };
 
   return (
-    <AppBar position="fixed" sx={{ backgroundColor: '#EDEBEB' }}>
+    <AppBar position="fixed" sx={{ backgroundColor: NAV_COLORS.background, boxShadow: 2 }}>
       <Container maxWidth="xl">
         <Toolbar disableGutters>
           <SchoolIcon
             sx={{
               display: { xs: 'none', md: 'flex' },
               mr: 1,
-              color: '#3f3f3f',
+              color: NAV_COLORS.text,
             }}
           />
           <PopUpMenu />
@@ -56,7 +57,7 @@ export default function NavBar({ isEditor }: { isEditor: boolean }) {
                   key={f}
                   sx={{
                     my: 2,
-                    color: '#3f3f3f',
+                    color: NAV_COLORS.text,
                     display: 'block',
                     backgroundColor: 'white',
                     borderRadius: 6,
@@ -74,14 +75,14 @@ export default function NavBar({ isEditor }: { isEditor: boolean }) {
               <FormControlLabel
                 control={<Switch defaultChecked={isTeacher} onChange={() => setTeacher(!isTeacher)} />}
                 label="Lærermodus"
-                sx={{ color: '#3F3F3F' }}
+                sx={{ color: NAV_COLORS.text }}
               />
             </FormGroup>
             <IconButton>
-              <SettingsIcon />
+              <SettingsIcon sx={{ color: NAV_COLORS.text }} />
             </IconButton>
             <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-              <AccountCircleIcon />
+              <AccountCircleIcon sx={{ color: NAV_COLORS.text }} />
             </IconButton>
             <Menu
               sx={{ mt: '45px' }}
