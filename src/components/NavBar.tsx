@@ -104,10 +104,10 @@ export default function NavBar({ isEditor }: { isEditor: boolean }) {
                 <MenuItem key={setting} onClick={handleCloseUserMenu}>
                   {setting === 'Logg ut' ? (
                     <Link to="/signin" style={{ color: 'inherit' }}>
-                      <Typography sx={{ textAlign: 'center' }}>{setting}</Typography>
+                      <Typography sx={{ textAlign: 'center', color: NAV_COLORS.text }}>{setting}</Typography>
                     </Link>
                   ) : (
-                    <Typography sx={{ textAlign: 'center' }}>{setting}</Typography>
+                    <Typography sx={{ textAlign: 'center', color: NAV_COLORS.text }}>{setting}</Typography>
                   )}
                 </MenuItem>
               ))}
