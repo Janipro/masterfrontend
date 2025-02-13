@@ -6,18 +6,7 @@ import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
 import IndeterminateCheckBoxIcon from '@mui/icons-material/IndeterminateCheckBox';
 import { useCallback, useMemo, useState } from 'react';
 import { renderRequirement } from './renderRequirement';
-
-type tableProps = {
-  id: number;
-  title: string;
-  requirement: string[];
-  level: string;
-  course: string;
-  type: string;
-  due: string;
-  status: string;
-  assigned?: string;
-};
+import { tableProps } from '../types/tableProps';
 
 const paginationModel = { page: 0, pageSize: 5 };
 
