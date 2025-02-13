@@ -17,7 +17,6 @@ const rows = [
     type: 'Obligatorisk',
     due: '14.02.2025 13:00',
     status: 'Uncomplete',
-    assigned: '8AB',
   },
   {
     id: 2,
@@ -28,7 +27,6 @@ const rows = [
     type: 'Obligatorisk',
     due: '14.02.2025 13:00',
     status: 'Uncomplete',
-    assigned: 'R1',
   },
   {
     id: 3,
@@ -39,7 +37,6 @@ const rows = [
     type: 'Anbefalt',
     due: '17.02.2025 13:00',
     status: 'Uncomplete',
-    assigned: 'R2',
   },
   {
     id: 4,
@@ -50,7 +47,6 @@ const rows = [
     type: 'Obligatorisk',
     due: '15.02.2025 15:00',
     status: 'Uncomplete',
-    assigned: '8CD',
   },
   {
     id: 5,
@@ -61,7 +57,6 @@ const rows = [
     type: 'Anbefalt',
     due: '14.02.2025 14:00',
     status: 'Uncomplete',
-    assigned: '10EF',
   },
   {
     id: 6,
@@ -72,7 +67,26 @@ const rows = [
     type: 'Anbefalt',
     due: '14.02.2025 14:00',
     status: 'Uncomplete',
-    assigned: '1T',
+  },
+  {
+    id: 7,
+    title: 'Peter Cooner',
+    requirement: ['while-løkke', 'if-setning'],
+    level: '9',
+    course: 'Matematikk',
+    type: 'Anbefalt',
+    due: '14.02.2025 14:00',
+    status: 'Uncomplete',
+  },
+  {
+    id: 8,
+    title: 'Sexy Sigma',
+    requirement: ['if-setning'],
+    level: '10',
+    course: 'Matematikk',
+    type: 'Anbefalt',
+    due: '14.02.2025 14:00',
+    status: 'Uncomplete',
   },
 ];
 

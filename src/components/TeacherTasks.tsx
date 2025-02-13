@@ -16,6 +16,75 @@ const rows = [
     type: 'Obligatorisk',
     due: '14.02.2025 13:00',
     status: 'Uncomplete',
+    assigned: '8AB',
+  },
+  {
+    id: 2,
+    title: 'Peter Griffith',
+    requirement: ['for-løkke'],
+    level: '10',
+    course: 'Matematikk',
+    type: 'Obligatorisk',
+    due: '14.02.2025 13:00',
+    status: 'Uncomplete',
+    assigned: 'R1',
+  },
+  {
+    id: 3,
+    title: 'Peter Griffin',
+    requirement: ['for-løkke', 'while-løkke'],
+    level: '9',
+    course: 'Matematikk',
+    type: 'Anbefalt',
+    due: '17.02.2025 13:00',
+    status: 'Uncomplete',
+    assigned: 'R2',
+  },
+  {
+    id: 4,
+    title: 'Peter Grizzler',
+    requirement: ['if-setning'],
+    level: '9',
+    course: 'Matematikk',
+    type: 'Obligatorisk',
+    due: '15.02.2025 15:00',
+    status: 'Uncomplete',
+    assigned: '8CD',
+  },
+  {
+    id: 5,
+    title: 'Peter Nuggets',
+    requirement: ['if-setning', 'while-løkke'],
+    level: '8',
+    course: 'Matematikk',
+    type: 'Anbefalt',
+    due: '14.02.2025 14:00',
+    status: 'Uncomplete',
+    assigned: '10EF',
+  },
+  {
+    id: 6,
+    title: 'Peter Gooner',
+    requirement: ['for-løkke', 'if-setning'],
+    level: '8',
+    course: 'Matematikk',
+    type: 'Anbefalt',
+    due: '14.02.2025 14:00',
+    status: 'Uncomplete',
+    assigned: '1T',
+  },
+];
+
+const rows2 = [
+  {
+    id: 1,
+    title: 'Chicken Nuggets',
+    requirement: ['for-løkke', 'if-setning'],
+    level: 'VG1',
+    course: 'Matematikk',
+    type: 'Obligatorisk',
+    due: '14.02.2025 13:00',
+    status: 'Uncomplete',
   },
   {
     id: 2,
@@ -67,6 +136,26 @@ const rows = [
     due: '14.02.2025 14:00',
     status: 'Uncomplete',
   },
+  {
+    id: 7,
+    title: 'Peter Cooner',
+    requirement: ['while-løkke', 'if-setning'],
+    level: '9',
+    course: 'Matematikk',
+    type: 'Anbefalt',
+    due: '14.02.2025 14:00',
+    status: 'Uncomplete',
+  },
+  {
+    id: 8,
+    title: 'Sexy Sigma',
+    requirement: ['if-setning'],
+    level: '10',
+    course: 'Matematikk',
+    type: 'Anbefalt',
+    due: '14.02.2025 14:00',
+    status: 'Uncomplete',
+  },
 ];
 
 export default function TeacherTasks() {
@@ -113,7 +202,7 @@ export default function TeacherTasks() {
               Alle oppgaver
             </Typography>
             <Grid2 container direction="row">
-              <SearchBar options={rows} />
+              <SearchBar options={rows2} />
               <Grid2 sx={{ flexGrow: 0, ml: 'auto', mt: 'auto' }}>
                 <Button
                   variant="contained"
@@ -126,7 +215,7 @@ export default function TeacherTasks() {
               </Grid2>
             </Grid2>
           </Grid2>
-          <Table rows={rows} selectable />
+          <Table rows={rows2} selectable />
         </Grid2>
       </Container>
     </Box>
