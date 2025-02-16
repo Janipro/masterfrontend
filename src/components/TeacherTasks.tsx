@@ -164,7 +164,7 @@ export default function TeacherTasks() {
       <CssBaseline />
       <Container component={'main'} sx={{ bgcolor: 'background.default' }}>
         <Grid2 direction="column" container spacing={2} mt={10}>
-          <Grid2 direction="row" container sx={{ mb: 0.5 }}>
+          <Grid2 direction="row" container>
             <Typography variant="h5" noWrap component="div">
               Utdelte oppgaver
             </Typography>
