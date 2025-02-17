@@ -72,7 +72,7 @@ const rows = [
 
 const columns: GridColDef[] = [
   { field: 'assigned', headerName: 'Tildelt', width: 100 },
-  { field: 'title', headerName: 'Tittel', width: 220 },
+  { field: 'title', headerName: 'Tittel', width: 240 },
   {
     field: 'requirement',
     display: 'flex',
@@ -81,12 +81,12 @@ const columns: GridColDef[] = [
       row.title == null || row.requirement == null ? null : { title: row.title, requirement: row.requirement },
     filterable: false,
     headerName: 'Krav',
-    width: 220,
+    width: 240,
   } as GridColDef<{ requirement: string[]; title: string }>,
   { field: 'level', headerName: 'Nivå', width: 60 },
-  { field: 'course', headerName: 'Fag', width: 100 },
-  { field: 'type', headerName: 'Type', width: 100 },
-  { field: 'due', headerName: 'Frist', width: 140 },
+  { field: 'course', headerName: 'Fag', width: 120 },
+  { field: 'type', headerName: 'Type', width: 120 },
+  { field: 'due', headerName: 'Frist', width: 160 },
   {
     field: 'actions',
     type: 'actions',
@@ -106,7 +106,7 @@ const columns: GridColDef[] = [
 
 const columns2: GridColDef[] = [
   { field: 'assigned', headerName: 'Tildelt', width: 100 },
-  { field: 'title', headerName: 'Tittel', width: 220 },
+  { field: 'title', headerName: 'Tittel', width: 320 },
   {
     field: 'requirement',
     display: 'flex',
@@ -115,10 +115,10 @@ const columns2: GridColDef[] = [
       row.title == null || row.requirement == null ? null : { title: row.title, requirement: row.requirement },
     filterable: false,
     headerName: 'Krav',
-    width: 220,
+    width: 320,
   } as GridColDef<{ requirement: string[]; title: string }>,
   { field: 'level', headerName: 'Nivå', width: 60 },
-  { field: 'course', headerName: 'Fag', width: 100 },
+  { field: 'course', headerName: 'Fag', width: 140 },
   {
     field: 'actions',
     type: 'actions',

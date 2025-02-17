@@ -9,6 +9,7 @@ import { useState } from 'react';
 import Backdrop from '@mui/material/Backdrop';
 import { GridColDef } from '@mui/x-data-grid';
 import { renderRequirement } from './renderRequirement';
+import { NAV_COLORS } from '../types/navColors';
 
 const rows = [
   {
@@ -151,64 +152,56 @@ const rows2 = [
 const rows3 = [
   {
     id: 1,
-    title: 'Petter',
-    lastname: 'Hassen',
+    title: 'Petter Banh Cuon',
     level: 'VG1',
     class: '1STB',
     school: 'St. Hallvard VGS',
   },
   {
     id: 2,
-    title: 'Petter',
-    lastname: 'Hassen',
+    title: 'Petter Kjaken',
     level: 'VG1',
     class: '1STB',
     school: 'St. Hallvard VGS',
   },
   {
     id: 3,
-    title: 'Petter',
-    lastname: 'Hassen',
+    title: 'Petter Ballestad',
     level: 'VG1',
     class: '1STB',
     school: 'St. Hallvard VGS',
   },
   {
     id: 4,
-    title: 'Petter',
-    lastname: 'Hassen',
+    title: 'Petter Rizzler',
     level: 'VG1',
     class: '1STB',
     school: 'St. Hallvard VGS',
   },
   {
     id: 5,
-    title: 'Petter',
-    lastname: 'Hassen',
+    title: 'Petter Dass',
     level: 'VG1',
     class: '1STB',
     school: 'St. Hallvard VGS',
   },
   {
     id: 6,
-    title: 'Petter',
-    lastname: 'Hassen',
+    title: 'Petter Slalom',
     level: 'VG1',
     class: '1STB',
     school: 'St. Hallvard VGS',
   },
   {
     id: 7,
-    title: 'Petter',
-    lastname: 'Hassen',
+    title: 'Petter Mammasønn',
     level: 'VG1',
     class: '1STB',
     school: 'St. Hallvard VGS',
   },
   {
     id: 8,
-    firstname: 'Petter',
-    lastname: 'Hassen',
+    title: 'Petter Rambølseter',
     level: 'VG1',
     class: '1STB',
     school: 'St. Hallvard VGS',
@@ -230,7 +223,7 @@ const style = {
 const columns: GridColDef[] = [
   { field: 'assigned', headerName: 'Tildelt', width: 100 },
   { field: 'course', headerName: 'Fag', width: 100 },
-  { field: 'title', headerName: 'Tittel', width: 220 },
+  { field: 'title', headerName: 'Tittel', width: 280 },
   {
     field: 'requirement',
     display: 'flex',
@@ -239,16 +232,16 @@ const columns: GridColDef[] = [
       row.title == null || row.requirement == null ? null : { title: row.title, requirement: row.requirement },
     filterable: false,
     headerName: 'Krav',
-    width: 220,
+    width: 280,
   } as GridColDef<{ requirement: string[]; title: string }>,
   { field: 'level', headerName: 'Nivå', width: 60 },
   { field: 'type', headerName: 'Type', width: 100 },
-  { field: 'due', headerName: 'Frist', width: 140 },
+  { field: 'due', headerName: 'Frist', width: 160 },
 ];
 
 const columns2: GridColDef[] = [
   { field: 'course', headerName: 'Fag', width: 100 },
-  { field: 'title', headerName: 'Tittel', width: 220 },
+  { field: 'title', headerName: 'Tittel', width: 300 },
   {
     field: 'requirement',
     display: 'flex',
@@ -257,18 +250,17 @@ const columns2: GridColDef[] = [
       row.title == null || row.requirement == null ? null : { title: row.title, requirement: row.requirement },
     filterable: false,
     headerName: 'Krav',
-    width: 220,
+    width: 300,
   } as GridColDef<{ requirement: string[]; title: string }>,
-  { field: 'level', headerName: 'Nivå', width: 60 },
-  { field: 'owner', headerName: 'Laget av', width: 100 },
+  { field: 'level', headerName: 'Nivå', width: 80 },
+  { field: 'owner', headerName: 'Laget av', width: 300 },
 ];
 
 const columns3: GridColDef[] = [
-  { field: 'title', headerName: 'Fornavn', width: 120 },
-  { field: 'lastname', headerName: 'Etternavn', width: 120 },
+  { field: 'title', headerName: 'Elev', width: 240 },
   { field: 'level', headerName: 'Trinn', width: 60 },
   { field: 'class', headerName: 'Klasse', width: 60 },
-  { field: 'school', headerName: 'Skole', width: 220 },
+  { field: 'school', headerName: 'Skole', width: 200 },
 ];
 
 export default function TeacherTasks() {
@@ -289,7 +281,12 @@ export default function TeacherTasks() {
               <Button
                 variant="contained"
                 startIcon={<VisibilityIcon />}
-                sx={{ backgroundColor: '#EDEBEB', color: '#3F3F3F', textTransform: 'none', scale: 0.8 }}
+                sx={{
+                  backgroundColor: NAV_COLORS.background,
+                  color: NAV_COLORS.text,
+                  textTransform: 'none',
+                  scale: 0.8,
+                }}
                 disabled
               >
                 Aktiver
@@ -297,7 +294,12 @@ export default function TeacherTasks() {
               <Button
                 variant="contained"
                 startIcon={<VisibilityOffIcon />}
-                sx={{ backgroundColor: '#EDEBEB', color: '#3F3F3F', textTransform: 'none', scale: 0.8 }}
+                sx={{
+                  backgroundColor: NAV_COLORS.background,
+                  color: NAV_COLORS.text,
+                  textTransform: 'none',
+                  scale: 0.8,
+                }}
                 disabled
               >
                 Deaktiver
@@ -305,7 +307,12 @@ export default function TeacherTasks() {
               <Button
                 variant="contained"
                 startIcon={<DeleteIcon />}
-                sx={{ backgroundColor: '#EDEBEB', color: '#3F3F3F', textTransform: 'none', scale: 0.8 }}
+                sx={{
+                  backgroundColor: NAV_COLORS.background,
+                  color: NAV_COLORS.text,
+                  textTransform: 'none',
+                  scale: 0.8,
+                }}
                 disabled
               >
                 Slett
@@ -324,7 +331,12 @@ export default function TeacherTasks() {
                 <Button
                   variant="contained"
                   startIcon={<ShareIcon />}
-                  sx={{ backgroundColor: '#EDEBEB', color: '#3F3F3F', textTransform: 'none', scale: 0.8 }}
+                  sx={{
+                    backgroundColor: NAV_COLORS.background,
+                    color: NAV_COLORS.text,
+                    textTransform: 'none',
+                    scale: 0.8,
+                  }}
                   onClick={handleOpen}
                 >
                   Del

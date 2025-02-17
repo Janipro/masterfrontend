@@ -85,7 +85,7 @@ const columns: GridColDef[] = [
       row.title == null || row.requirement == null ? null : { title: row.title, requirement: row.requirement },
     filterable: false,
     headerName: 'Krav',
-    width: 220,
+    width: 260,
   } as GridColDef<{ requirement: string[]; title: string }>,
   { field: 'level', headerName: 'Nivå', width: 60 },
   { field: 'course', headerName: 'Fag', width: 100 },

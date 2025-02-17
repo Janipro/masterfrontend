@@ -10,6 +10,4 @@ export type tableProps = {
   assigned?: string;
   school?: string;
   class?: string;
-  firstname?: string;
-  lastname?: string;
 };
