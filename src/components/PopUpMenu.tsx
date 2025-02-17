@@ -1,6 +1,5 @@
 import Box from '@mui/material/Box';
 import Drawer from '@mui/material/Drawer';
-import Button from '@mui/material/Button';
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import ListItemButton from '@mui/material/ListItemButton';
@@ -17,9 +16,10 @@ import SettingsIcon from '@mui/icons-material/Settings';
 import CodeIcon from '@mui/icons-material/Code';
 import { useState } from 'react';
 /*import Collapse from '@mui/material/Collapse';*/
-import { Typography } from '@mui/material';
+import { IconButton, Typography } from '@mui/material';
 import { Link } from 'react-router-dom';
 import { NAV_COLORS } from '../types/navColors';
+import MenuIcon from '@mui/icons-material/Menu';
 
 export default function Menu() {
   const [open, setOpen] = useState(false);
@@ -103,11 +103,9 @@ export default function Menu() {
 
   return (
     <Box>
-      <Button onClick={toggleDrawer(true)} sx={{ color: NAV_COLORS.text }}>
-        <Typography textTransform="none" typography="h6" fontWeight="medium">
-          Meny
-        </Typography>
-      </Button>
+      <IconButton onClick={toggleDrawer(true)} sx={{ color: NAV_COLORS.text }}>
+        <MenuIcon />
+      </IconButton>
       <Drawer open={open} onClose={toggleDrawer(false)}>
         {DrawerList}
       </Drawer>

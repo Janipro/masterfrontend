@@ -35,6 +35,7 @@ export default function NavBar({ isEditor }: { isEditor: boolean }) {
     <AppBar position="fixed" sx={{ backgroundColor: NAV_COLORS.background, boxShadow: 2 }}>
       <Container maxWidth="xl">
         <Toolbar disableGutters>
+          <PopUpMenu />
           <img
             src="src/assets/educode.png"
             width="30"
@@ -42,9 +43,17 @@ export default function NavBar({ isEditor }: { isEditor: boolean }) {
             alt="EduCode logo"
             unselectable="on"
             draggable={false}
-            style={{ userSelect: 'none', msUserSelect: 'none', MozUserSelect: 'none', WebkitUserSelect: 'none' }}
+            style={{
+              userSelect: 'none',
+              msUserSelect: 'none',
+              MozUserSelect: 'none',
+              WebkitUserSelect: 'none',
+              marginLeft: 18,
+            }}
           ></img>
-          <PopUpMenu />
+          <Typography color={NAV_COLORS.text} variant="h6" fontWeight="medium" marginLeft={0.25}>
+            EduCode
+          </Typography>
           {isEditor ? (
             <Box
               sx={{
