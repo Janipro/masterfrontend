@@ -1,10 +1,24 @@
-import { Box, Button, Container, CssBaseline, Grid2, Stack, Typography } from '@mui/material';
+import {
+  Backdrop,
+  Box,
+  Button,
+  Container,
+  CssBaseline,
+  Fade,
+  Grid2,
+  Modal,
+  Stack,
+  TextField,
+  Typography,
+} from '@mui/material';
 import Table from './Table';
 import { NAV_COLORS } from '../types/navColors';
 import Announcements from './Announcements';
 import { GridColDef } from '@mui/x-data-grid';
 import { renderRequirement } from './renderRequirement';
 import AnnouncementIcon from '@mui/icons-material/Announcement';
+import { useState } from 'react';
+import ShareIcon from '@mui/icons-material/Share';
 
 const rows = [
   {
@@ -69,6 +83,18 @@ const rows = [
   },
 ];
 
+const style = {
+  position: 'absolute',
+  top: '50%',
+  left: '50%',
+  transform: 'translate(-50%, -50%)',
+  width: 'auto',
+  bgcolor: 'background.paper',
+  border: '2px solid #000',
+  boxShadow: 24,
+  p: 4,
+};
+
 const columns: GridColDef[] = [
   { field: 'assigned', headerName: 'Tildelt', width: 100 },
   { field: 'course', headerName: 'Fag', width: 120 },
@@ -89,6 +115,9 @@ const columns: GridColDef[] = [
 ];
 
 export default function TeacherClass() {
+  const [open, setOpen] = useState(false);
+  const handleOpen = () => setOpen(true);
+  const handleClose = () => setOpen(false);
   return (
     <Box>
       <CssBaseline />
@@ -117,9 +146,59 @@ export default function TeacherClass() {
                 scale: 0.8,
                 ml: 'auto',
               }}
+              onClick={handleOpen}
             >
               Ny kunngjøring
             </Button>
+            <Modal
+              aria-labelledby="transition-modal-title"
+              aria-describedby="transition-modal-description"
+              open={open}
+              onClose={handleClose}
+              closeAfterTransition
+              slots={{ backdrop: Backdrop }}
+              slotProps={{
+                backdrop: {
+                  timeout: 500,
+                },
+              }}
+            >
+              <Fade in={open}>
+                <Box sx={style}>
+                  <Grid2 container direction="column" spacing={3}>
+                    <Stack direction="row">
+                      <Typography id="keep-mounted-modal-title" variant="h5" fontWeight="medium">
+                        Del kunngjøring
+                      </Typography>
+                    </Stack>
+                    <TextField id="keep-mounted-modal-title" label="Tittel" variant="standard" />
+                    <TextField
+                      id="keep-mounted-modal-description"
+                      label="Innhold"
+                      multiline
+                      rows={8}
+                      sx={{ width: 400 }}
+                    />
+                    <Stack direction="row">
+                      <Button
+                        variant="contained"
+                        startIcon={<ShareIcon />}
+                        sx={{
+                          backgroundColor: NAV_COLORS.background,
+                          color: NAV_COLORS.text,
+                          textTransform: 'none',
+                          scale: 0.8,
+                          ml: 'auto',
+                        }}
+                        onClick={handleOpen}
+                      >
+                        Del
+                      </Button>
+                    </Stack>
+                  </Grid2>
+                </Box>
+              </Fade>
+            </Modal>
           </Stack>
           <Announcements />
           <Grid2 container spacing={2} direction="column">
