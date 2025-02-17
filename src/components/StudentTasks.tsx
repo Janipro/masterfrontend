@@ -1,4 +1,4 @@
-import { Box, Container, CssBaseline, Grid2, Typography } from '@mui/material';
+import { Box, Container, CssBaseline, Fade, Grid2, Typography } from '@mui/material';
 import Table from './Table';
 import SearchBar from './SearchBar';
 import { GridActionsCellItem, GridColDef } from '@mui/x-data-grid';
@@ -138,24 +138,26 @@ const columns2: GridColDef[] = [
 
 export default function StudentTasks() {
   return (
-    <Box>
-      <CssBaseline />
-      <Container component={'main'} sx={{ bgcolor: 'background.default' }}>
-        <Grid2 direction="column" container spacing={2} mt={10}>
-          <Typography variant="h5" noWrap component="div" sx={{ textAlign: 'left' }}>
-            Anbefalte oppgaver
-          </Typography>
-          <Table rows={rows} columns={columns} selectable={false} />
-
-          <Grid2 container spacing={2} direction="column">
+    <Fade in timeout={500}>
+      <Box>
+        <CssBaseline />
+        <Container component={'main'} sx={{ bgcolor: 'background.default' }}>
+          <Grid2 direction="column" container spacing={2} mt={10}>
             <Typography variant="h5" noWrap component="div" sx={{ textAlign: 'left' }}>
-              Alle oppgaver
+              Anbefalte oppgaver
             </Typography>
-            <SearchBar options={rows} prompt="Søk etter oppgaver" />
+            <Table rows={rows} columns={columns} selectable={false} />
+
+            <Grid2 container spacing={2} direction="column">
+              <Typography variant="h5" noWrap component="div" sx={{ textAlign: 'left' }}>
+                Alle oppgaver
+              </Typography>
+              <SearchBar options={rows} prompt="Søk etter oppgaver" />
+            </Grid2>
+            <Table rows={rows} columns={columns2} selectable={false} />
           </Grid2>
-          <Table rows={rows} columns={columns2} selectable={false} />
-        </Grid2>
-      </Container>
-    </Box>
+        </Container>
+      </Box>
+    </Fade>
   );
 }

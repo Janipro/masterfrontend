@@ -1,4 +1,4 @@
-import { Box, Button, Container, CssBaseline, Grid2, Typography } from '@mui/material';
+import { Box, Button, Container, CssBaseline, Fade, Grid2, Typography } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
@@ -113,10 +113,28 @@ const columns: GridColDef[] = [
 
 export default function TeacherDashboard() {
   return (
-    <Box component={'main'} sx={{ bgcolor: 'background.default' }}>
-      <CssBaseline />
-      <Container component={'main'} sx={{ bgcolor: 'background.default' }}>
-        <Grid2 sx={{ display: 'flex' }}>
+    <Fade in timeout={500}>
+      <Box component={'main'} sx={{ bgcolor: 'background.default' }}>
+        <CssBaseline />
+        <Container component={'main'} sx={{ bgcolor: 'background.default' }}>
+          <Grid2 sx={{ display: 'flex' }}>
+            <Grid2
+              component="main"
+              sx={{
+                flexGrow: 1,
+                textAlign: 'left',
+              }}
+            >
+              <Typography variant="h5" noWrap component="div" sx={{ mt: 10 }}>
+                Mine undervisningsgrupper
+              </Typography>
+              <Grid2 container direction={'row'} spacing={4} sx={{ m: 2, p: 1, maxWidth: 970 }}>
+                {subjects.map(() => (
+                  <InfoCard />
+                ))}
+              </Grid2>
+            </Grid2>
+          </Grid2>
           <Grid2
             component="main"
             sx={{
@@ -124,57 +142,41 @@ export default function TeacherDashboard() {
               textAlign: 'left',
             }}
           >
-            <Typography variant="h5" noWrap component="div" sx={{ mt: 10 }}>
-              Mine undervisningsgrupper
-            </Typography>
-            <Grid2 container direction={'row'} spacing={4} sx={{ m: 2, p: 1, maxWidth: 970 }}>
-              {subjects.map(() => (
-                <InfoCard />
-              ))}
+            <Grid2 container direction="row" sx={{ mb: 0.5 }}>
+              <Typography variant="h5" noWrap component="div">
+                Utdelte oppgaver
+              </Typography>
+              <Grid2 container direction={'row'} sx={{ flexGrow: 0, ml: 'auto' }}>
+                <Button
+                  variant="contained"
+                  startIcon={<VisibilityIcon />}
+                  sx={{ backgroundColor: '#EDEBEB', color: '#3F3F3F', textTransform: 'none', scale: 0.8 }}
+                  disabled
+                >
+                  Aktiver
+                </Button>
+                <Button
+                  variant="contained"
+                  startIcon={<VisibilityOffIcon />}
+                  sx={{ backgroundColor: '#EDEBEB', color: '#3F3F3F', textTransform: 'none', scale: 0.8 }}
+                  disabled
+                >
+                  Deaktiver
+                </Button>
+                <Button
+                  variant="contained"
+                  startIcon={<DeleteIcon />}
+                  sx={{ backgroundColor: '#EDEBEB', color: '#3F3F3F', textTransform: 'none', scale: 0.8 }}
+                  disabled
+                >
+                  Slett
+                </Button>
+              </Grid2>
             </Grid2>
+            <Table rows={rows} columns={columns} selectable />
           </Grid2>
-        </Grid2>
-        <Grid2
-          component="main"
-          sx={{
-            flexGrow: 1,
-            textAlign: 'left',
-          }}
-        >
-          <Grid2 container direction="row" sx={{ mb: 0.5 }}>
-            <Typography variant="h5" noWrap component="div">
-              Utdelte oppgaver
-            </Typography>
-            <Grid2 container direction={'row'} sx={{ flexGrow: 0, ml: 'auto' }}>
-              <Button
-                variant="contained"
-                startIcon={<VisibilityIcon />}
-                sx={{ backgroundColor: '#EDEBEB', color: '#3F3F3F', textTransform: 'none', scale: 0.8 }}
-                disabled
-              >
-                Aktiver
-              </Button>
-              <Button
-                variant="contained"
-                startIcon={<VisibilityOffIcon />}
-                sx={{ backgroundColor: '#EDEBEB', color: '#3F3F3F', textTransform: 'none', scale: 0.8 }}
-                disabled
-              >
-                Deaktiver
-              </Button>
-              <Button
-                variant="contained"
-                startIcon={<DeleteIcon />}
-                sx={{ backgroundColor: '#EDEBEB', color: '#3F3F3F', textTransform: 'none', scale: 0.8 }}
-                disabled
-              >
-                Slett
-              </Button>
-            </Grid2>
-          </Grid2>
-          <Table rows={rows} columns={columns} selectable />
-        </Grid2>
-      </Container>
-    </Box>
+        </Container>
+      </Box>
+    </Fade>
   );
 }

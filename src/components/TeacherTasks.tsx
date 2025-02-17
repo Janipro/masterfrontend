@@ -269,114 +269,116 @@ export default function TeacherTasks() {
   const handleClose = () => setOpen(false);
 
   return (
-    <Box>
-      <CssBaseline />
-      <Container component={'main'} sx={{ bgcolor: 'background.default' }}>
-        <Grid2 direction="column" container spacing={2} mt={10}>
-          <Grid2 direction="row" container>
-            <Typography variant="h5" noWrap component="div">
-              Utdelte oppgaver
-            </Typography>
-            <Grid2 direction="row" sx={{ flexGrow: 0, ml: 'auto' }}>
-              <Button
-                variant="contained"
-                startIcon={<VisibilityIcon />}
-                sx={{
-                  backgroundColor: NAV_COLORS.background,
-                  color: NAV_COLORS.text,
-                  textTransform: 'none',
-                  scale: 0.8,
-                }}
-                disabled
-              >
-                Aktiver
-              </Button>
-              <Button
-                variant="contained"
-                startIcon={<VisibilityOffIcon />}
-                sx={{
-                  backgroundColor: NAV_COLORS.background,
-                  color: NAV_COLORS.text,
-                  textTransform: 'none',
-                  scale: 0.8,
-                }}
-                disabled
-              >
-                Deaktiver
-              </Button>
-              <Button
-                variant="contained"
-                startIcon={<DeleteIcon />}
-                sx={{
-                  backgroundColor: NAV_COLORS.background,
-                  color: NAV_COLORS.text,
-                  textTransform: 'none',
-                  scale: 0.8,
-                }}
-                disabled
-              >
-                Slett
-              </Button>
-            </Grid2>
-          </Grid2>
-          <Table rows={rows} columns={columns} selectable />
-
-          <Grid2 spacing={2} container direction="column">
-            <Typography variant="h5" noWrap component="div" sx={{ textAlign: 'left' }}>
-              Alle oppgaver
-            </Typography>
-            <Grid2 container direction="row">
-              <SearchBar options={rows2} prompt="Søk etter oppgaver" />
-              <Grid2 sx={{ flexGrow: 0, ml: 'auto', mt: 'auto' }}>
+    <Fade in timeout={500}>
+      <Box>
+        <CssBaseline />
+        <Container component={'main'} sx={{ bgcolor: 'background.default' }}>
+          <Grid2 direction="column" container spacing={2} mt={10}>
+            <Grid2 direction="row" container>
+              <Typography variant="h5" noWrap component="div">
+                Utdelte oppgaver
+              </Typography>
+              <Grid2 direction="row" sx={{ flexGrow: 0, ml: 'auto' }}>
                 <Button
                   variant="contained"
-                  startIcon={<ShareIcon />}
+                  startIcon={<VisibilityIcon />}
                   sx={{
                     backgroundColor: NAV_COLORS.background,
                     color: NAV_COLORS.text,
                     textTransform: 'none',
                     scale: 0.8,
                   }}
-                  onClick={handleOpen}
+                  disabled
                 >
-                  Del
+                  Aktiver
                 </Button>
-                <Modal
-                  aria-labelledby="transition-modal-title"
-                  aria-describedby="transition-modal-description"
-                  open={open}
-                  onClose={handleClose}
-                  closeAfterTransition
-                  slots={{ backdrop: Backdrop }}
-                  slotProps={{
-                    backdrop: {
-                      timeout: 500,
-                    },
+                <Button
+                  variant="contained"
+                  startIcon={<VisibilityOffIcon />}
+                  sx={{
+                    backgroundColor: NAV_COLORS.background,
+                    color: NAV_COLORS.text,
+                    textTransform: 'none',
+                    scale: 0.8,
                   }}
+                  disabled
                 >
-                  <Fade in={open}>
-                    <Box sx={style}>
-                      <Grid2 container direction="column" spacing={1}>
-                        <Stack direction="row">
-                          <Typography id="keep-mounted-modal-title" variant="h5" fontWeight="medium">
-                            Del oppgaver
-                          </Typography>
-                        </Stack>
-                        <Typography id="keep-mounted-modal-description" sx={{ mt: 2 }}>
-                          Deler valgte oppgaver med:
-                        </Typography>
-                        <SearchBar options={rows3} prompt="Søk etter elever" />
-                        <Table rows={rows3} columns={columns3} selectable />
-                      </Grid2>
-                    </Box>
-                  </Fade>
-                </Modal>
+                  Deaktiver
+                </Button>
+                <Button
+                  variant="contained"
+                  startIcon={<DeleteIcon />}
+                  sx={{
+                    backgroundColor: NAV_COLORS.background,
+                    color: NAV_COLORS.text,
+                    textTransform: 'none',
+                    scale: 0.8,
+                  }}
+                  disabled
+                >
+                  Slett
+                </Button>
               </Grid2>
             </Grid2>
+            <Table rows={rows} columns={columns} selectable />
+
+            <Grid2 spacing={2} container direction="column">
+              <Typography variant="h5" noWrap component="div" sx={{ textAlign: 'left' }}>
+                Alle oppgaver
+              </Typography>
+              <Grid2 container direction="row">
+                <SearchBar options={rows2} prompt="Søk etter oppgaver" />
+                <Grid2 sx={{ flexGrow: 0, ml: 'auto', mt: 'auto' }}>
+                  <Button
+                    variant="contained"
+                    startIcon={<ShareIcon />}
+                    sx={{
+                      backgroundColor: NAV_COLORS.background,
+                      color: NAV_COLORS.text,
+                      textTransform: 'none',
+                      scale: 0.8,
+                    }}
+                    onClick={handleOpen}
+                  >
+                    Del
+                  </Button>
+                  <Modal
+                    aria-labelledby="transition-modal-title"
+                    aria-describedby="transition-modal-description"
+                    open={open}
+                    onClose={handleClose}
+                    closeAfterTransition
+                    slots={{ backdrop: Backdrop }}
+                    slotProps={{
+                      backdrop: {
+                        timeout: 500,
+                      },
+                    }}
+                  >
+                    <Fade in={open}>
+                      <Box sx={style}>
+                        <Grid2 container direction="column" spacing={1}>
+                          <Stack direction="row">
+                            <Typography id="keep-mounted-modal-title" variant="h5" fontWeight="medium">
+                              Del oppgaver
+                            </Typography>
+                          </Stack>
+                          <Typography id="keep-mounted-modal-description" sx={{ mt: 2 }}>
+                            Deler valgte oppgaver med:
+                          </Typography>
+                          <SearchBar options={rows3} prompt="Søk etter elever" />
+                          <Table rows={rows3} columns={columns3} selectable />
+                        </Grid2>
+                      </Box>
+                    </Fade>
+                  </Modal>
+                </Grid2>
+              </Grid2>
+            </Grid2>
+            <Table rows={rows2} columns={columns2} selectable />
           </Grid2>
-          <Table rows={rows2} columns={columns2} selectable />
-        </Grid2>
-      </Container>
-    </Box>
+        </Container>
+      </Box>
+    </Fade>
   );
 }

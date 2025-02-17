@@ -1,4 +1,4 @@
-import { Box, Container, CssBaseline, Grid2, Stack, Typography } from '@mui/material';
+import { Box, Container, CssBaseline, Fade, Grid2, Stack, Typography } from '@mui/material';
 import Table from './Table';
 import { NAV_COLORS } from '../types/navColors';
 import Announcements from './Announcements';
@@ -107,31 +107,33 @@ const columns: GridColDef[] = [
 
 export default function StudentClass() {
   return (
-    <Box>
-      <CssBaseline />
-      <Container component={'main'} sx={{ bgcolor: 'background.default' }}>
-        <Grid2 direction="column" container spacing={2} mt={10}>
-          <Typography variant="h4" noWrap component="div" sx={{ textAlign: 'left' }}>
-            R1 - klasse 1
-          </Typography>
-          <Stack direction="row" spacing={8} mb={4} color={NAV_COLORS.text}>
-            <Typography>Fag: Matematikk</Typography>
-            <Typography>Lærer: Ole Bull</Typography>
-            <Typography>E-post: ole.bull@osloskolen.no</Typography>
-          </Stack>
-
-          <Typography variant="h5" noWrap component="div" sx={{ textAlign: 'left' }}>
-            Kunngjøringer
-          </Typography>
-          <Announcements />
-          <Grid2 container spacing={2} direction="column">
-            <Typography variant="h5" noWrap component="div" sx={{ textAlign: 'left' }}>
-              Anbefalte oppgaver
+    <Fade in timeout={500}>
+      <Box>
+        <CssBaseline />
+        <Container component={'main'} sx={{ bgcolor: 'background.default' }}>
+          <Grid2 direction="column" container spacing={2} mt={10}>
+            <Typography variant="h4" noWrap component="div" sx={{ textAlign: 'left' }}>
+              R1 - klasse 1
             </Typography>
+            <Stack direction="row" spacing={8} mb={4} color={NAV_COLORS.text}>
+              <Typography>Fag: Matematikk</Typography>
+              <Typography>Lærer: Ole Bull</Typography>
+              <Typography>E-post: ole.bull@osloskolen.no</Typography>
+            </Stack>
+
+            <Typography variant="h5" noWrap component="div" sx={{ textAlign: 'left' }}>
+              Kunngjøringer
+            </Typography>
+            <Announcements />
+            <Grid2 container spacing={2} direction="column">
+              <Typography variant="h5" noWrap component="div" sx={{ textAlign: 'left' }}>
+                Anbefalte oppgaver
+              </Typography>
+            </Grid2>
+            <Table rows={rows} columns={columns} selectable={false} />
           </Grid2>
-          <Table rows={rows} columns={columns} selectable={false} />
-        </Grid2>
-      </Container>
-    </Box>
+        </Container>
+      </Box>
+    </Fade>
   );
 }

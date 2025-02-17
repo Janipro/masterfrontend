@@ -1,4 +1,4 @@
-import { Box, Container, CssBaseline, Grid2, List, ListItem, Typography } from '@mui/material';
+import { Box, Container, CssBaseline, Fade, Grid2, List, ListItem, Typography } from '@mui/material';
 import Table from './Table';
 import InfoCard from './InfoCard';
 import Calendar from './Calendar';
@@ -110,66 +110,68 @@ const columns: GridColDef[] = [
 
 export default function StudentDashboard() {
   return (
-    <Box>
-      <CssBaseline />
-      <Container component={'main'} sx={{ bgcolor: 'background.default' }}>
-        <Grid2 sx={{ display: 'flex' }}>
+    <Fade in timeout={500}>
+      <Box>
+        <CssBaseline />
+        <Container component={'main'} sx={{ bgcolor: 'background.default' }}>
+          <Grid2 sx={{ display: 'flex' }}>
+            <Grid2
+              component="main"
+              sx={{
+                flexGrow: 1,
+                textAlign: 'left',
+              }}
+            >
+              <Typography variant="h5" noWrap component="div" sx={{ mt: 10, ml: -3 }}>
+                Mine fag
+              </Typography>
+              <Grid2 container direction={'row'} spacing={2} sx={{ m: 2, p: 1, maxWidth: 600 }}>
+                {subjects.map(() => (
+                  <InfoCard />
+                ))}
+              </Grid2>
+            </Grid2>
+            <Grid2
+              component="main"
+              sx={{
+                flexGrow: 1,
+                mt: 10,
+              }}
+            >
+              <Typography variant="h5" noWrap component="div">
+                Progresjon
+              </Typography>
+              <Grid2 container sx={{ justifyContent: 'center', alignItems: 'center' }}>
+                <List dense sx={{ listStyle: 'decimal', pl: 4 }}>
+                  <ListItem sx={{ display: 'list-item' }}>
+                    <Requirement value="for-løkke" size="small" />
+                  </ListItem>
+                  <ListItem sx={{ display: 'list-item' }}>
+                    <Requirement value="if-setning" size="small" />
+                  </ListItem>
+                  <ListItem sx={{ display: 'list-item' }}>
+                    <Requirement value="while-løkke" size="small" />
+                  </ListItem>
+                </List>
+              </Grid2>
+              <Calendar />
+            </Grid2>
+          </Grid2>
           <Grid2
             component="main"
             sx={{
               flexGrow: 1,
               textAlign: 'left',
+              mt: -4,
             }}
           >
-            <Typography variant="h5" noWrap component="div" sx={{ mt: 10, ml: -3 }}>
-              Mine fag
+            <Typography variant="h5" noWrap component="div" sx={{ mb: 0.5 }}>
+              Anbefalte oppgaver
             </Typography>
-            <Grid2 container direction={'row'} spacing={2} sx={{ m: 2, p: 1, maxWidth: 600 }}>
-              {subjects.map(() => (
-                <InfoCard />
-              ))}
-            </Grid2>
+            <Table rows={rows} columns={columns} selectable={false} />
           </Grid2>
-          <Grid2
-            component="main"
-            sx={{
-              flexGrow: 1,
-              mt: 10,
-            }}
-          >
-            <Typography variant="h5" noWrap component="div">
-              Progresjon
-            </Typography>
-            <Grid2 container sx={{ justifyContent: 'center', alignItems: 'center' }}>
-              <List dense sx={{ listStyle: 'decimal', pl: 4 }}>
-                <ListItem sx={{ display: 'list-item' }}>
-                  <Requirement value="for-løkke" size="small" />
-                </ListItem>
-                <ListItem sx={{ display: 'list-item' }}>
-                  <Requirement value="if-setning" size="small" />
-                </ListItem>
-                <ListItem sx={{ display: 'list-item' }}>
-                  <Requirement value="while-løkke" size="small" />
-                </ListItem>
-              </List>
-            </Grid2>
-            <Calendar />
-          </Grid2>
-        </Grid2>
-        <Grid2
-          component="main"
-          sx={{
-            flexGrow: 1,
-            textAlign: 'left',
-            mt: -4,
-          }}
-        >
-          <Typography variant="h5" noWrap component="div" sx={{ mb: 0.5 }}>
-            Anbefalte oppgaver
-          </Typography>
-          <Table rows={rows} columns={columns} selectable={false} />
-        </Grid2>
-      </Container>
-    </Box>
+        </Container>
+      </Box>
+    </Fade>
   );
 }

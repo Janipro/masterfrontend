@@ -119,96 +119,98 @@ export default function TeacherClass() {
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
   return (
-    <Box>
-      <CssBaseline />
-      <Container component={'main'} sx={{ bgcolor: 'background.default' }}>
-        <Grid2 direction="column" container spacing={2} mt={10}>
-          <Typography variant="h4" noWrap component="div" sx={{ textAlign: 'left' }}>
-            R1 - klasse 1
-          </Typography>
-          <Stack direction="row" spacing={8} mb={4} color={NAV_COLORS.text}>
-            <Typography>Fag: Matematikk</Typography>
-            <Typography>Lærer: Ole Bull</Typography>
-            <Typography>E-post: ole.bull@osloskolen.no</Typography>
-          </Stack>
+    <Fade in timeout={500}>
+      <Box>
+        <CssBaseline />
+        <Container component={'main'} sx={{ bgcolor: 'background.default' }}>
+          <Grid2 direction="column" container spacing={2} mt={10}>
+            <Typography variant="h4" noWrap component="div" sx={{ textAlign: 'left' }}>
+              R1 - klasse 1
+            </Typography>
+            <Stack direction="row" spacing={8} mb={4} color={NAV_COLORS.text}>
+              <Typography>Fag: Matematikk</Typography>
+              <Typography>Lærer: Ole Bull</Typography>
+              <Typography>E-post: ole.bull@osloskolen.no</Typography>
+            </Stack>
 
-          <Stack direction="row">
-            <Typography variant="h5" noWrap component="div" sx={{ textAlign: 'left' }}>
-              Kunngjøringer
-            </Typography>
-            <Button
-              variant="contained"
-              startIcon={<AnnouncementIcon />}
-              sx={{
-                backgroundColor: NAV_COLORS.background,
-                color: NAV_COLORS.text,
-                textTransform: 'none',
-                scale: 0.8,
-                ml: 'auto',
-              }}
-              onClick={handleOpen}
-            >
-              Ny kunngjøring
-            </Button>
-            <Modal
-              aria-labelledby="transition-modal-title"
-              aria-describedby="transition-modal-description"
-              open={open}
-              onClose={handleClose}
-              closeAfterTransition
-              slots={{ backdrop: Backdrop }}
-              slotProps={{
-                backdrop: {
-                  timeout: 500,
-                },
-              }}
-            >
-              <Fade in={open}>
-                <Box sx={style}>
-                  <Grid2 container direction="column" spacing={3}>
-                    <Stack direction="row">
-                      <Typography id="keep-mounted-modal-title" variant="h5" fontWeight="medium">
-                        Del kunngjøring
-                      </Typography>
-                    </Stack>
-                    <TextField id="keep-mounted-modal-title" label="Tittel" variant="standard" />
-                    <TextField
-                      id="keep-mounted-modal-description"
-                      label="Innhold"
-                      multiline
-                      rows={8}
-                      sx={{ width: 400 }}
-                    />
-                    <Stack direction="row">
-                      <Button
-                        variant="contained"
-                        startIcon={<ShareIcon />}
-                        sx={{
-                          backgroundColor: NAV_COLORS.background,
-                          color: NAV_COLORS.text,
-                          textTransform: 'none',
-                          scale: 0.8,
-                          ml: 'auto',
-                        }}
-                        onClick={handleOpen}
-                      >
-                        Del
-                      </Button>
-                    </Stack>
-                  </Grid2>
-                </Box>
-              </Fade>
-            </Modal>
-          </Stack>
-          <Announcements />
-          <Grid2 container spacing={2} direction="column">
-            <Typography variant="h5" noWrap component="div" sx={{ textAlign: 'left' }}>
-              Utdelte oppgaver
-            </Typography>
+            <Stack direction="row">
+              <Typography variant="h5" noWrap component="div" sx={{ textAlign: 'left' }}>
+                Kunngjøringer
+              </Typography>
+              <Button
+                variant="contained"
+                startIcon={<AnnouncementIcon />}
+                sx={{
+                  backgroundColor: NAV_COLORS.background,
+                  color: NAV_COLORS.text,
+                  textTransform: 'none',
+                  scale: 0.8,
+                  ml: 'auto',
+                }}
+                onClick={handleOpen}
+              >
+                Ny kunngjøring
+              </Button>
+              <Modal
+                aria-labelledby="transition-modal-title"
+                aria-describedby="transition-modal-description"
+                open={open}
+                onClose={handleClose}
+                closeAfterTransition
+                slots={{ backdrop: Backdrop }}
+                slotProps={{
+                  backdrop: {
+                    timeout: 500,
+                  },
+                }}
+              >
+                <Fade in={open}>
+                  <Box sx={style}>
+                    <Grid2 container direction="column" spacing={3}>
+                      <Stack direction="row">
+                        <Typography id="keep-mounted-modal-title" variant="h5" fontWeight="medium">
+                          Del kunngjøring
+                        </Typography>
+                      </Stack>
+                      <TextField id="keep-mounted-modal-title" label="Tittel" variant="standard" />
+                      <TextField
+                        id="keep-mounted-modal-description"
+                        label="Innhold"
+                        multiline
+                        rows={8}
+                        sx={{ width: 400 }}
+                      />
+                      <Stack direction="row">
+                        <Button
+                          variant="contained"
+                          startIcon={<ShareIcon />}
+                          sx={{
+                            backgroundColor: NAV_COLORS.background,
+                            color: NAV_COLORS.text,
+                            textTransform: 'none',
+                            scale: 0.8,
+                            ml: 'auto',
+                          }}
+                          onClick={handleOpen}
+                        >
+                          Del
+                        </Button>
+                      </Stack>
+                    </Grid2>
+                  </Box>
+                </Fade>
+              </Modal>
+            </Stack>
+            <Announcements />
+            <Grid2 container spacing={2} direction="column">
+              <Typography variant="h5" noWrap component="div" sx={{ textAlign: 'left' }}>
+                Utdelte oppgaver
+              </Typography>
+            </Grid2>
+            <Table rows={rows} columns={columns} selectable />
           </Grid2>
-          <Table rows={rows} columns={columns} selectable />
-        </Grid2>
-      </Container>
-    </Box>
+        </Container>
+      </Box>
+    </Fade>
   );
 }
