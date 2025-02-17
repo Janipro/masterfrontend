@@ -8,7 +8,6 @@ import Menu from '@mui/material/Menu';
 import Container from '@mui/material/Container';
 import Button from '@mui/material/Button';
 import MenuItem from '@mui/material/MenuItem';
-import SchoolIcon from '@mui/icons-material/School';
 import PopUpMenu from './PopUpMenu';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import SettingsIcon from '@mui/icons-material/Settings';
@@ -36,13 +35,15 @@ export default function NavBar({ isEditor }: { isEditor: boolean }) {
     <AppBar position="fixed" sx={{ backgroundColor: NAV_COLORS.background, boxShadow: 2 }}>
       <Container maxWidth="xl">
         <Toolbar disableGutters>
-          <SchoolIcon
-            sx={{
-              display: { xs: 'none', md: 'flex' },
-              mr: 1,
-              color: NAV_COLORS.text,
-            }}
-          />
+          <img
+            src="src/assets/educode.png"
+            width="30"
+            height="auto"
+            alt="EduCode logo"
+            unselectable="on"
+            draggable={false}
+            style={{ userSelect: 'none', msUserSelect: 'none', MozUserSelect: 'none', WebkitUserSelect: 'none' }}
+          ></img>
           <PopUpMenu />
           {isEditor ? (
             <Box
