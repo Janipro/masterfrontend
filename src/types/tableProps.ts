@@ -1,6 +1,6 @@
 export type tableProps = {
   id: number;
-  title: string;
+  title?: string;
   requirement?: string[];
   level?: string;
   course?: string;
@@ -8,4 +8,8 @@ export type tableProps = {
   due?: string;
   status?: string;
   assigned?: string;
+  school?: string;
+  class?: string;
+  firstname?: string;
+  lastname?: string;
 };

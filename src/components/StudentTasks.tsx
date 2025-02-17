@@ -1,6 +1,11 @@
 import { Box, Container, CssBaseline, Grid2, Typography } from '@mui/material';
 import Table from './Table';
 import SearchBar from './SearchBar';
+import { GridActionsCellItem, GridColDef } from '@mui/x-data-grid';
+import { renderRequirement } from './renderRequirement';
+import CheckBoxIcon from '@mui/icons-material/CheckBox';
+import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
+import IndeterminateCheckBoxIcon from '@mui/icons-material/IndeterminateCheckBox';
 
 const rows = [
   {
@@ -65,6 +70,72 @@ const rows = [
   },
 ];
 
+const columns: GridColDef[] = [
+  { field: 'assigned', headerName: 'Tildelt', width: 100 },
+  { field: 'title', headerName: 'Tittel', width: 220 },
+  {
+    field: 'requirement',
+    display: 'flex',
+    renderCell: renderRequirement,
+    valueGetter: (value, row) =>
+      row.title == null || row.requirement == null ? null : { title: row.title, requirement: row.requirement },
+    filterable: false,
+    headerName: 'Krav',
+    width: 220,
+  } as GridColDef<{ requirement: string[]; title: string }>,
+  { field: 'level', headerName: 'Nivå', width: 60 },
+  { field: 'course', headerName: 'Fag', width: 100 },
+  { field: 'type', headerName: 'Type', width: 100 },
+  { field: 'due', headerName: 'Frist', width: 140 },
+  {
+    field: 'actions',
+    type: 'actions',
+    width: 80,
+    headerName: 'Status',
+    getActions: () => [
+      <GridActionsCellItem icon={<CheckBoxIcon sx={{ color: '#4CCC17' }} />} label="Fullført" showInMenu />,
+      <GridActionsCellItem
+        icon={<IndeterminateCheckBoxIcon sx={{ color: '#FCD703' }} />}
+        label="Underveis"
+        showInMenu
+      />,
+      <GridActionsCellItem icon={<CheckBoxOutlineBlankIcon />} label="Ikke fullført" showInMenu />,
+    ],
+  },
+];
+
+const columns2: GridColDef[] = [
+  { field: 'assigned', headerName: 'Tildelt', width: 100 },
+  { field: 'title', headerName: 'Tittel', width: 220 },
+  {
+    field: 'requirement',
+    display: 'flex',
+    renderCell: renderRequirement,
+    valueGetter: (value, row) =>
+      row.title == null || row.requirement == null ? null : { title: row.title, requirement: row.requirement },
+    filterable: false,
+    headerName: 'Krav',
+    width: 220,
+  } as GridColDef<{ requirement: string[]; title: string }>,
+  { field: 'level', headerName: 'Nivå', width: 60 },
+  { field: 'course', headerName: 'Fag', width: 100 },
+  {
+    field: 'actions',
+    type: 'actions',
+    width: 80,
+    headerName: 'Status',
+    getActions: () => [
+      <GridActionsCellItem icon={<CheckBoxIcon sx={{ color: '#4CCC17' }} />} label="Fullført" showInMenu />,
+      <GridActionsCellItem
+        icon={<IndeterminateCheckBoxIcon sx={{ color: '#FCD703' }} />}
+        label="Underveis"
+        showInMenu
+      />,
+      <GridActionsCellItem icon={<CheckBoxOutlineBlankIcon />} label="Ikke fullført" showInMenu />,
+    ],
+  },
+];
+
 export default function StudentTasks() {
   return (
     <Box>
@@ -74,15 +145,15 @@ export default function StudentTasks() {
           <Typography variant="h5" noWrap component="div" sx={{ textAlign: 'left' }}>
             Anbefalte oppgaver
           </Typography>
-          <Table rows={rows} selectable={false} />
+          <Table rows={rows} columns={columns} selectable={false} />
 
           <Grid2 container spacing={2} direction="column">
             <Typography variant="h5" noWrap component="div" sx={{ textAlign: 'left' }}>
               Alle oppgaver
             </Typography>
-            <SearchBar options={rows} />
+            <SearchBar options={rows} prompt="Søk etter oppgaver" />
           </Grid2>
-          <Table rows={rows} selectable={false} />
+          <Table rows={rows} columns={columns2} selectable={false} />
         </Grid2>
       </Container>
     </Box>

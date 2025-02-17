@@ -4,6 +4,8 @@ import VisibilityIcon from '@mui/icons-material/Visibility';
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 import Table from './Table';
 import InfoCard from './InfoCard';
+import { GridColDef } from '@mui/x-data-grid';
+import { renderRequirement } from './renderRequirement';
 
 const subjects = [1, 2, 3, 4, 5, 6, 7, 8];
 
@@ -90,6 +92,25 @@ const rows = [
   },
 ];
 
+const columns: GridColDef[] = [
+  { field: 'assigned', headerName: 'Tildelt', width: 100 },
+  { field: 'title', headerName: 'Tittel', width: 220 },
+  {
+    field: 'requirement',
+    display: 'flex',
+    renderCell: renderRequirement,
+    valueGetter: (value, row) =>
+      row.title == null || row.requirement == null ? null : { title: row.title, requirement: row.requirement },
+    filterable: false,
+    headerName: 'Krav',
+    width: 220,
+  } as GridColDef<{ requirement: string[]; title: string }>,
+  { field: 'level', headerName: 'Nivå', width: 60 },
+  { field: 'course', headerName: 'Fag', width: 100 },
+  { field: 'type', headerName: 'Type', width: 100 },
+  { field: 'due', headerName: 'Frist', width: 140 },
+];
+
 export default function TeacherDashboard() {
   return (
     <Box component={'main'} sx={{ bgcolor: 'background.default' }}>
@@ -151,7 +172,7 @@ export default function TeacherDashboard() {
               </Button>
             </Grid2>
           </Grid2>
-          <Table rows={rows} selectable />
+          <Table rows={rows} columns={columns} selectable />
         </Grid2>
       </Container>
     </Box>

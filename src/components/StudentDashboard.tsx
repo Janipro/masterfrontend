@@ -3,6 +3,11 @@ import Table from './Table';
 import InfoCard from './InfoCard';
 import Calendar from './Calendar';
 import Requirement from './Requirement';
+import { GridActionsCellItem, GridColDef } from '@mui/x-data-grid';
+import { renderRequirement } from './renderRequirement';
+import CheckBoxIcon from '@mui/icons-material/CheckBox';
+import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
+import IndeterminateCheckBoxIcon from '@mui/icons-material/IndeterminateCheckBox';
 
 const subjects = [1, 2, 3, 4, 5, 6];
 
@@ -69,6 +74,40 @@ const rows = [
   },
 ];
 
+const columns: GridColDef[] = [
+  { field: 'assigned', headerName: 'Tildelt', width: 100 },
+  { field: 'title', headerName: 'Tittel', width: 220 },
+  {
+    field: 'requirement',
+    display: 'flex',
+    renderCell: renderRequirement,
+    valueGetter: (value, row) =>
+      row.title == null || row.requirement == null ? null : { title: row.title, requirement: row.requirement },
+    filterable: false,
+    headerName: 'Krav',
+    width: 220,
+  } as GridColDef<{ requirement: string[]; title: string }>,
+  { field: 'level', headerName: 'Nivå', width: 60 },
+  { field: 'course', headerName: 'Fag', width: 100 },
+  { field: 'type', headerName: 'Type', width: 100 },
+  { field: 'due', headerName: 'Frist', width: 140 },
+  {
+    field: 'actions',
+    type: 'actions',
+    width: 80,
+    headerName: 'Status',
+    getActions: () => [
+      <GridActionsCellItem icon={<CheckBoxIcon sx={{ color: '#4CCC17' }} />} label="Fullført" showInMenu />,
+      <GridActionsCellItem
+        icon={<IndeterminateCheckBoxIcon sx={{ color: '#FCD703' }} />}
+        label="Underveis"
+        showInMenu
+      />,
+      <GridActionsCellItem icon={<CheckBoxOutlineBlankIcon />} label="Ikke fullført" showInMenu />,
+    ],
+  },
+];
+
 export default function StudentDashboard() {
   return (
     <Box>
@@ -128,7 +167,7 @@ export default function StudentDashboard() {
           <Typography variant="h5" noWrap component="div" sx={{ mb: 0.5 }}>
             Anbefalte oppgaver
           </Typography>
-          <Table rows={rows} selectable={false} />
+          <Table rows={rows} columns={columns} selectable={false} />
         </Grid2>
       </Container>
     </Box>

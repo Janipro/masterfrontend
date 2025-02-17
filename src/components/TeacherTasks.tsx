@@ -1,10 +1,14 @@
-import { Box, Button, Container, CssBaseline, Grid2, Typography } from '@mui/material';
+import { Box, Button, Container, CssBaseline, Fade, Grid2, Modal, Stack, Typography } from '@mui/material';
 import Table from './Table';
 import SearchBar from './SearchBar';
 import DeleteIcon from '@mui/icons-material/Delete';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 import ShareIcon from '@mui/icons-material/Share';
+import { useState } from 'react';
+import Backdrop from '@mui/material/Backdrop';
+import { GridColDef } from '@mui/x-data-grid';
+import { renderRequirement } from './renderRequirement';
 
 const rows = [
   {
@@ -15,7 +19,6 @@ const rows = [
     course: 'Matematikk',
     type: 'Obligatorisk',
     due: '14.02.2025 13:00',
-    status: 'Uncomplete',
     assigned: '8AB',
   },
   {
@@ -26,7 +29,6 @@ const rows = [
     course: 'Matematikk',
     type: 'Obligatorisk',
     due: '14.02.2025 13:00',
-    status: 'Uncomplete',
     assigned: 'R1',
   },
   {
@@ -37,7 +39,6 @@ const rows = [
     course: 'Matematikk',
     type: 'Anbefalt',
     due: '17.02.2025 13:00',
-    status: 'Uncomplete',
     assigned: 'R2',
   },
   {
@@ -48,7 +49,6 @@ const rows = [
     course: 'Matematikk',
     type: 'Obligatorisk',
     due: '15.02.2025 15:00',
-    status: 'Uncomplete',
     assigned: '8CD',
   },
   {
@@ -59,7 +59,6 @@ const rows = [
     course: 'Matematikk',
     type: 'Anbefalt',
     due: '14.02.2025 14:00',
-    status: 'Uncomplete',
     assigned: '10EF',
   },
   {
@@ -70,7 +69,6 @@ const rows = [
     course: 'Matematikk',
     type: 'Anbefalt',
     due: '14.02.2025 14:00',
-    status: 'Uncomplete',
     assigned: '1T',
   },
 ];
@@ -84,7 +82,6 @@ const rows2 = [
     course: 'Matematikk',
     type: 'Obligatorisk',
     due: '14.02.2025 13:00',
-    status: 'Uncomplete',
   },
   {
     id: 2,
@@ -94,7 +91,6 @@ const rows2 = [
     course: 'Matematikk',
     type: 'Obligatorisk',
     due: '14.02.2025 13:00',
-    status: 'Uncomplete',
   },
   {
     id: 3,
@@ -104,7 +100,6 @@ const rows2 = [
     course: 'Matematikk',
     type: 'Anbefalt',
     due: '17.02.2025 13:00',
-    status: 'Uncomplete',
   },
   {
     id: 4,
@@ -114,7 +109,6 @@ const rows2 = [
     course: 'Matematikk',
     type: 'Obligatorisk',
     due: '15.02.2025 15:00',
-    status: 'Uncomplete',
   },
   {
     id: 5,
@@ -124,7 +118,6 @@ const rows2 = [
     course: 'Matematikk',
     type: 'Anbefalt',
     due: '14.02.2025 14:00',
-    status: 'Uncomplete',
   },
   {
     id: 6,
@@ -134,7 +127,6 @@ const rows2 = [
     course: 'Matematikk',
     type: 'Anbefalt',
     due: '14.02.2025 14:00',
-    status: 'Uncomplete',
   },
   {
     id: 7,
@@ -144,7 +136,6 @@ const rows2 = [
     course: 'Matematikk',
     type: 'Anbefalt',
     due: '14.02.2025 14:00',
-    status: 'Uncomplete',
   },
   {
     id: 8,
@@ -154,11 +145,137 @@ const rows2 = [
     course: 'Matematikk',
     type: 'Anbefalt',
     due: '14.02.2025 14:00',
-    status: 'Uncomplete',
   },
 ];
 
+const rows3 = [
+  {
+    id: 1,
+    title: 'Petter',
+    lastname: 'Hassen',
+    level: 'VG1',
+    class: '1STB',
+    school: 'St. Hallvard VGS',
+  },
+  {
+    id: 2,
+    title: 'Petter',
+    lastname: 'Hassen',
+    level: 'VG1',
+    class: '1STB',
+    school: 'St. Hallvard VGS',
+  },
+  {
+    id: 3,
+    title: 'Petter',
+    lastname: 'Hassen',
+    level: 'VG1',
+    class: '1STB',
+    school: 'St. Hallvard VGS',
+  },
+  {
+    id: 4,
+    title: 'Petter',
+    lastname: 'Hassen',
+    level: 'VG1',
+    class: '1STB',
+    school: 'St. Hallvard VGS',
+  },
+  {
+    id: 5,
+    title: 'Petter',
+    lastname: 'Hassen',
+    level: 'VG1',
+    class: '1STB',
+    school: 'St. Hallvard VGS',
+  },
+  {
+    id: 6,
+    title: 'Petter',
+    lastname: 'Hassen',
+    level: 'VG1',
+    class: '1STB',
+    school: 'St. Hallvard VGS',
+  },
+  {
+    id: 7,
+    title: 'Petter',
+    lastname: 'Hassen',
+    level: 'VG1',
+    class: '1STB',
+    school: 'St. Hallvard VGS',
+  },
+  {
+    id: 8,
+    firstname: 'Petter',
+    lastname: 'Hassen',
+    level: 'VG1',
+    class: '1STB',
+    school: 'St. Hallvard VGS',
+  },
+];
+
+const style = {
+  position: 'absolute',
+  top: '50%',
+  left: '50%',
+  transform: 'translate(-50%, -50%)',
+  width: 'auto',
+  bgcolor: 'background.paper',
+  border: '2px solid #000',
+  boxShadow: 24,
+  p: 4,
+};
+
+const columns: GridColDef[] = [
+  { field: 'assigned', headerName: 'Tildelt', width: 100 },
+  { field: 'course', headerName: 'Fag', width: 100 },
+  { field: 'title', headerName: 'Tittel', width: 220 },
+  {
+    field: 'requirement',
+    display: 'flex',
+    renderCell: renderRequirement,
+    valueGetter: (value, row) =>
+      row.title == null || row.requirement == null ? null : { title: row.title, requirement: row.requirement },
+    filterable: false,
+    headerName: 'Krav',
+    width: 220,
+  } as GridColDef<{ requirement: string[]; title: string }>,
+  { field: 'level', headerName: 'Nivå', width: 60 },
+  { field: 'type', headerName: 'Type', width: 100 },
+  { field: 'due', headerName: 'Frist', width: 140 },
+];
+
+const columns2: GridColDef[] = [
+  { field: 'course', headerName: 'Fag', width: 100 },
+  { field: 'title', headerName: 'Tittel', width: 220 },
+  {
+    field: 'requirement',
+    display: 'flex',
+    renderCell: renderRequirement,
+    valueGetter: (value, row) =>
+      row.title == null || row.requirement == null ? null : { title: row.title, requirement: row.requirement },
+    filterable: false,
+    headerName: 'Krav',
+    width: 220,
+  } as GridColDef<{ requirement: string[]; title: string }>,
+  { field: 'level', headerName: 'Nivå', width: 60 },
+  { field: 'owner', headerName: 'Laget av', width: 100 },
+];
+
+const columns3: GridColDef[] = [
+  { field: 'title', headerName: 'Fornavn', width: 120 },
+  { field: 'lastname', headerName: 'Etternavn', width: 120 },
+  { field: 'level', headerName: 'Trinn', width: 60 },
+  { field: 'class', headerName: 'Klasse', width: 60 },
+  { field: 'school', headerName: 'Skole', width: 220 },
+];
+
 export default function TeacherTasks() {
+  const [open, setOpen] = useState(false);
+  const handleOpen = () => setOpen(true);
+  const handleClose = () => setOpen(false);
+
   return (
     <Box>
       <CssBaseline />
@@ -195,27 +312,57 @@ export default function TeacherTasks() {
               </Button>
             </Grid2>
           </Grid2>
-          <Table rows={rows} selectable />
+          <Table rows={rows} columns={columns} selectable />
 
           <Grid2 spacing={2} container direction="column">
             <Typography variant="h5" noWrap component="div" sx={{ textAlign: 'left' }}>
               Alle oppgaver
             </Typography>
             <Grid2 container direction="row">
-              <SearchBar options={rows2} />
+              <SearchBar options={rows2} prompt="Søk etter oppgaver" />
               <Grid2 sx={{ flexGrow: 0, ml: 'auto', mt: 'auto' }}>
                 <Button
                   variant="contained"
                   startIcon={<ShareIcon />}
                   sx={{ backgroundColor: '#EDEBEB', color: '#3F3F3F', textTransform: 'none', scale: 0.8 }}
-                  disabled
+                  onClick={handleOpen}
                 >
                   Del
                 </Button>
+                <Modal
+                  aria-labelledby="transition-modal-title"
+                  aria-describedby="transition-modal-description"
+                  open={open}
+                  onClose={handleClose}
+                  closeAfterTransition
+                  slots={{ backdrop: Backdrop }}
+                  slotProps={{
+                    backdrop: {
+                      timeout: 500,
+                    },
+                  }}
+                >
+                  <Fade in={open}>
+                    <Box sx={style}>
+                      <Grid2 container direction="column" spacing={1}>
+                        <Stack direction="row">
+                          <Typography id="keep-mounted-modal-title" variant="h5" fontWeight="medium">
+                            Del oppgaver
+                          </Typography>
+                        </Stack>
+                        <Typography id="keep-mounted-modal-description" sx={{ mt: 2 }}>
+                          Deler valgte oppgaver med:
+                        </Typography>
+                        <SearchBar options={rows3} prompt="Søk etter elever" />
+                        <Table rows={rows3} columns={columns3} selectable />
+                      </Grid2>
+                    </Box>
+                  </Fade>
+                </Modal>
               </Grid2>
             </Grid2>
           </Grid2>
-          <Table rows={rows2} selectable />
+          <Table rows={rows2} columns={columns2} selectable />
         </Grid2>
       </Container>
     </Box>
