@@ -1,15 +1,12 @@
-import { Box, Container, CssBaseline, Fade, Grid2, List, ListItem, Typography } from '@mui/material';
+import { Box, Container, CssBaseline, Fade, Grid2, Stack, Typography } from '@mui/material';
 import Table from './Table';
-import InfoCard from './InfoCard';
-import Calendar from './Calendar';
-import Requirement from './Requirement';
+import { NAV_COLORS } from '../types/navColors';
+import Announcements from './Announcements';
 import { GridActionsCellItem, GridColDef } from '@mui/x-data-grid';
 import { renderRequirement } from './renderRequirement';
 import CheckBoxIcon from '@mui/icons-material/CheckBox';
 import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
 import IndeterminateCheckBoxIcon from '@mui/icons-material/IndeterminateCheckBox';
-
-const subjects = [1, 2, 3, 4, 5, 6];
 
 const rows = [
   {
@@ -76,7 +73,7 @@ const rows = [
 
 const columns: GridColDef[] = [
   { field: 'assigned', headerName: 'Tildelt', width: 100 },
-  { field: 'title', headerName: 'Tittel', width: 220 },
+  { field: 'title', headerName: 'Tittel', width: 240 },
   {
     field: 'requirement',
     display: 'flex',
@@ -85,12 +82,12 @@ const columns: GridColDef[] = [
       row.title == null || row.requirement == null ? null : { title: row.title, requirement: row.requirement },
     filterable: false,
     headerName: 'Krav',
-    width: 260,
+    width: 240,
   } as GridColDef<{ requirement: string[]; title: string }>,
   { field: 'level', headerName: 'Nivå', width: 60 },
-  { field: 'course', headerName: 'Fag', width: 100 },
-  { field: 'type', headerName: 'Type', width: 100 },
-  { field: 'due', headerName: 'Frist', width: 140 },
+  { field: 'course', headerName: 'Fag', width: 120 },
+  { field: 'type', headerName: 'Type', width: 120 },
+  { field: 'due', headerName: 'Frist', width: 160 },
   {
     field: 'actions',
     type: 'actions',
@@ -108,66 +105,31 @@ const columns: GridColDef[] = [
   },
 ];
 
-export default function StudentDashboard() {
+export default function StudentClass() {
   return (
     <Fade in timeout={500}>
       <Box>
         <CssBaseline />
         <Container component={'main'} sx={{ bgcolor: 'background.default' }}>
-          <Grid2 sx={{ display: 'flex' }}>
-            <Grid2
-              component="main"
-              sx={{
-                flexGrow: 1,
-                textAlign: 'left',
-              }}
-            >
-              <Typography variant="h5" noWrap component="div" sx={{ mt: 10, ml: -3 }}>
-                Mine fag
-              </Typography>
-              <Grid2 container direction={'row'} spacing={2} sx={{ m: 2, p: 1, maxWidth: 600 }}>
-                {subjects.map(() => (
-                  <InfoCard />
-                ))}
-              </Grid2>
-            </Grid2>
-            <Grid2
-              component="main"
-              sx={{
-                flexGrow: 1,
-                mt: 10,
-              }}
-            >
-              <Typography variant="h5" noWrap component="div">
-                Progresjon
-              </Typography>
-              <Grid2 container sx={{ justifyContent: 'center', alignItems: 'center' }}>
-                <List dense sx={{ listStyle: 'decimal', pl: 4 }}>
-                  <ListItem sx={{ display: 'list-item' }}>
-                    <Requirement value="for-løkke" size="small" />
-                  </ListItem>
-                  <ListItem sx={{ display: 'list-item' }}>
-                    <Requirement value="if-setning" size="small" />
-                  </ListItem>
-                  <ListItem sx={{ display: 'list-item' }}>
-                    <Requirement value="while-løkke" size="small" />
-                  </ListItem>
-                </List>
-              </Grid2>
-              <Calendar />
-            </Grid2>
-          </Grid2>
-          <Grid2
-            component="main"
-            sx={{
-              flexGrow: 1,
-              textAlign: 'left',
-              mt: -4,
-            }}
-          >
-            <Typography variant="h5" noWrap component="div" sx={{ mb: 0.5 }}>
-              Anbefalte oppgaver
+          <Grid2 direction="column" container spacing={2} mt={10}>
+            <Typography variant="h4" noWrap component="div" sx={{ textAlign: 'left' }}>
+              R1 - klasse 1
             </Typography>
+            <Stack direction="row" spacing={8} mb={4} color={NAV_COLORS.text}>
+              <Typography>Fag: Matematikk</Typography>
+              <Typography>Lærer: Ole Bull</Typography>
+              <Typography>E-post: ole.bull@osloskolen.no</Typography>
+            </Stack>
+
+            <Typography variant="h5" noWrap component="div" sx={{ textAlign: 'left' }}>
+              Kunngjøringer
+            </Typography>
+            <Announcements />
+            <Grid2 container spacing={2} direction="column">
+              <Typography variant="h5" noWrap component="div" sx={{ textAlign: 'left' }}>
+                Anbefalte oppgaver
+              </Typography>
+            </Grid2>
             <Table rows={rows} columns={columns} selectable={false} />
           </Grid2>
         </Container>

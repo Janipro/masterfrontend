@@ -12,11 +12,13 @@ import ExpandMore from '@mui/icons-material/ExpandMore';
 import { green } from '@mui/material/colors';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';*/
 import SettingsIcon from '@mui/icons-material/Settings';
+import SchoolIcon from '@mui/icons-material/School';
+import CloseIcon from '@mui/icons-material/Close';
 /*import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';*/
 import CodeIcon from '@mui/icons-material/Code';
 import { useState } from 'react';
 /*import Collapse from '@mui/material/Collapse';*/
-import { IconButton, Typography } from '@mui/material';
+import { Divider, IconButton, Typography } from '@mui/material';
 import { Link } from 'react-router-dom';
 import { NAV_COLORS } from '../types/navColors';
 import MenuIcon from '@mui/icons-material/Menu';
@@ -41,9 +43,17 @@ export default function Menu() {
         height: '100%',
         color: NAV_COLORS.text,
       }}
-      onClick={toggleDrawer(true)}
     >
       <List>
+        <Typography typography="h5" fontWeight="medium">
+          <ListItem key={'Meny'} disablePadding>
+            <ListItemButton onClick={toggleDrawer(false)}>
+              <ListItemText primary={'Meny'} disableTypography />
+              <CloseIcon />
+            </ListItemButton>
+          </ListItem>
+        </Typography>
+        <Divider />
         <Typography textTransform="none" typography="h6" fontWeight="medium">
           <Link to="/" style={{ color: 'inherit' }}>
             <ListItem key={'Dashboard'} disablePadding>
@@ -78,6 +88,16 @@ export default function Menu() {
             ))}
           </List>
         </Collapse>*/}
+          <Link to="/class" style={{ color: 'inherit' }}>
+            <ListItem key={'Class'} disablePadding>
+              <ListItemButton>
+                <ListItemIcon>
+                  <SchoolIcon sx={{ color: NAV_COLORS.text }} />
+                </ListItemIcon>
+                <ListItemText primary={'Mine fag'} disableTypography />
+              </ListItemButton>
+            </ListItem>
+          </Link>
           <Link to="/playground" style={{ color: 'inherit' }}>
             <ListItem key={'Playground'} disablePadding>
               <ListItemButton>
@@ -88,7 +108,8 @@ export default function Menu() {
               </ListItemButton>
             </ListItem>
           </Link>
-          <ListItem key={'Settings'} disablePadding>
+          <Divider sx={{ position: 'fixed', bottom: 55, width: 250 }} />
+          <ListItem key={'Settings'} disablePadding sx={{ position: 'fixed', bottom: 0, width: 250 }}>
             <ListItemButton>
               <ListItemIcon>
                 <SettingsIcon sx={{ color: NAV_COLORS.text }} />

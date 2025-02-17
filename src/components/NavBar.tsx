@@ -51,7 +51,7 @@ export default function NavBar({ isEditor }: { isEditor: boolean }) {
               marginLeft: 18,
             }}
           ></img>
-          <Typography color={NAV_COLORS.text} variant="h6" fontWeight="medium" marginLeft={0.25}>
+          <Typography color={NAV_COLORS.text} typography="h6" fontWeight="medium" marginLeft={0.25}>
             EduCode
           </Typography>
           {isEditor ? (
