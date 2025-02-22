@@ -7,6 +7,7 @@ import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import HomeIcon from '@mui/icons-material/Home';
 import AssignmentIcon from '@mui/icons-material/Assignment';
+import InsightsIcon from '@mui/icons-material/Insights';
 /*import ExpandLess from '@mui/icons-material/ExpandLess';
 import ExpandMore from '@mui/icons-material/ExpandMore';
 import { green } from '@mui/material/colors';
@@ -95,6 +96,16 @@ export default function Menu() {
                   <SchoolIcon sx={{ color: NAV_COLORS.text }} />
                 </ListItemIcon>
                 <ListItemText primary={'Mine fag'} disableTypography />
+              </ListItemButton>
+            </ListItem>
+          </Link>
+          <Link to="/statistics" style={{ color: 'inherit' }}>
+            <ListItem key={'Statistics'} disablePadding>
+              <ListItemButton>
+                <ListItemIcon>
+                  <InsightsIcon sx={{ color: NAV_COLORS.text }} />
+                </ListItemIcon>
+                <ListItemText primary={'Statistikk'} disableTypography />
               </ListItemButton>
             </ListItem>
           </Link>
