@@ -1,11 +1,7 @@
 import * as React from 'react';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
-import Checkbox from '@mui/material/Checkbox';
 import CssBaseline from '@mui/material/CssBaseline';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import Divider from '@mui/material/Divider';
-import FormLabel from '@mui/material/FormLabel';
 import FormControl from '@mui/material/FormControl';
 import Link from '@mui/material/Link';
 import TextField from '@mui/material/TextField';
@@ -14,6 +10,7 @@ import Stack from '@mui/material/Stack';
 import MuiCard from '@mui/material/Card';
 import { styled } from '@mui/material/styles';
 import { useNavigate } from 'react-router-dom';
+import { NAV_COLORS } from '../types/navColors';
 
 const Card = styled(MuiCard)(({ theme }) => ({
   display: 'flex',
@@ -53,7 +50,11 @@ const SignInContainer = styled(Stack)(({ theme }) => ({
   },
 }));
 
-export default function SignIn() {
+export default function Register() {
+  const [firstnameError, setFirstnameError] = React.useState(false);
+  const [firstnameErrorMessage, setFirstnameErrorMessage] = React.useState('');
+  const [lastnameError, setLastnameError] = React.useState(false);
+  const [lastnameErrorMessage, setLastnameErrorMessage] = React.useState('');
   const [emailError, setEmailError] = React.useState(false);
   const [emailErrorMessage, setEmailErrorMessage] = React.useState('');
   const [passwordError, setPasswordError] = React.useState(false);
@@ -67,6 +68,8 @@ export default function SignIn() {
     }
     const data = new FormData(event.currentTarget);
     console.log({
+      firstname: data.get('firstname'),
+      lastname: data.get('lastname'),
       email: data.get('email'),
       password: data.get('password'),
     });
@@ -74,6 +77,8 @@ export default function SignIn() {
   };
 
   const validateInputs = () => {
+    const firstname = document.getElementById('firstname') as HTMLInputElement;
+    const lastname = document.getElementById('lastname') as HTMLInputElement;
     const email = document.getElementById('email') as HTMLInputElement;
     const password = document.getElementById('password') as HTMLInputElement;
 
@@ -81,7 +86,7 @@ export default function SignIn() {
 
     if (!email.value || !/\S+@\S+\.\S+/.test(email.value)) {
       setEmailError(true);
-      setEmailErrorMessage('Please enter a valid email address.');
+      setEmailErrorMessage('Vennligst bruk en gyldig e-post adresse.');
       isValid = false;
     } else {
       setEmailError(false);
@@ -90,11 +95,29 @@ export default function SignIn() {
 
     if (!password.value || password.value.length < 6) {
       setPasswordError(true);
-      setPasswordErrorMessage('Password must be at least 6 characters long.');
+      setPasswordErrorMessage('Passord må være minst 6 karakterer langt.');
       isValid = false;
     } else {
       setPasswordError(false);
       setPasswordErrorMessage('');
+    }
+
+    if (!firstname.value) {
+      setFirstnameError(true);
+      setFirstnameErrorMessage('Vennligt fyll inn fornavn');
+      isValid = false;
+    } else {
+      setFirstnameError(false);
+      setFirstnameErrorMessage('');
+    }
+
+    if (!lastname.value) {
+      setLastnameError(true);
+      setLastnameErrorMessage('Vennligt fyll inn fornavn');
+      isValid = false;
+    } else {
+      setLastnameError(false);
+      setLastnameErrorMessage('');
     }
 
     return isValid;
@@ -105,9 +128,25 @@ export default function SignIn() {
       <CssBaseline enableColorScheme />
       <SignInContainer direction="column" justifyContent="space-between">
         <Card variant="outlined">
-          <Typography component="h1" variant="h4" sx={{ width: '100%', fontSize: 'clamp(2rem, 10vw, 2.15rem)' }}>
-            Sign in
-          </Typography>
+          <Stack direction="row" gap={1} justifyContent="center" mb={2}>
+            <img
+              src="src/assets/educode.png"
+              width="40"
+              height="auto"
+              alt="EduCode logo"
+              unselectable="on"
+              draggable={false}
+              style={{
+                userSelect: 'none',
+                msUserSelect: 'none',
+                MozUserSelect: 'none',
+                WebkitUserSelect: 'none',
+              }}
+            ></img>
+            <Typography color={NAV_COLORS.text} typography="h6" fontWeight="medium" marginLeft={0.25}>
+              EduCode
+            </Typography>
+          </Stack>
           <Box
             component="form"
             onSubmit={handleSubmit}
@@ -120,14 +159,45 @@ export default function SignIn() {
             }}
           >
             <FormControl>
-              <FormLabel htmlFor="email">Email</FormLabel>
+              <TextField
+                error={firstnameError}
+                helperText={firstnameErrorMessage}
+                id="firstname"
+                type="firstname"
+                name="firstname"
+                placeholder="Fornavn"
+                autoComplete="firstname"
+                autoFocus
+                required
+                fullWidth
+                variant="outlined"
+                color={firstnameError ? 'error' : 'primary'}
+              />
+            </FormControl>
+            <FormControl>
+              <TextField
+                error={lastnameError}
+                helperText={lastnameErrorMessage}
+                id="lastname"
+                type="lastname"
+                name="lastname"
+                placeholder="Etternavn"
+                autoComplete="lastname"
+                autoFocus
+                required
+                fullWidth
+                variant="outlined"
+                color={lastnameError ? 'error' : 'primary'}
+              />
+            </FormControl>
+            <FormControl>
               <TextField
                 error={emailError}
                 helperText={emailErrorMessage}
                 id="email"
                 type="email"
                 name="email"
-                placeholder="your@email.com"
+                placeholder="e-post"
                 autoComplete="email"
                 autoFocus
                 required
@@ -137,7 +207,6 @@ export default function SignIn() {
               />
             </FormControl>
             <FormControl>
-              <FormLabel htmlFor="password">Password</FormLabel>
               <TextField
                 error={passwordError}
                 helperText={passwordErrorMessage}
@@ -153,17 +222,15 @@ export default function SignIn() {
                 color={passwordError ? 'error' : 'primary'}
               />
             </FormControl>
-            <FormControlLabel control={<Checkbox value="remember" color="primary" />} label="Remember me" />
-            <Button type="submit" fullWidth variant="contained" onClick={validateInputs}>
-              Sign in
+            <Button type="submit" fullWidth variant="contained" onClick={validateInputs} sx={{ textTransform: 'none' }}>
+              Registrer
             </Button>
           </Box>
-          <Divider>or</Divider>
           <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
             <Typography sx={{ textAlign: 'center' }}>
-              Don&apos;t have an account?{' '}
-              <Link href="/material-ui/getting-started/templates/sign-in/" variant="body2" sx={{ alignSelf: 'center' }}>
-                Sign up
+              Har du allerede bruker?
+              <Link href="/login" variant="body2" sx={{ alignSelf: 'center', ml: 1 }}>
+                Logg inn
               </Link>
             </Typography>
           </Box>
