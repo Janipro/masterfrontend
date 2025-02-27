@@ -222,7 +222,7 @@ export default function Register() {
                 color={passwordError ? 'error' : 'primary'}
               />
             </FormControl>
-            <Button type="submit" fullWidth variant="contained" onClick={validateInputs}>
+            <Button type="submit" fullWidth variant="contained" onClick={validateInputs} sx={{ textTransform: 'none' }}>
               Registrer
             </Button>
           </Box>
