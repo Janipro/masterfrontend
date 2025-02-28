@@ -23,10 +23,12 @@ import { Divider, IconButton, Typography } from '@mui/material';
 import { Link } from 'react-router-dom';
 import { NAV_COLORS } from '../types/navColors';
 import MenuIcon from '@mui/icons-material/Menu';
+import useDarkmodeStore from '../stores/useDarkmodeStore';
 
 export default function Menu() {
   const [open, setOpen] = useState(false);
   const [openAssignments, setOpenAssignments] = useState(false);
+  const { isDarkmode } = useDarkmodeStore();
 
   const toggleDrawer = (newOpen: boolean) => () => {
     setOpen(newOpen);
@@ -40,9 +42,9 @@ export default function Menu() {
     <Box
       sx={{
         width: 250,
-        backgroundColor: NAV_COLORS.background,
+        backgroundColor: isDarkmode ? NAV_COLORS.background_dark : NAV_COLORS.background,
         height: '100%',
-        color: NAV_COLORS.text,
+        color: isDarkmode ? NAV_COLORS.text_dark : NAV_COLORS.text,
       }}
     >
       <List>
@@ -60,7 +62,7 @@ export default function Menu() {
             <ListItem key={'Dashboard'} disablePadding>
               <ListItemButton>
                 <ListItemIcon>
-                  <HomeIcon sx={{ color: NAV_COLORS.text }} />
+                  <HomeIcon sx={{ color: isDarkmode ? NAV_COLORS.text_dark : NAV_COLORS.text }} />
                 </ListItemIcon>
                 <ListItemText primary={'Oversikt'} disableTypography />
               </ListItemButton>
@@ -70,7 +72,7 @@ export default function Menu() {
             <ListItem key={'Tasks'} disablePadding>
               <ListItemButton onClick={handleClick}>
                 <ListItemIcon>
-                  <AssignmentIcon sx={{ color: NAV_COLORS.text }} />
+                  <AssignmentIcon sx={{ color: isDarkmode ? NAV_COLORS.text_dark : NAV_COLORS.text }} />
                 </ListItemIcon>
                 <ListItemText primary="Oppgaver" disableTypography />
                 {/*openAssignments ? <ExpandLess /> : <ExpandMore />*/}
@@ -93,7 +95,7 @@ export default function Menu() {
             <ListItem key={'Class'} disablePadding>
               <ListItemButton>
                 <ListItemIcon>
-                  <SchoolIcon sx={{ color: NAV_COLORS.text }} />
+                  <SchoolIcon sx={{ color: isDarkmode ? NAV_COLORS.text_dark : NAV_COLORS.text }} />
                 </ListItemIcon>
                 <ListItemText primary={'Mine fag'} disableTypography />
               </ListItemButton>
@@ -103,7 +105,7 @@ export default function Menu() {
             <ListItem key={'Statistics'} disablePadding>
               <ListItemButton>
                 <ListItemIcon>
-                  <InsightsIcon sx={{ color: NAV_COLORS.text }} />
+                  <InsightsIcon sx={{ color: isDarkmode ? NAV_COLORS.text_dark : NAV_COLORS.text }} />
                 </ListItemIcon>
                 <ListItemText primary={'Statistikk'} disableTypography />
               </ListItemButton>
@@ -113,7 +115,7 @@ export default function Menu() {
             <ListItem key={'Playground'} disablePadding>
               <ListItemButton>
                 <ListItemIcon>
-                  <CodeIcon sx={{ color: NAV_COLORS.text }} />
+                  <CodeIcon sx={{ color: isDarkmode ? NAV_COLORS.text_dark : NAV_COLORS.text }} />
                 </ListItemIcon>
                 <ListItemText primary={'Editor'} disableTypography />
               </ListItemButton>
@@ -123,7 +125,7 @@ export default function Menu() {
           <ListItem key={'Settings'} disablePadding sx={{ position: 'fixed', bottom: 0, width: 250 }}>
             <ListItemButton>
               <ListItemIcon>
-                <SettingsIcon sx={{ color: NAV_COLORS.text }} />
+                <SettingsIcon sx={{ color: isDarkmode ? NAV_COLORS.text_dark : NAV_COLORS.text }} />
               </ListItemIcon>
               <ListItemText primary={'Innstillinger'} disableTypography />
             </ListItemButton>
@@ -135,7 +137,7 @@ export default function Menu() {
 
   return (
     <Box>
-      <IconButton onClick={toggleDrawer(true)} sx={{ color: NAV_COLORS.text }}>
+      <IconButton onClick={toggleDrawer(true)} sx={{ color: isDarkmode ? NAV_COLORS.text_dark : NAV_COLORS.text }}>
         <MenuIcon />
       </IconButton>
       <Drawer open={open} onClose={toggleDrawer(false)}>
