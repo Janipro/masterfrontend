@@ -12,15 +12,32 @@ import PopUpMenu from './PopUpMenu';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import SettingsIcon from '@mui/icons-material/Settings';
 import { Link } from 'react-router-dom';
-import { FormControlLabel, FormGroup, Stack, Switch } from '@mui/material';
+import { FormControlLabel, FormGroup, Modal, Stack, Switch } from '@mui/material';
 import useTeacherStore from '../stores/useTeacherStore';
 import { NAV_COLORS } from '../types/navColors';
+import { useState } from 'react';
 
 const functions = ['Kjør', 'Hjelp', 'Lever'];
 const settings = ['Profil', 'Logg ut'];
 
+const style = {
+  position: 'absolute',
+  top: '50%',
+  left: '50%',
+  transform: 'translate(-50%, -50%)',
+  width: 300,
+  heigth: 'auto',
+  bgcolor: 'background.paper',
+  border: '2px solid #000',
+  boxShadow: 24,
+  p: 4,
+  textAlign: 'center',
+};
+
 export default function NavBar({ isEditor }: { isEditor: boolean }) {
   const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(null);
+  const [darkMode, setDarkMode] = useState(false);
+  const [editorDarkMode, setEditorDarkMode] = useState(false);
   const { isTeacher, setTeacher } = useTeacherStore();
 
   const handleOpenUserMenu = (event: React.MouseEvent<HTMLElement>) => {
@@ -30,6 +47,10 @@ export default function NavBar({ isEditor }: { isEditor: boolean }) {
   const handleCloseUserMenu = () => {
     setAnchorElUser(null);
   };
+
+  const [open, setOpen] = React.useState(false);
+  const handleOpen = () => setOpen(true);
+  const handleClose = () => setOpen(false);
 
   return (
     <AppBar position="fixed" sx={{ backgroundColor: NAV_COLORS.background, boxShadow: 2 }}>
@@ -88,9 +109,34 @@ export default function NavBar({ isEditor }: { isEditor: boolean }) {
                 sx={{ color: NAV_COLORS.text }}
               />
             </FormGroup>
-            <IconButton>
+            <IconButton onClick={handleOpen}>
               <SettingsIcon sx={{ color: NAV_COLORS.text }} />
             </IconButton>
+            <Modal open={open} onClose={handleClose} aria-labelledby="settings-modal-title">
+              <Box sx={style}>
+                <Typography id="settings-modal-title" variant="h5" component="h2" fontWeight="500">
+                  Innstillinger
+                </Typography>
+                <Stack direction="column" alignItems="left" mt={4} gap={1}>
+                  <FormGroup>
+                    <FormControlLabel
+                      control={
+                        <Switch defaultChecked={editorDarkMode} onChange={() => setEditorDarkMode(!editorDarkMode)} />
+                      }
+                      label="Editor mørk modus"
+                      sx={{ color: NAV_COLORS.text }}
+                    />
+                  </FormGroup>
+                  <FormGroup>
+                    <FormControlLabel
+                      control={<Switch defaultChecked={darkMode} onChange={() => setDarkMode(!darkMode)} />}
+                      label="Nettside mørk modus"
+                      sx={{ color: NAV_COLORS.text }}
+                    />
+                  </FormGroup>
+                </Stack>
+              </Box>
+            </Modal>
             <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
               <AccountCircleIcon sx={{ color: NAV_COLORS.text }} />
             </IconButton>
