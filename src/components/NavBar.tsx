@@ -98,10 +98,11 @@ export default function NavBar({ isEditor }: { isEditor: boolean }) {
                   sx={{
                     my: 2,
                     display: 'block',
-                    backgroundColor: 'white',
+                    backgroundColor: isDarkmode ? '#494949' : 'white',
                     borderRadius: 6,
                     mx: 0.5,
                     textTransform: 'none',
+                    color: isDarkmode ? NAV_COLORS.text_dark : NAV_COLORS.text,
                   }}
                 >
                   <Typography>{f}</Typography>
