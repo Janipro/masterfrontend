@@ -1,4 +1,17 @@
-import { Box, Button, Container, CssBaseline, Fade, Grid2, Modal, Stack, Typography } from '@mui/material';
+import {
+  Box,
+  Button,
+  Checkbox,
+  Container,
+  CssBaseline,
+  Fade,
+  FormControlLabel,
+  FormGroup,
+  Grid2,
+  Modal,
+  Stack,
+  Typography,
+} from '@mui/material';
 import Table from '../Table';
 import SearchBar from '../SearchBar';
 import DeleteIcon from '@mui/icons-material/Delete';
@@ -10,6 +23,7 @@ import Backdrop from '@mui/material/Backdrop';
 import { GridColDef } from '@mui/x-data-grid';
 import { renderRequirement } from '../renderRequirement';
 import { NAV_COLORS } from '../../types/navColors';
+import CreateIcon from '@mui/icons-material/Create';
 
 const rows = [
   {
@@ -275,10 +289,8 @@ export default function TeacherTasks() {
         <Container component={'main'} sx={{ bgcolor: 'background.default' }}>
           <Grid2 direction="column" container spacing={2} mt={10}>
             <Grid2 direction="row" container>
-              <Typography variant="h5" noWrap component="div">
-                Utdelte oppgaver
-              </Typography>
-              <Grid2 direction="row" sx={{ flexGrow: 0, ml: 'auto' }}>
+              <Typography typography="h5">Utdelte oppgaver</Typography>
+              <Grid2 container direction={'row'} spacing={0} sx={{ flexGrow: 0, ml: 'auto' }}>
                 <Button
                   variant="contained"
                   startIcon={<VisibilityIcon />}
@@ -318,6 +330,9 @@ export default function TeacherTasks() {
                 >
                   Slett
                 </Button>
+                <FormGroup>
+                  <FormControlLabel control={<Checkbox />} label="Vis inaktive" sx={{ scale: 0.8 }} />
+                </FormGroup>
               </Grid2>
             </Grid2>
             <Table rows={rows} columns={columns} selectable />
@@ -331,6 +346,18 @@ export default function TeacherTasks() {
                 <Grid2 sx={{ flexGrow: 0, ml: 'auto', mt: 'auto' }}>
                   <Button
                     variant="contained"
+                    startIcon={<CreateIcon />}
+                    color="primary"
+                    sx={{
+                      textTransform: 'none',
+                      scale: 0.8,
+                    }}
+                    onClick={handleOpen}
+                  >
+                    Opprett oppgave
+                  </Button>
+                  <Button
+                    variant="contained"
                     startIcon={<ShareIcon />}
                     sx={{
                       backgroundColor: NAV_COLORS.background,
@@ -340,7 +367,7 @@ export default function TeacherTasks() {
                     }}
                     onClick={handleOpen}
                   >
-                    Del
+                    Del oppgave
                   </Button>
                   <Modal
                     aria-labelledby="transition-modal-title"

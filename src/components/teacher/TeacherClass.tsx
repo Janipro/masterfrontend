@@ -19,6 +19,7 @@ import { renderRequirement } from '../renderRequirement';
 import AnnouncementIcon from '@mui/icons-material/Announcement';
 import { useState } from 'react';
 import ShareIcon from '@mui/icons-material/Share';
+import CreateIcon from '@mui/icons-material/Create';
 
 const rows = [
   {
@@ -124,9 +125,24 @@ export default function TeacherClass() {
         <CssBaseline />
         <Container component={'main'} sx={{ bgcolor: 'background.default' }}>
           <Grid2 direction="column" container spacing={2} mt={10}>
-            <Typography variant="h4" noWrap component="div" sx={{ textAlign: 'left' }}>
-              R1 - klasse 1
-            </Typography>
+            <Stack direction="row">
+              <Typography variant="h4" noWrap component="div" sx={{ textAlign: 'left' }}>
+                R1 - klasse 1
+              </Typography>
+              <Button
+                variant="contained"
+                startIcon={<CreateIcon />}
+                color="primary"
+                sx={{
+                  textTransform: 'none',
+                  scale: 0.8,
+                  ml: 'auto',
+                  mt: 'auto',
+                }}
+              >
+                Rediger
+              </Button>
+            </Stack>
             <Stack direction="row" spacing={8} mb={4} color={NAV_COLORS.text}>
               <Typography>Fag: Matematikk</Typography>
               <Typography>Lærer: Ole Bull</Typography>

@@ -1,7 +1,20 @@
-import { Box, Button, Container, CssBaseline, Fade, Grid2, Typography } from '@mui/material';
+import {
+  Box,
+  Button,
+  Checkbox,
+  Container,
+  CssBaseline,
+  Fade,
+  FormControlLabel,
+  FormGroup,
+  Grid2,
+  Stack,
+  Typography,
+} from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
+import CreateIcon from '@mui/icons-material/Create';
 import Table from '../Table';
 import InfoCard from '../InfoCard';
 import { GridColDef } from '@mui/x-data-grid';
@@ -125,9 +138,24 @@ export default function TeacherDashboard() {
                 textAlign: 'left',
               }}
             >
-              <Typography variant="h5" noWrap component="div" sx={{ mt: 10 }}>
-                Mine undervisningsgrupper
-              </Typography>
+              <Grid2 container direction="row" mt={10}>
+                <Typography variant="h5" noWrap component="div">
+                  Mine undervisningsgrupper
+                </Typography>
+                <Stack direction="row" ml={'auto'} mt={'auto'}>
+                  <Button
+                    variant="contained"
+                    startIcon={<CreateIcon />}
+                    color="primary"
+                    sx={{ textTransform: 'none', scale: 0.8 }}
+                  >
+                    Opprett undervisningsgruppe
+                  </Button>
+                  <FormGroup>
+                    <FormControlLabel control={<Checkbox />} label="Vis inaktive" sx={{ scale: 0.8 }} />
+                  </FormGroup>
+                </Stack>
+              </Grid2>
               <Grid2 container direction={'row'} spacing={4} sx={{ m: 2, p: 1, maxWidth: 970 }}>
                 {subjects.map(() => (
                   <InfoCard />
@@ -171,6 +199,9 @@ export default function TeacherDashboard() {
                 >
                   Slett
                 </Button>
+                <FormGroup>
+                  <FormControlLabel control={<Checkbox />} label="Vis inaktive" sx={{ scale: 0.8 }} />
+                </FormGroup>
               </Grid2>
             </Grid2>
             <Table rows={rows} columns={columns} selectable />
