@@ -1,7 +1,7 @@
 import { Box } from '@mui/material';
 import NavBar from '../components/NavBar';
-import StudentDashboard from '../components/StudentDashboard';
-import TeacherDashboard from '../components/TeacherDashboard';
+import StudentDashboard from '../components/student/StudentDashboard';
+import TeacherDashboard from '../components/teacher/TeacherDashboard';
 import useTeacherStore from '../stores/useTeacherStore';
 
 export default function Home() {

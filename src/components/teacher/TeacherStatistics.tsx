@@ -17,8 +17,8 @@ import {
 } from '@mui/material';
 import { BarChart } from '@mui/x-charts/BarChart';
 import { axisClasses } from '@mui/x-charts/ChartsAxis';
-import { TYPE_COLORS } from '../types/typeColors';
-import { NAV_COLORS } from '../types/navColors';
+import { TYPE_COLORS } from '../../types/typeColors';
+import { NAV_COLORS } from '../../types/navColors';
 
 const chartSetting = {
   width: 500,

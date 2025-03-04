@@ -2,10 +2,10 @@ import { Box, Button, Container, CssBaseline, Fade, Grid2, Typography } from '@m
 import DeleteIcon from '@mui/icons-material/Delete';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
-import Table from './Table';
-import InfoCard from './InfoCard';
+import Table from '../Table';
+import InfoCard from '../InfoCard';
 import { GridColDef } from '@mui/x-data-grid';
-import { renderRequirement } from './renderRequirement';
+import { renderRequirement } from '../renderRequirement';
 
 const subjects = [1, 2, 3, 4, 5, 6, 7, 8];
 

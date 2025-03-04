@@ -1,6 +1,6 @@
 import { Box, Button, Container, CssBaseline, Fade, Grid2, Modal, Stack, Typography } from '@mui/material';
-import Table from './Table';
-import SearchBar from './SearchBar';
+import Table from '../Table';
+import SearchBar from '../SearchBar';
 import DeleteIcon from '@mui/icons-material/Delete';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
@@ -8,8 +8,8 @@ import ShareIcon from '@mui/icons-material/Share';
 import { useState } from 'react';
 import Backdrop from '@mui/material/Backdrop';
 import { GridColDef } from '@mui/x-data-grid';
-import { renderRequirement } from './renderRequirement';
-import { NAV_COLORS } from '../types/navColors';
+import { renderRequirement } from '../renderRequirement';
+import { NAV_COLORS } from '../../types/navColors';
 
 const rows = [
   {

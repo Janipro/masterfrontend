@@ -11,11 +11,11 @@ import {
   TextField,
   Typography,
 } from '@mui/material';
-import Table from './Table';
-import { NAV_COLORS } from '../types/navColors';
-import Announcements from './Announcements';
+import Table from '../Table';
+import { NAV_COLORS } from '../../types/navColors';
+import Announcements from '../Announcements';
 import { GridColDef } from '@mui/x-data-grid';
-import { renderRequirement } from './renderRequirement';
+import { renderRequirement } from '../renderRequirement';
 import AnnouncementIcon from '@mui/icons-material/Announcement';
 import { useState } from 'react';
 import ShareIcon from '@mui/icons-material/Share';
