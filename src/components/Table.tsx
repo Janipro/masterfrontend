@@ -42,7 +42,7 @@ export default function Table({
 
   return (
     <Box>
-      <Paper sx={{ height: 400, width: '100%' }}>
+      <Paper sx={{ height: 'auto', width: '100%' }}>
         <DataGrid
           rows={initialRows}
           columns={columns}
@@ -52,6 +52,7 @@ export default function Table({
           localeText={nbNO.components.MuiDataGrid.defaultProps.localeText}
           checkboxSelection={selectable}
           columnVisibilityModel={columnVisibilityModel}
+          density="compact"
         />
       </Paper>
     </Box>

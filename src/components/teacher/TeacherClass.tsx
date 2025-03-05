@@ -12,7 +12,7 @@ import {
   Typography,
 } from '@mui/material';
 import Table from '../Table';
-import { NAV_COLORS } from '../../types/navColors';
+import { NAV_COLORS, style } from '../../types/navColors';
 import Announcements from '../Announcements';
 import { GridColDef } from '@mui/x-data-grid';
 import { renderRequirement } from '../renderRequirement';
@@ -83,18 +83,6 @@ const rows = [
     status: 'Uncomplete',
   },
 ];
-
-const style = {
-  position: 'absolute',
-  top: '50%',
-  left: '50%',
-  transform: 'translate(-50%, -50%)',
-  width: 'auto',
-  bgcolor: 'background.paper',
-  border: '2px solid #000',
-  boxShadow: 24,
-  p: 4,
-};
 
 const columns: GridColDef[] = [
   { field: 'assigned', headerName: 'Tildelt', width: 100 },
