@@ -6,10 +6,15 @@ import {
   Container,
   CssBaseline,
   Fade,
+  FormControl,
   FormControlLabel,
   FormGroup,
   Grid2,
+  InputLabel,
+  MenuItem,
   Modal,
+  Select,
+  SelectChangeEvent,
   Stack,
   TextField,
   Typography,
@@ -30,6 +35,11 @@ export default function TeacherDashboard() {
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
+  const [age, setAge] = useState('');
+
+  const handleChange = (event: SelectChangeEvent) => {
+    setAge(event.target.value);
+  };
   return (
     <Fade in timeout={500}>
       <Box component={'main'} sx={{ bgcolor: 'background.default' }}>
@@ -78,18 +88,48 @@ export default function TeacherDashboard() {
                               Ny undervisningsgruppe
                             </Typography>
                           </Stack>
-                          <TextField
-                            id="keep-mounted-modal-title"
-                            label="Gruppenavn"
-                            variant="outlined"
-                            sx={{ width: 200 }}
-                          />
+                          <Stack direction="row" gap={1}>
+                            <TextField
+                              id="keep-mounted-modal-title"
+                              label="Gruppenavn"
+                              variant="outlined"
+                              sx={{ width: 200 }}
+                            />
+                            <FormControl sx={{ m: 1, minWidth: 100 }} size="small">
+                              <InputLabel id="demo-select-small-label">Fag</InputLabel>
+                              <Select
+                                labelId="demo-select-small-label"
+                                id="demo-select-small"
+                                value={age}
+                                label="Age"
+                                onChange={handleChange}
+                              >
+                                <MenuItem value={10}>R1</MenuItem>
+                                <MenuItem value={20}>IT1</MenuItem>
+                                <MenuItem value={30}>1T</MenuItem>
+                              </Select>
+                            </FormControl>
+                            <FormControl sx={{ m: 1, minWidth: 100 }} size="small">
+                              <InputLabel id="demo-select-small-label">Nivå</InputLabel>
+                              <Select
+                                labelId="demo-select-small-label"
+                                id="demo-select-small"
+                                value={age}
+                                label="Age"
+                                onChange={handleChange}
+                              >
+                                <MenuItem value={10}>VG1</MenuItem>
+                                <MenuItem value={20}>VG2</MenuItem>
+                                <MenuItem value={30}>VG3</MenuItem>
+                              </Select>
+                            </FormControl>
+                          </Stack>
                           <TextField
                             id="keep-mounted-modal-description"
                             label="Kort beskrivelse av gruppen"
                             multiline
                             rows={3}
-                            sx={{ width: 400 }}
+                            sx={{ width: 440 }}
                           />
                           <Stack direction="row"></Stack>
                           <Table rows={rows3} columns={columns3} selectable />
@@ -103,7 +143,7 @@ export default function TeacherDashboard() {
                             }}
                             onClick={handleOpen}
                           >
-                            Opprett
+                            Opprett undervisningsgruppe
                           </Button>
                         </Grid2>
                       </Box>
