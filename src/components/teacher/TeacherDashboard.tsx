@@ -20,115 +20,11 @@ import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 import CreateIcon from '@mui/icons-material/Create';
 import Table from '../Table';
 import InfoCard from '../InfoCard';
-import { GridColDef } from '@mui/x-data-grid';
-import { renderRequirement } from '../renderRequirement';
 import { useState } from 'react';
 import { style } from '../../types/navColors';
-import { columns3, rows3 } from '../../types/userData';
+import { columns, columns3, rows, rows3 } from '../../types/userData';
 
 const subjects = [1, 2, 3, 4, 5, 6, 7, 8];
-
-const rows = [
-  {
-    id: 1,
-    title: 'Chicken Nuggets',
-    requirement: ['for-løkke', 'if-setning'],
-    level: 'VG1',
-    course: 'Matematikk',
-    type: 'Obligatorisk',
-    due: '14.02.2025 13:00',
-    status: 'Uncomplete',
-  },
-  {
-    id: 2,
-    title: 'Peter Griffith',
-    requirement: ['for-løkke'],
-    level: '10',
-    course: 'Matematikk',
-    type: 'Obligatorisk',
-    due: '14.02.2025 13:00',
-    status: 'Uncomplete',
-  },
-  {
-    id: 3,
-    title: 'Peter Griffin',
-    requirement: ['for-løkke', 'while-løkke'],
-    level: '9',
-    course: 'Matematikk',
-    type: 'Anbefalt',
-    due: '17.02.2025 13:00',
-    status: 'Uncomplete',
-  },
-  {
-    id: 4,
-    title: 'Peter Grizzler',
-    requirement: ['if-setning'],
-    level: '9',
-    course: 'Matematikk',
-    type: 'Obligatorisk',
-    due: '15.02.2025 15:00',
-    status: 'Uncomplete',
-  },
-  {
-    id: 5,
-    title: 'Peter Nuggets',
-    requirement: ['if-setning', 'while-løkke'],
-    level: '8',
-    course: 'Matematikk',
-    type: 'Anbefalt',
-    due: '14.02.2025 14:00',
-    status: 'Uncomplete',
-  },
-  {
-    id: 6,
-    title: 'Peter Gooner',
-    requirement: ['for-løkke', 'if-setning'],
-    level: '8',
-    course: 'Matematikk',
-    type: 'Anbefalt',
-    due: '14.02.2025 14:00',
-    status: 'Uncomplete',
-  },
-  {
-    id: 7,
-    title: 'Peter Cooner',
-    requirement: ['while-løkke', 'if-setning'],
-    level: '9',
-    course: 'Matematikk',
-    type: 'Anbefalt',
-    due: '14.02.2025 14:00',
-    status: 'Uncomplete',
-  },
-  {
-    id: 8,
-    title: 'Sexy Sigma',
-    requirement: ['if-setning'],
-    level: '10',
-    course: 'Matematikk',
-    type: 'Anbefalt',
-    due: '14.02.2025 14:00',
-    status: 'Uncomplete',
-  },
-];
-
-const columns: GridColDef[] = [
-  { field: 'assigned', headerName: 'Tildelt', width: 100 },
-  { field: 'title', headerName: 'Tittel', width: 220 },
-  {
-    field: 'requirement',
-    display: 'flex',
-    renderCell: renderRequirement,
-    valueGetter: (value, row) =>
-      row.title == null || row.requirement == null ? null : { title: row.title, requirement: row.requirement },
-    filterable: false,
-    headerName: 'Krav',
-    width: 240,
-  } as GridColDef<{ requirement: string[]; title: string }>,
-  { field: 'level', headerName: 'Nivå', width: 60 },
-  { field: 'course', headerName: 'Fag', width: 100 },
-  { field: 'type', headerName: 'Type', width: 100 },
-  { field: 'due', headerName: 'Frist', width: 140 },
-];
 
 export default function TeacherDashboard() {
   const [open, setOpen] = useState(false);
