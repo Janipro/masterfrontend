@@ -1,8 +1,8 @@
 import { Box } from '@mui/material';
 import NavBar from '../components/NavBar';
 import useTeacherStore from '../stores/useTeacherStore';
-import StudentClass from '../components/StudentClass';
-import TeacherClass from '../components/TeacherClass';
+import StudentClass from '../components/student/StudentClass';
+import TeacherClass from '../components/teacher/TeacherClass';
 
 export default function Class() {
   const { isTeacher } = useTeacherStore();

@@ -17,8 +17,8 @@ import {
 } from '@mui/material';
 import { BarChart } from '@mui/x-charts/BarChart';
 import { axisClasses } from '@mui/x-charts/ChartsAxis';
-import { TYPE_COLORS } from '../types/typeColors';
-import { NAV_COLORS } from '../types/navColors';
+import { TYPE_COLORS } from '../../types/typeColors';
+import { NAV_COLORS } from '../../types/navColors';
 
 const chartSetting = {
   width: 500,
@@ -116,7 +116,7 @@ export default function StudentStatistics() {
                 mt: 10,
               }}
             >
-              <Typography variant="h6" noWrap component="div">
+              <Typography typography="h6" noWrap component="div" mb={2}>
                 Følgende elever vises
               </Typography>
               <TableContainer component={Paper}>
