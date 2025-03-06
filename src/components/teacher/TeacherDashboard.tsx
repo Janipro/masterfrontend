@@ -57,13 +57,14 @@ export default function TeacherDashboard() {
                 <Typography variant="h5" noWrap component="div">
                   Mine undervisningsgrupper
                 </Typography>
-                <Stack direction="row" ml={'auto'} mt={'auto'}>
+                <Stack direction="row" ml={'auto'} mt={'auto'} gap={1}>
                   <Button
                     variant="contained"
                     startIcon={<CreateIcon />}
                     color="primary"
-                    sx={{ textTransform: 'none', scale: 0.8 }}
+                    sx={{ textTransform: 'none' }}
                     onClick={handleOpen}
+                    size="small"
                   >
                     Opprett undervisningsgruppe
                   </Button>
@@ -94,8 +95,9 @@ export default function TeacherDashboard() {
                               label="Gruppenavn"
                               variant="outlined"
                               sx={{ width: 200 }}
+                              size="small"
                             />
-                            <FormControl sx={{ m: 1, minWidth: 100 }} size="small">
+                            <FormControl sx={{ minWidth: 100 }} size="small">
                               <InputLabel id="demo-select-small-label">Fag</InputLabel>
                               <Select
                                 labelId="demo-select-small-label"
@@ -109,7 +111,7 @@ export default function TeacherDashboard() {
                                 <MenuItem value={30}>1T</MenuItem>
                               </Select>
                             </FormControl>
-                            <FormControl sx={{ m: 1, minWidth: 100 }} size="small">
+                            <FormControl sx={{ minWidth: 100 }} size="small">
                               <InputLabel id="demo-select-small-label">Nivå</InputLabel>
                               <Select
                                 labelId="demo-select-small-label"
@@ -138,10 +140,10 @@ export default function TeacherDashboard() {
                             startIcon={<CreateIcon />}
                             sx={{
                               textTransform: 'none',
-                              scale: 1,
                               ml: 'auto',
                             }}
                             onClick={handleOpen}
+                            size="small"
                           >
                             Opprett undervisningsgruppe
                           </Button>
@@ -150,7 +152,7 @@ export default function TeacherDashboard() {
                     </Fade>
                   </Modal>
                   <FormGroup>
-                    <FormControlLabel control={<Checkbox />} label="Vis inaktive" sx={{ scale: 0.8 }} />
+                    <FormControlLabel control={<Checkbox size="small" />} label="Vis inaktive" />
                   </FormGroup>
                 </Stack>
               </Grid2>
@@ -172,33 +174,36 @@ export default function TeacherDashboard() {
               <Typography variant="h5" noWrap component="div">
                 Utdelte oppgaver
               </Typography>
-              <Grid2 container direction={'row'} sx={{ flexGrow: 0, ml: 'auto' }}>
+              <Grid2 container direction={'row'} sx={{ flexGrow: 0, ml: 'auto' }} spacing={1}>
                 <Button
                   variant="contained"
                   startIcon={<VisibilityIcon />}
-                  sx={{ backgroundColor: '#EDEBEB', color: '#3F3F3F', textTransform: 'none', scale: 0.8 }}
+                  sx={{ backgroundColor: '#EDEBEB', color: '#3F3F3F', textTransform: 'none' }}
                   disabled
+                  size="small"
                 >
                   Aktiver
                 </Button>
                 <Button
                   variant="contained"
                   startIcon={<VisibilityOffIcon />}
-                  sx={{ backgroundColor: '#EDEBEB', color: '#3F3F3F', textTransform: 'none', scale: 0.8 }}
+                  sx={{ backgroundColor: '#EDEBEB', color: '#3F3F3F', textTransform: 'none' }}
                   disabled
+                  size="small"
                 >
                   Deaktiver
                 </Button>
                 <Button
                   variant="contained"
                   startIcon={<DeleteIcon />}
-                  sx={{ backgroundColor: '#EDEBEB', color: '#3F3F3F', textTransform: 'none', scale: 0.8 }}
+                  sx={{ backgroundColor: '#EDEBEB', color: '#3F3F3F', textTransform: 'none' }}
                   disabled
+                  size="small"
                 >
                   Slett
                 </Button>
                 <FormGroup>
-                  <FormControlLabel control={<Checkbox />} label="Vis inaktive" sx={{ scale: 0.8 }} />
+                  <FormControlLabel control={<Checkbox size="small" />} label="Vis inaktive" />
                 </FormGroup>
               </Grid2>
             </Grid2>

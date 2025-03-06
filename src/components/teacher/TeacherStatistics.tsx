@@ -116,7 +116,7 @@ export default function StudentStatistics() {
                 mt: 10,
               }}
             >
-              <Typography variant="h6" noWrap component="div">
+              <Typography typography="h6" noWrap component="div" mb={2}>
                 Følgende elever vises
               </Typography>
               <TableContainer component={Paper}>

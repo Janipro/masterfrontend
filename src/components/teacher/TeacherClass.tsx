@@ -14,94 +14,11 @@ import {
 import Table from '../Table';
 import { NAV_COLORS, style } from '../../types/navColors';
 import Announcements from '../Announcements';
-import { GridColDef } from '@mui/x-data-grid';
-import { renderRequirement } from '../renderRequirement';
 import AnnouncementIcon from '@mui/icons-material/Announcement';
 import { useState } from 'react';
-import ShareIcon from '@mui/icons-material/Share';
+import PostAddIcon from '@mui/icons-material/PostAdd';
 import CreateIcon from '@mui/icons-material/Create';
-
-const rows = [
-  {
-    id: 1,
-    title: 'Chicken Nuggets',
-    requirement: ['for-løkke', 'if-setning'],
-    level: 'VG1',
-    course: 'Matematikk',
-    type: 'Obligatorisk',
-    due: '14.02.2025 13:00',
-    status: 'Uncomplete',
-  },
-  {
-    id: 2,
-    title: 'Peter Griffith',
-    requirement: ['for-løkke'],
-    level: '10',
-    course: 'Matematikk',
-    type: 'Obligatorisk',
-    due: '14.02.2025 13:00',
-    status: 'Uncomplete',
-  },
-  {
-    id: 3,
-    title: 'Peter Griffin',
-    requirement: ['for-løkke', 'while-løkke'],
-    level: '9',
-    course: 'Matematikk',
-    type: 'Anbefalt',
-    due: '17.02.2025 13:00',
-    status: 'Uncomplete',
-  },
-  {
-    id: 4,
-    title: 'Peter Grizzler',
-    requirement: ['if-setning'],
-    level: '9',
-    course: 'Matematikk',
-    type: 'Obligatorisk',
-    due: '15.02.2025 15:00',
-    status: 'Uncomplete',
-  },
-  {
-    id: 5,
-    title: 'Peter Nuggets',
-    requirement: ['if-setning', 'while-løkke'],
-    level: '8',
-    course: 'Matematikk',
-    type: 'Anbefalt',
-    due: '14.02.2025 14:00',
-    status: 'Uncomplete',
-  },
-  {
-    id: 6,
-    title: 'Peter Gooner',
-    requirement: ['for-løkke', 'if-setning'],
-    level: '8',
-    course: 'Matematikk',
-    type: 'Anbefalt',
-    due: '14.02.2025 14:00',
-    status: 'Uncomplete',
-  },
-];
-
-const columns: GridColDef[] = [
-  { field: 'assigned', headerName: 'Tildelt', width: 100 },
-  { field: 'course', headerName: 'Fag', width: 120 },
-  { field: 'title', headerName: 'Tittel', width: 260 },
-  {
-    field: 'requirement',
-    display: 'flex',
-    renderCell: renderRequirement,
-    valueGetter: (value, row) =>
-      row.title == null || row.requirement == null ? null : { title: row.title, requirement: row.requirement },
-    filterable: false,
-    headerName: 'Krav',
-    width: 300,
-  } as GridColDef<{ requirement: string[]; title: string }>,
-  { field: 'level', headerName: 'Nivå', width: 60 },
-  { field: 'type', headerName: 'Type', width: 120 },
-  { field: 'due', headerName: 'Frist', width: 160 },
-];
+import { columns, rows } from '../../types/userData';
 
 export default function TeacherClass() {
   const [open, setOpen] = useState(false);
@@ -123,10 +40,10 @@ export default function TeacherClass() {
                 color="primary"
                 sx={{
                   textTransform: 'none',
-                  scale: 0.8,
                   ml: 'auto',
                   mt: 'auto',
                 }}
+                size="small"
               >
                 Rediger
               </Button>
@@ -145,13 +62,11 @@ export default function TeacherClass() {
                 variant="contained"
                 startIcon={<AnnouncementIcon />}
                 sx={{
-                  backgroundColor: NAV_COLORS.background,
-                  color: NAV_COLORS.text,
                   textTransform: 'none',
-                  scale: 0.8,
                   ml: 'auto',
                 }}
                 onClick={handleOpen}
+                size="small"
               >
                 Ny kunngjøring
               </Button>
@@ -173,10 +88,16 @@ export default function TeacherClass() {
                     <Grid2 container direction="column" spacing={3}>
                       <Stack direction="row">
                         <Typography id="keep-mounted-modal-title" variant="h5" fontWeight="medium">
-                          Del kunngjøring
+                          Ny kunngjøring
                         </Typography>
                       </Stack>
-                      <TextField id="keep-mounted-modal-title" label="Tittel" variant="standard" />
+                      <TextField
+                        id="keep-mounted-modal-title"
+                        label="Tittel"
+                        variant="outlined"
+                        size="small"
+                        sx={{ width: '14vw' }}
+                      />
                       <TextField
                         id="keep-mounted-modal-description"
                         label="Innhold"
@@ -187,17 +108,15 @@ export default function TeacherClass() {
                       <Stack direction="row">
                         <Button
                           variant="contained"
-                          startIcon={<ShareIcon />}
+                          startIcon={<PostAddIcon />}
                           sx={{
-                            backgroundColor: NAV_COLORS.background,
-                            color: NAV_COLORS.text,
                             textTransform: 'none',
-                            scale: 0.8,
                             ml: 'auto',
                           }}
                           onClick={handleOpen}
+                          size="small"
                         >
-                          Del
+                          Publiser
                         </Button>
                       </Stack>
                     </Grid2>

@@ -36,7 +36,7 @@ export default function TeacherTasks() {
           <Grid2 direction="column" container spacing={2} mt={10}>
             <Grid2 direction="row" container>
               <Typography typography="h5">Utdelte oppgaver</Typography>
-              <Grid2 container direction={'row'} spacing={0} sx={{ flexGrow: 0, ml: 'auto' }}>
+              <Grid2 container direction={'row'} spacing={1} sx={{ flexGrow: 0 }} ml={'auto'} mt={'auto'}>
                 <Button
                   variant="contained"
                   startIcon={<VisibilityIcon />}
@@ -44,9 +44,9 @@ export default function TeacherTasks() {
                     backgroundColor: NAV_COLORS.background,
                     color: NAV_COLORS.text,
                     textTransform: 'none',
-                    scale: 0.8,
                   }}
                   disabled
+                  size="small"
                 >
                   Aktiver
                 </Button>
@@ -57,9 +57,9 @@ export default function TeacherTasks() {
                     backgroundColor: NAV_COLORS.background,
                     color: NAV_COLORS.text,
                     textTransform: 'none',
-                    scale: 0.8,
                   }}
                   disabled
+                  size="small"
                 >
                   Deaktiver
                 </Button>
@@ -70,14 +70,14 @@ export default function TeacherTasks() {
                     backgroundColor: NAV_COLORS.background,
                     color: NAV_COLORS.text,
                     textTransform: 'none',
-                    scale: 0.8,
                   }}
                   disabled
+                  size="small"
                 >
                   Slett
                 </Button>
                 <FormGroup>
-                  <FormControlLabel control={<Checkbox />} label="Vis inaktive" sx={{ scale: 0.8 }} />
+                  <FormControlLabel control={<Checkbox size="small" />} label="Vis inaktive" />
                 </FormGroup>
               </Grid2>
             </Grid2>
@@ -89,16 +89,15 @@ export default function TeacherTasks() {
               </Typography>
               <Grid2 container direction="row">
                 <SearchBar options={rows2} prompt="Søk etter oppgaver" />
-                <Grid2 sx={{ flexGrow: 0, ml: 'auto', mt: 'auto' }}>
+                <Grid2 container sx={{ flexGrow: 0, ml: 'auto' }} spacing={1}>
                   <Button
                     variant="contained"
                     startIcon={<CreateIcon />}
                     color="primary"
                     sx={{
                       textTransform: 'none',
-                      scale: 0.8,
                     }}
-                    onClick={handleOpen}
+                    size="small"
                   >
                     Opprett oppgave
                   </Button>
@@ -109,9 +108,9 @@ export default function TeacherTasks() {
                       backgroundColor: NAV_COLORS.background,
                       color: NAV_COLORS.text,
                       textTransform: 'none',
-                      scale: 0.8,
                     }}
                     onClick={handleOpen}
+                    size="small"
                   >
                     Del oppgave
                   </Button>
@@ -136,11 +135,24 @@ export default function TeacherTasks() {
                               Del oppgaver
                             </Typography>
                           </Stack>
-                          <Typography id="keep-mounted-modal-description" sx={{ mt: 2 }}>
+                          <Typography id="keep-mounted-modal-description" sx={{ mt: 2, mb: 1 }}>
                             Deler valgte oppgaver med:
                           </Typography>
-                          <SearchBar options={rows3} prompt="Søk etter elever" />
+                          {/*<SearchBar options={rows3} prompt="Søk etter elever" />
+                          TODO: ADD SEARCH FUNCTIONALITY */}
                           <Table rows={rows3} columns={columns3} selectable />
+                          <Button
+                            variant="contained"
+                            startIcon={<ShareIcon />}
+                            sx={{
+                              textTransform: 'none',
+                              ml: 'auto',
+                            }}
+                            onClick={handleOpen}
+                            size="small"
+                          >
+                            Del
+                          </Button>
                         </Grid2>
                       </Box>
                     </Fade>

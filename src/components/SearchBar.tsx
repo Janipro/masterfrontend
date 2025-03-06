@@ -10,6 +10,7 @@ export default function SearchBar({ options, prompt }: { options: tableProps[]; 
       sx={{ width: 300 }}
       renderInput={(params) => <TextField {...params} label={prompt} />}
       getOptionLabel={(option: tableProps) => option.title}
+      size="small"
     />
   );
 }
