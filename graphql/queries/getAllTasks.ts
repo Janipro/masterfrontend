@@ -1,31 +1,34 @@
 import { gql } from '@apollo/client';
 
 export const GET_ALL_TASKS = gql`
-    query GetTasks () {
+  query AllTasks {
     allTasks {
-    nodes {
-      taskName
-      taskId
-      difficulty
-      courseId
-      taskDescription
-      isActive
-      imageUrl
-      taskstatusesByTaskId {
-        nodes {
-          status
-          lastUpdated
+      nodes {
+        taskId
+        difficulty
+        imageUrl
+        isActive
+        publicAccess
+        taskName
+        userByUserId {
+          email
         }
-      }
-      taskrequirementsByTaskId {
-        nodes {
-          requirementByRequirementId {
-            requirementName
-            requirementId
+        taskstatusesByTaskId {
+          nodes {
+            status
           }
+        }
+        taskrequirementsByTaskId {
+          nodes {
+            requirementByRequirementId {
+              requirementName
+            }
+          }
+        }
+        courseByCourseId {
+          courseName
         }
       }
     }
   }
-}
 `;

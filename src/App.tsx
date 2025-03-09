@@ -10,6 +10,8 @@ import Class from './pages/Class';
 import Statistics from './pages/Statistics';
 import useDarkmodeStore from './stores/useDarkmodeStore';
 import Home from './pages/Home';
+import client from './apolloClient';
+import { ApolloProvider } from '@apollo/client';
 
 const darkTheme = createTheme({
   palette: {
@@ -35,7 +37,7 @@ function Router(props: { children?: React.ReactNode }) {
 function App() {
   const { isDarkmode } = useDarkmodeStore();
   return (
-    <>
+    <ApolloProvider client={client}>
       <ThemeProvider theme={isDarkmode ? darkTheme : defaultTheme}>
         <CssBaseline />
         <Router>
@@ -50,7 +52,7 @@ function App() {
           </Routes>
         </Router>
       </ThemeProvider>
-    </>
+    </ApolloProvider>
   );
 }
 

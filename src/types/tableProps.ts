@@ -1,9 +1,13 @@
 export type tableProps = {
   id: number;
-  title?: string;
+  taskId: number;
+  taskName?: string;
   requirement?: string[];
   level?: string;
-  course?: string;
+  difficulty?: string;
+  courseByCourseId?: string;
+  userByUserId?: string;
+  taskrequirementsByRequirementId?: string;
   type?: string;
   due?: string;
   status?: string;
