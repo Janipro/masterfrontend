@@ -27,7 +27,10 @@ import Table from '../Table';
 import InfoCard from '../InfoCard';
 import { useState } from 'react';
 import { style } from '../../types/navColors';
-import { columns, columns3, rows, rows3 } from '../../types/userData';
+import { columns, columns3, rows3 } from '../../types/userData';
+import { useQuery } from '@apollo/client';
+import { GET_GIVEN_TASKS } from '../../../graphql/queries/getGivenTasks';
+import { task, taskRequirement } from '../../types/tableProps';
 
 const subjects = [1, 2, 3, 4, 5, 6, 7, 8];
 
@@ -39,6 +42,33 @@ export default function TeacherDashboard() {
 
   const handleChange = (event: SelectChangeEvent) => {
     setAge(event.target.value);
+  };
+  const { loading, error, data } = useQuery(GET_GIVEN_TASKS, { variables: { userId: 2 } });
+
+  if (loading) {
+    return (
+      <Box mt="30vh">
+        <p> Loading... </p>
+      </Box>
+    );
+  }
+
+  if (error) {
+    console.log('could not load from db');
+  }
+  const getGivenTasks = (): task[] => {
+    return data.allTasks.nodes.map((task: task) => ({
+      id: task.taskId,
+      course: task.courseByCourseId?.courseName,
+      title: task.taskName,
+      owner: task.userByUserId?.email,
+      requirement: task.taskrequirementsByTaskId
+        ? task.taskrequirementsByTaskId.nodes.map(
+            (req: taskRequirement) => req.requirementByRequirementId.requirementName
+          )
+        : [],
+      level: task.difficulty,
+    }));
   };
   return (
     <Fade in timeout={500}>
@@ -207,7 +237,7 @@ export default function TeacherDashboard() {
                 </FormGroup>
               </Grid2>
             </Grid2>
-            <Table rows={rows} columns={columns} selectable />
+            <Table rows={getGivenTasks()} columns={columns} selectable />
           </Grid2>
         </Container>
       </Box>

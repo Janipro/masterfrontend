@@ -27,8 +27,6 @@ export default function StudentTasks() {
     console.log('could not load from db');
   }
 
-  console.log(recommendedTasks);
-
   const getAllTasks = (): task[] => {
     return allTasks.allTasks.nodes.map((task: task) => ({
       id: task.taskId,

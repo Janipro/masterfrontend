@@ -3,112 +3,41 @@ import Table from '../Table';
 import InfoCard from '../InfoCard';
 import Calendar from '../Calendar';
 import Requirement from '../Requirement';
-import { GridActionsCellItem, GridColDef } from '@mui/x-data-grid';
-import { renderRequirement } from '../renderRequirement';
-import CheckBoxIcon from '@mui/icons-material/CheckBox';
-import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
-import IndeterminateCheckBoxIcon from '@mui/icons-material/IndeterminateCheckBox';
+import { useQuery } from '@apollo/client';
+import { recommended, taskRequirement } from '../../types/tableProps';
+import { GET_RECOMMENDED_TASKS } from '../../../graphql/queries/getRecommendedTasks';
+import { columns } from '../../types/userData';
 
 const subjects = [1, 2, 3, 4, 5, 6];
 
-const rows = [
-  {
-    id: 1,
-    title: 'Chicken Nuggets',
-    requirement: ['for-løkke', 'if-setning'],
-    level: 'VG1',
-    course: 'Matematikk',
-    type: 'Obligatorisk',
-    due: '14.02.2025 13:00',
-    status: 'Uncomplete',
-  },
-  {
-    id: 2,
-    title: 'Peter Griffith',
-    requirement: ['for-løkke'],
-    level: '10',
-    course: 'Matematikk',
-    type: 'Obligatorisk',
-    due: '14.02.2025 13:00',
-    status: 'Uncomplete',
-  },
-  {
-    id: 3,
-    title: 'Peter Griffin',
-    requirement: ['for-løkke', 'while-løkke'],
-    level: '9',
-    course: 'Matematikk',
-    type: 'Anbefalt',
-    due: '17.02.2025 13:00',
-    status: 'Uncomplete',
-  },
-  {
-    id: 4,
-    title: 'Peter Grizzler',
-    requirement: ['if-setning'],
-    level: '9',
-    course: 'Matematikk',
-    type: 'Obligatorisk',
-    due: '15.02.2025 15:00',
-    status: 'Uncomplete',
-  },
-  {
-    id: 5,
-    title: 'Peter Nuggets',
-    requirement: ['if-setning', 'while-løkke'],
-    level: '8',
-    course: 'Matematikk',
-    type: 'Anbefalt',
-    due: '14.02.2025 14:00',
-    status: 'Uncomplete',
-  },
-  {
-    id: 6,
-    title: 'Peter Gooner',
-    requirement: ['for-løkke', 'if-setning'],
-    level: '8',
-    course: 'Matematikk',
-    type: 'Anbefalt',
-    due: '14.02.2025 14:00',
-    status: 'Uncomplete',
-  },
-];
-
-const columns: GridColDef[] = [
-  { field: 'assigned', headerName: 'Tildelt', width: 100 },
-  { field: 'title', headerName: 'Tittel', width: 220 },
-  {
-    field: 'requirement',
-    display: 'flex',
-    renderCell: renderRequirement,
-    valueGetter: (value, row) =>
-      row.title == null || row.requirement == null ? null : { title: row.title, requirement: row.requirement },
-    filterable: false,
-    headerName: 'Krav',
-    width: 260,
-  } as GridColDef<{ requirement: string[]; title: string }>,
-  { field: 'level', headerName: 'Nivå', width: 60 },
-  { field: 'course', headerName: 'Fag', width: 100 },
-  { field: 'type', headerName: 'Type', width: 100 },
-  { field: 'due', headerName: 'Frist', width: 140 },
-  {
-    field: 'actions',
-    type: 'actions',
-    width: 80,
-    headerName: 'Status',
-    getActions: () => [
-      <GridActionsCellItem icon={<CheckBoxIcon sx={{ color: '#4CCC17' }} />} label="Fullført" showInMenu />,
-      <GridActionsCellItem
-        icon={<IndeterminateCheckBoxIcon sx={{ color: '#FCD703' }} />}
-        label="Underveis"
-        showInMenu
-      />,
-      <GridActionsCellItem icon={<CheckBoxOutlineBlankIcon />} label="Ikke fullført" showInMenu />,
-    ],
-  },
-];
-
 export default function StudentDashboard() {
+  const { loading, error, data } = useQuery(GET_RECOMMENDED_TASKS, { variables: { userId: 1 } });
+
+  if (loading) {
+    return (
+      <Box mt="30vh">
+        <p> Loading... </p>
+      </Box>
+    );
+  }
+
+  if (error) {
+    console.log('could not load from db');
+  }
+  const getRecommendedTasks = (): recommended[] => {
+    return data.allRecommendeds.nodes.map((recommended: recommended) => ({
+      id: recommended.taskByTaskId.taskId,
+      course: recommended.taskByTaskId.courseByCourseId?.courseName,
+      title: recommended.taskByTaskId.taskName,
+      owner: recommended.taskByTaskId.userByUserId?.email,
+      requirement: recommended.taskByTaskId.taskrequirementsByTaskId
+        ? recommended.taskByTaskId.taskrequirementsByTaskId.nodes.map(
+            (req: taskRequirement) => req.requirementByRequirementId.requirementName
+          )
+        : [],
+      level: recommended.taskByTaskId.difficulty,
+    }));
+  };
   return (
     <Fade in timeout={500}>
       <Box>
@@ -168,7 +97,7 @@ export default function StudentDashboard() {
             <Typography variant="h5" noWrap component="div" sx={{ mb: 0.5 }}>
               Anbefalte oppgaver
             </Typography>
-            <Table rows={rows} columns={columns} selectable={false} />
+            <Table rows={getRecommendedTasks()} columns={columns} selectable={false} />
           </Grid2>
         </Container>
       </Box>
