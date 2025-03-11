@@ -1,30 +1,61 @@
 import { Box, Container, CssBaseline, Fade, Grid2, Typography } from '@mui/material';
 import Table from '../Table';
 import SearchBar from '../SearchBar';
-import { columns, columns2, rows } from '../../types/userData';
+import { columns, columns2 } from '../../types/userData';
 import { useQuery } from '@apollo/client';
 import { GET_ALL_TASKS } from '../../../graphql/queries/getAllTasks';
-import { tableProps } from '../../types/tableProps';
+import { GET_RECOMMENDED_TASKS } from '../../../graphql/queries/getRecommendedTasks';
+import { recommended, task, taskRequirement } from '../../types/tableProps';
 
 export default function StudentTasks() {
-  const { loading, error, data } = useQuery(GET_ALL_TASKS);
+  const { loading: tasksLoading, error: tasksError, data: allTasks } = useQuery(GET_ALL_TASKS);
+  const {
+    loading: recommendedsLoading,
+    error: recommendedsError,
+    data: recommendedTasks,
+  } = useQuery(GET_RECOMMENDED_TASKS, { variables: { userId: 1 } });
 
-  if (loading) {
-    return <p> Loading... </p>;
+  if (tasksLoading || recommendedsLoading) {
+    return (
+      <Box mt="30vh">
+        <p> Loading... </p>
+      </Box>
+    );
   }
 
-  if (error) {
-    console.log(`could not load tasks ${error}`);
+  if (tasksError || recommendedsError) {
+    console.log('could not load from db');
   }
 
-  const transformData = (): tableProps[] => {
-    return data.allTasks.nodes.map((task: tableProps) => ({
+  console.log(recommendedTasks);
+
+  const getAllTasks = (): task[] => {
+    return allTasks.allTasks.nodes.map((task: task) => ({
       id: task.taskId,
       course: task.courseByCourseId?.courseName,
       title: task.taskName,
       owner: task.userByUserId?.email,
-      requirement: [task.taskrequirementsByTaskId?.nodes[0].requirementByRequirementId.requirementName],
+      requirement: task.taskrequirementsByTaskId
+        ? task.taskrequirementsByTaskId.nodes.map(
+            (req: taskRequirement) => req.requirementByRequirementId.requirementName
+          )
+        : [],
       level: task.difficulty,
+    }));
+  };
+
+  const getRecommendedTasks = (): recommended[] => {
+    return recommendedTasks.allRecommendeds.nodes.map((recommended: recommended) => ({
+      id: recommended.taskByTaskId.taskId,
+      course: recommended.taskByTaskId.courseByCourseId?.courseName,
+      title: recommended.taskByTaskId.taskName,
+      owner: recommended.taskByTaskId.userByUserId?.email,
+      requirement: recommended.taskByTaskId.taskrequirementsByTaskId
+        ? recommended.taskByTaskId.taskrequirementsByTaskId.nodes.map(
+            (req: taskRequirement) => req.requirementByRequirementId.requirementName
+          )
+        : [],
+      level: recommended.taskByTaskId.difficulty,
     }));
   };
 
@@ -37,15 +68,15 @@ export default function StudentTasks() {
             <Typography variant="h5" noWrap component="div" sx={{ textAlign: 'left' }}>
               Anbefalte oppgaver
             </Typography>
-            <Table rows={rows} columns={columns} selectable={false} />
+            <Table rows={getRecommendedTasks()} columns={columns} selectable={false} />
 
             <Grid2 container spacing={2} direction="column">
               <Typography variant="h5" noWrap component="div" sx={{ textAlign: 'left' }}>
                 Alle oppgaver
               </Typography>
-              <SearchBar options={rows} prompt="Søk etter oppgaver" />
+              <SearchBar options={getAllTasks()} prompt="Søk etter oppgaver" />
             </Grid2>
-            <Table rows={transformData()} columns={columns2} selectable={false} />
+            <Table rows={getAllTasks()} columns={columns2} selectable={false} />
           </Grid2>
         </Container>
       </Box>
