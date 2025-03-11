@@ -9,6 +9,7 @@ import ExpandLessRoundedIcon from '@mui/icons-material/ExpandLessRounded';
 import Editor from './Editor';
 import { Container, CssBaseline, Grid2, IconButton, useTheme } from '@mui/material';
 import { NAV_COLORS } from '../types/navColors';
+import Requirement from './Requirement';
 
 export default function PlaygroundContent() {
   const theme = useTheme();
@@ -34,18 +35,30 @@ export default function PlaygroundContent() {
 
   const taskDescription: string[] = ['VG1', 'Matematikk', 'Giga Elise'];
   const programmingConstructs = [
-    'For-loop',
-    '#FFA857',
-    '#FC9B3F',
-    'If-statement',
-    '#EA6C6C',
-    '#EC3939',
-    'While-loop',
-    '#6ECFFF',
-    '#6ABCF2',
-    'Inheritance',
-    '#7CFF6E',
-    '#53EC67',
+    'if-statement',
+    'for-loop',
+    'while-loop',
+    'inheritance',
+    'switch-statement',
+    'do-while-loop',
+    'recursion',
+    'function-call',
+    'array',
+    'object',
+    'class',
+    'try-catch',
+    'variable-declaration',
+    'return-statement',
+    'pointer',
+    'operator',
+    'lambda-function',
+    'struct',
+    'exception-handling',
+    'promise',
+    'callback',
+    'bitwise-operation',
+    'thread',
+    'enum',
   ];
 
   const disableInteractions = useCallback(() => {
@@ -320,7 +333,6 @@ export default function PlaygroundContent() {
                   <Box
                     sx={{
                       typography: 'body2',
-                      fontWeight: 'medium',
                       fontFamily: 'inter',
                       display: 'flex',
                       width: '100%',
@@ -331,21 +343,8 @@ export default function PlaygroundContent() {
                       gap: '10px',
                     }}
                   >
-                    {programmingConstructs.slice(0, programmingConstructs.length / 3).map((_, index) => (
-                      <Box
-                        sx={{
-                          backgroundColor: programmingConstructs[index * 3 + 1],
-                          border: `${programmingConstructs[index * 3 + 2]} 3px solid`,
-                          paddingX: '6px',
-                          paddingY: '1px',
-                          borderRadius: '20px',
-                          fontWeight: '600',
-                          fontSize: '1em',
-                          boxShadow: 3,
-                        }}
-                      >
-                        {programmingConstructs[index * 3]}
-                      </Box>
+                    {programmingConstructs.map((item) => (
+                      <Requirement value={item} size="small" />
                     ))}
                   </Box>
                   <Box

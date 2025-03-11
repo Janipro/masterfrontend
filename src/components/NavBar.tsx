@@ -73,14 +73,14 @@ export default function NavBar({ isEditor }: { isEditor: boolean }) {
           : isDarkmode
             ? NAV_COLORS.background_dark
             : NAV_COLORS.background,
-        boxShadow: isEditor ? 'none' : 2,
+        boxShadow: 'none',
+        border: isEditor ? null : '2px solid #D6E4ED',
         color: isDarkmode ? NAV_COLORS.text_dark : NAV_COLORS.text,
       }}
     >
       <CssBaseline />
       <Container maxWidth={isEditor ? false : 'xl'}>
-        <Toolbar disableGutters>
-          {isEditor ? null : <PopUpMenu />}
+        <Toolbar disableGutters sx={{ minHeight: '50px !important' }}>
           <img
             src="src/assets/educode.png"
             width="40"
@@ -94,21 +94,15 @@ export default function NavBar({ isEditor }: { isEditor: boolean }) {
             }}
             onClick={() => navigate('/')}
           />
-          {isEditor ? (
-            <Box
-              sx={{
-                padding: 0,
-                margin: 0,
-                zIndex: 100,
-              }}
-            >
-              <PopUpMenu />
-            </Box>
-          ) : (
-            <Typography typography="h6" fontWeight="medium" marginLeft={0.25}>
-              EduCode
-            </Typography>
-          )}
+          <Box
+            sx={{
+              padding: 0,
+              margin: 0,
+              zIndex: 100,
+            }}
+          >
+            <PopUpMenu />
+          </Box>
           {isEditor ? (
             <Box
               sx={{

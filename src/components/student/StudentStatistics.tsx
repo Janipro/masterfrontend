@@ -15,7 +15,7 @@ const rows = [
   {
     id: 1,
     title: 'Chicken Nuggets',
-    requirement: ['for-løkke', 'if-setning'],
+    requirement: ['for-loop', 'if-statement'],
     level: 'VG1',
     course: 'Matematikk',
     type: 'Obligatorisk',
@@ -25,7 +25,7 @@ const rows = [
   {
     id: 2,
     title: 'Peter Griffith',
-    requirement: ['for-løkke'],
+    requirement: ['for-loop'],
     level: '10',
     course: 'Matematikk',
     type: 'Obligatorisk',
@@ -35,7 +35,7 @@ const rows = [
   {
     id: 3,
     title: 'Peter Griffin',
-    requirement: ['for-løkke', 'while-løkke'],
+    requirement: ['for-loop', 'while-loop'],
     level: '9',
     course: 'Matematikk',
     type: 'Anbefalt',
@@ -45,7 +45,7 @@ const rows = [
   {
     id: 4,
     title: 'Peter Grizzler',
-    requirement: ['if-setning'],
+    requirement: ['if-statement'],
     level: '9',
     course: 'Matematikk',
     type: 'Obligatorisk',
@@ -55,7 +55,7 @@ const rows = [
   {
     id: 5,
     title: 'Peter Nuggets',
-    requirement: ['if-setning', 'while-løkke'],
+    requirement: ['if-statement', 'while-loop'],
     level: '8',
     course: 'Matematikk',
     type: 'Anbefalt',
@@ -65,7 +65,7 @@ const rows = [
   {
     id: 6,
     title: 'Peter Gooner',
-    requirement: ['for-løkke', 'if-setning'],
+    requirement: ['for-loop', 'if-statement'],
     level: '8',
     course: 'Matematikk',
     type: 'Anbefalt',
@@ -166,16 +166,16 @@ export default function StudentStatistics() {
                 <Grid2 container sx={{ justifyContent: 'center', alignItems: 'center' }}>
                   <List dense sx={{ listStyle: 'decimal', pl: 4 }}>
                     <ListItem sx={{ display: 'list-item' }}>
-                      <Requirement value="for-løkke" size="small" />
+                      <Requirement value="for-loop" size="small" />
                     </ListItem>
                     <ListItem sx={{ display: 'list-item' }}>
-                      <Requirement value="if-setning" size="small" />
+                      <Requirement value="if-statement" size="small" />
                     </ListItem>
                     <ListItem sx={{ display: 'list-item' }}>
-                      <Requirement value="while-løkke" size="small" />
+                      <Requirement value="while-loop" size="small" />
                     </ListItem>
                     <ListItem sx={{ display: 'list-item' }}>
-                      <Requirement value="arv" size="small" />
+                      <Requirement value="inheritance" size="small" />
                     </ListItem>
                   </List>
                 </Grid2>
