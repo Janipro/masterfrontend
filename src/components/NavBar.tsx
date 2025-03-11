@@ -15,13 +15,22 @@ import { Link } from 'react-router-dom';
 import { FormControlLabel, FormGroup, Stack, Switch } from '@mui/material';
 import useTeacherStore from '../stores/useTeacherStore';
 import { NAV_COLORS } from '../types/navColors';
+import ReplayOutlinedIcon from '@mui/icons-material/ReplayOutlined';
+import NavigationRoundedIcon from '@mui/icons-material/NavigationRounded';
+import WbIncandescentRoundedIcon from '@mui/icons-material/WbIncandescentRounded';
+import CloudUploadRoundedIcon from '@mui/icons-material/CloudUploadRounded';
+import HistoryRoundedIcon from '@mui/icons-material/HistoryRounded';
+import NotificationsRoundedIcon from '@mui/icons-material/NotificationsRounded';
+import { useNavigate } from 'react-router-dom';
 
-const functions = ['Kjør', 'Hjelp', 'Lever'];
+const functions = ['Kjør', 'Hjelp', 'Lever', 'Innsendingshistorikk'];
 const settings = ['Profil', 'Logg ut'];
 
 export default function NavBar({ isEditor }: { isEditor: boolean }) {
   const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(null);
   const { isTeacher, setTeacher } = useTeacherStore();
+
+  const navigate = useNavigate();
 
   const handleOpenUserMenu = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorElUser(event.currentTarget);
@@ -32,55 +41,415 @@ export default function NavBar({ isEditor }: { isEditor: boolean }) {
   };
 
   return (
-    <AppBar position="fixed" sx={{ backgroundColor: NAV_COLORS.background, boxShadow: 2 }}>
-      <Container maxWidth="xl">
+    <AppBar position="fixed" sx={{ backgroundColor: 'white', boxShadow: 'none' }}>
+      <Container maxWidth={isEditor ? false : 'xl'}>
         <Toolbar disableGutters>
-          <PopUpMenu />
           <img
             src="src/assets/educode.png"
-            width="30"
+            width="40"
             height="auto"
             alt="EduCode logo"
             unselectable="on"
             draggable={false}
             style={{
-              userSelect: 'none',
-              msUserSelect: 'none',
-              MozUserSelect: 'none',
-              WebkitUserSelect: 'none',
-              marginLeft: 18,
+              cursor: 'Pointer',
+              zIndex: 100,
             }}
-          ></img>
-          <Typography color={NAV_COLORS.text} variant="h6" fontWeight="medium" marginLeft={0.25}>
-            EduCode
-          </Typography>
+            onClick={() => navigate('/')}
+          />
+          <Box
+            sx={{
+              padding: 0,
+              margin: 0,
+              zIndex: 100,
+            }}
+          >
+            <PopUpMenu />
+          </Box>
           {isEditor ? (
             <Box
               sx={{
-                flexGrow: 1,
-                display: { xs: 'none', md: 'flex' },
+                position: 'fixed',
+                display: 'flex',
+                width: '95vw',
                 justifyContent: 'center',
               }}
             >
-              {functions.map((f) => (
-                <Button
-                  key={f}
+              <Box
+                sx={{
+                  flexGrow: 1,
+                  display: 'flex',
+                  justifyContent: 'center',
+                }}
+              >
+                <Box
                   sx={{
-                    my: 2,
-                    color: NAV_COLORS.text,
-                    display: 'block',
-                    backgroundColor: 'white',
-                    borderRadius: 6,
-                    mx: 0.5,
-                    textTransform: 'none',
+                    display: 'flex',
+                    justifyContent: 'center',
+                    mx: 2,
+                    alignItems: { md: 'flex-end' },
                   }}
                 >
-                  <Typography>{f}</Typography>
-                </Button>
-              ))}
+                  <Box
+                    sx={{
+                      my: 2,
+                      color: NAV_COLORS.text,
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      backgroundColor: 'white',
+                      borderRadius: 20,
+                      mx: 0,
+                      textTransform: 'none',
+                      height: '40%',
+                      px: 0,
+                      minWidth: 'auto',
+                      width: 'fit-content',
+                      boxShadow: 2,
+                    }}
+                  >
+                    <Button
+                      key={'undoBtn'}
+                      sx={{
+                        color: NAV_COLORS.text,
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        backgroundColor: 'white',
+                        borderTopLeftRadius: 20,
+                        borderBottomLeftRadius: 20,
+                        borderTopRightRadius: 0,
+                        borderBottomRightRadius: 0,
+                        mx: 0,
+                        my: 0,
+                        textTransform: 'none',
+                        height: '100%',
+                        px: 1.5,
+                        minWidth: 'auto',
+                        width: 'fit-content',
+                      }}
+                    >
+                      <ReplayOutlinedIcon
+                        sx={{
+                          color: '#323232',
+                          fontSize: 'large',
+                        }}
+                      />
+                    </Button>
+
+                    <Box
+                      sx={{
+                        my: 2,
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        backgroundColor: 'white',
+                        borderRadius: 0,
+                        mx: 0,
+                        height: '45%',
+                        padding: 0,
+                      }}
+                    >
+                      <Box
+                        sx={{
+                          display: 'block',
+                          width: '1.5px',
+                          height: '100%',
+                          backgroundColor: '#d7e1ed',
+                        }}
+                      ></Box>
+                    </Box>
+
+                    <Button
+                      key={'redoBtn'}
+                      sx={{
+                        color: NAV_COLORS.text,
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        backgroundColor: 'white',
+                        borderTopLeftRadius: 0,
+                        borderBottomLeftRadius: 0,
+                        borderTopRightRadius: 20,
+                        borderBottomRightRadius: 20,
+                        mx: 0,
+                        my: 0,
+                        textTransform: 'none',
+                        height: '100%',
+                        px: 1.5,
+                        minWidth: 'auto',
+                        width: 'fit-content',
+                      }}
+                    >
+                      <ReplayOutlinedIcon
+                        sx={{
+                          color: '#323232',
+                          fontSize: 'large',
+                          transform: 'scaleX(-1)',
+                        }}
+                      />
+                    </Button>
+                  </Box>
+                </Box>
+
+                <Box
+                  sx={{
+                    display: 'flex',
+                    justifyContent: 'center',
+                    mx: 2,
+                    alignItems: { md: 'flex-end' },
+                  }}
+                >
+                  <Box
+                    sx={{
+                      my: 2,
+                      color: NAV_COLORS.text,
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      backgroundColor: 'white',
+                      borderRadius: 20,
+                      mx: 0,
+                      textTransform: 'none',
+                      height: '50%',
+                      px: 0,
+                      minWidth: 'auto',
+                      width: 'fit-content',
+                      boxShadow: 2,
+                    }}
+                  >
+                    <Button
+                      key={functions[0]}
+                      sx={{
+                        color: NAV_COLORS.text,
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        backgroundColor: 'white',
+                        borderTopLeftRadius: 20,
+                        borderBottomLeftRadius: 20,
+                        borderTopRightRadius: 0,
+                        borderBottomRightRadius: 0,
+                        mx: 0,
+                        my: 0,
+                        textTransform: 'none',
+                        height: '100%',
+                        px: 1.5,
+                        minWidth: 'auto',
+                        width: 'fit-content',
+                      }}
+                    >
+                      <NavigationRoundedIcon
+                        sx={{
+                          mx: 0.2,
+                          fontSize: 'large',
+                          transform: 'rotate(90deg)',
+                          color: '#00D100',
+                        }}
+                      />
+                      <Typography
+                        sx={{
+                          color: '#090909',
+                        }}
+                      >
+                        &nbsp;{functions[0]}
+                      </Typography>
+                    </Button>
+
+                    <Box
+                      sx={{
+                        my: 2,
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        backgroundColor: 'white',
+                        borderRadius: 0,
+                        mx: 0,
+                        height: '45%',
+                        padding: 0,
+                      }}
+                    >
+                      <Box
+                        sx={{
+                          display: 'block',
+                          width: '1.5px',
+                          height: '100%',
+                          backgroundColor: '#d7e1ed',
+                        }}
+                      ></Box>
+                    </Box>
+
+                    <Button
+                      key={functions[1]}
+                      sx={{
+                        color: NAV_COLORS.text,
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        backgroundColor: 'white',
+                        borderRadius: 0,
+                        mx: 0,
+                        my: 0,
+                        textTransform: 'none',
+                        height: '100%',
+                        px: 1.5,
+                        minWidth: 'auto',
+                        width: 'fit-content',
+                      }}
+                    >
+                      <WbIncandescentRoundedIcon
+                        sx={{
+                          mx: 0.2,
+                          fontSize: 'large',
+                          transform: 'rotate(180deg)',
+                          color: '#FDA500',
+                        }}
+                      />
+                      <Typography
+                        sx={{
+                          color: '#090909',
+                        }}
+                      >
+                        &nbsp;{functions[1]}
+                      </Typography>
+                    </Button>
+
+                    <Box
+                      sx={{
+                        my: 2,
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        backgroundColor: 'white',
+                        borderRadius: 0,
+                        mx: 0,
+                        height: '45%',
+                        padding: 0,
+                      }}
+                    >
+                      <Box
+                        sx={{
+                          display: 'block',
+                          width: '1.5px',
+                          height: '100%',
+                          backgroundColor: '#d7e1ed',
+                        }}
+                      ></Box>
+                    </Box>
+
+                    <Button
+                      key={functions[2]}
+                      sx={{
+                        color: NAV_COLORS.text,
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        backgroundColor: 'white',
+                        borderTopLeftRadius: 0,
+                        borderBottomLeftRadius: 0,
+                        borderTopRightRadius: 20,
+                        borderBottomRightRadius: 20,
+                        mx: 0,
+                        my: 0,
+                        textTransform: 'none',
+                        height: '100%',
+                        px: 1.5,
+                        minWidth: 'auto',
+                        width: 'fit-content',
+                      }}
+                    >
+                      <CloudUploadRoundedIcon
+                        sx={{
+                          mx: 0.2,
+                          fontSize: 'large',
+                          color: '#00D100',
+                        }}
+                      />
+                      <Typography
+                        sx={{
+                          color: '#090909',
+                        }}
+                      >
+                        &nbsp;{functions[2]}
+                      </Typography>
+                    </Button>
+                  </Box>
+                </Box>
+              </Box>
             </Box>
           ) : null}
-          <Stack direction="row" sx={{ flexGrow: 0, ml: 'auto' }}>
+          <Stack direction="row" sx={{ flexGrow: 0, ml: 'auto', alignItems: 'center' }}>
+            {isEditor ? (
+              <Box
+                sx={{
+                  flexGrow: 1,
+                  display: 'flex',
+                  justifyContent: 'center',
+                }}
+              >
+                <Box
+                  sx={{
+                    display: 'flex',
+                    justifyContent: 'center',
+                    mx: 2,
+                    alignItems: { md: 'flex-end' },
+                  }}
+                >
+                  <Box
+                    sx={{
+                      my: 2,
+                      color: NAV_COLORS.text,
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      backgroundColor: 'white',
+                      borderRadius: '20px',
+                      mx: 0,
+                      textTransform: 'none',
+                      height: '40%',
+                      px: 0,
+                      minWidth: 'auto',
+                      width: 'fit-content',
+                      boxShadow: 2,
+                    }}
+                  >
+                    <Button
+                      key={'submissionHistory'}
+                      sx={{
+                        color: NAV_COLORS.text,
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        backgroundColor: 'white',
+                        borderRadius: 20,
+                        mx: 0,
+                        my: 0,
+                        textTransform: 'none',
+                        height: '100%',
+                        px: 1.5,
+                        minWidth: 'auto',
+                        width: 'fit-content',
+                      }}
+                    >
+                      <HistoryRoundedIcon
+                        sx={{
+                          color: '#005FD4',
+                          fontSize: 'large',
+                        }}
+                      />
+                      <Typography
+                        sx={{
+                          color: '#090909',
+                          fontSize: 'small',
+                        }}
+                      >
+                        &nbsp;{functions[3]}
+                      </Typography>
+                    </Button>
+                  </Box>
+                </Box>
+              </Box>
+            ) : null}
             <FormGroup>
               <FormControlLabel
                 control={<Switch defaultChecked={isTeacher} onChange={() => setTeacher(!isTeacher)} />}
@@ -88,6 +457,10 @@ export default function NavBar({ isEditor }: { isEditor: boolean }) {
                 sx={{ color: NAV_COLORS.text }}
               />
             </FormGroup>
+
+            <IconButton>
+              <NotificationsRoundedIcon sx={{ color: NAV_COLORS.text }} />
+            </IconButton>
             <IconButton>
               <SettingsIcon sx={{ color: NAV_COLORS.text }} />
             </IconButton>
