@@ -12,7 +12,7 @@ import PopUpMenu from './PopUpMenu';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import SettingsIcon from '@mui/icons-material/Settings';
 import { Link } from 'react-router-dom';
-import { FormControlLabel, FormGroup, Stack, Switch } from '@mui/material';
+import { CssBaseline, FormControlLabel, FormGroup, Modal, Stack, Switch } from '@mui/material';
 import useTeacherStore from '../stores/useTeacherStore';
 import { NAV_COLORS } from '../types/navColors';
 import ReplayOutlinedIcon from '@mui/icons-material/ReplayOutlined';
@@ -22,13 +22,31 @@ import CloudUploadRoundedIcon from '@mui/icons-material/CloudUploadRounded';
 import HistoryRoundedIcon from '@mui/icons-material/HistoryRounded';
 import NotificationsRoundedIcon from '@mui/icons-material/NotificationsRounded';
 import { useNavigate } from 'react-router-dom';
+import { useState } from 'react';
+import useDarkmodeStore from '../stores/useDarkmodeStore';
 
 const functions = ['Kjør', 'Hjelp', 'Lever', 'Innsendingshistorikk'];
 const settings = ['Profil', 'Logg ut'];
 
+const style = {
+  position: 'absolute',
+  top: '50%',
+  left: '50%',
+  transform: 'translate(-50%, -50%)',
+  width: 300,
+  heigth: 'auto',
+  bgcolor: 'background.paper',
+  border: '2px solid #000',
+  boxShadow: 24,
+  p: 4,
+  textAlign: 'center',
+};
+
 export default function NavBar({ isEditor }: { isEditor: boolean }) {
   const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(null);
+  const [editorDarkmode, setEditorDarkmode] = useState(false);
   const { isTeacher, setTeacher } = useTeacherStore();
+  const { isDarkmode, setDarkmode } = useDarkmodeStore();
 
   const navigate = useNavigate();
 
@@ -40,10 +58,29 @@ export default function NavBar({ isEditor }: { isEditor: boolean }) {
     setAnchorElUser(null);
   };
 
+  const [open, setOpen] = React.useState(false);
+  const handleOpen = () => setOpen(true);
+  const handleClose = () => setOpen(false);
+
   return (
-    <AppBar position="fixed" sx={{ backgroundColor: 'white', boxShadow: 'none' }}>
+    <AppBar
+      position="fixed"
+      sx={{
+        backgroundColor: isEditor
+          ? isDarkmode
+            ? '#0F0F0F'
+            : '#FFFFFF'
+          : isDarkmode
+            ? NAV_COLORS.background_dark
+            : NAV_COLORS.background,
+        boxShadow: isEditor ? 'none' : 2,
+        color: isDarkmode ? NAV_COLORS.text_dark : NAV_COLORS.text,
+      }}
+    >
+      <CssBaseline />
       <Container maxWidth={isEditor ? false : 'xl'}>
         <Toolbar disableGutters>
+          {isEditor ? null : <PopUpMenu />}
           <img
             src="src/assets/educode.png"
             width="40"
@@ -57,15 +94,21 @@ export default function NavBar({ isEditor }: { isEditor: boolean }) {
             }}
             onClick={() => navigate('/')}
           />
-          <Box
-            sx={{
-              padding: 0,
-              margin: 0,
-              zIndex: 100,
-            }}
-          >
-            <PopUpMenu />
-          </Box>
+          {isEditor ? (
+            <Box
+              sx={{
+                padding: 0,
+                margin: 0,
+                zIndex: 100,
+              }}
+            >
+              <PopUpMenu />
+            </Box>
+          ) : (
+            <Typography typography="h6" fontWeight="medium" marginLeft={0.25}>
+              EduCode
+            </Typography>
+          )}
           {isEditor ? (
             <Box
               sx={{
@@ -93,11 +136,11 @@ export default function NavBar({ isEditor }: { isEditor: boolean }) {
                   <Box
                     sx={{
                       my: 2,
-                      color: NAV_COLORS.text,
+                      color: isDarkmode ? NAV_COLORS.text_dark : NAV_COLORS.text,
                       display: 'flex',
                       alignItems: 'center',
                       justifyContent: 'center',
-                      backgroundColor: 'white',
+                      backgroundColor: isDarkmode ? '#494949' : 'white',
                       borderRadius: 20,
                       mx: 0,
                       textTransform: 'none',
@@ -454,18 +497,43 @@ export default function NavBar({ isEditor }: { isEditor: boolean }) {
               <FormControlLabel
                 control={<Switch defaultChecked={isTeacher} onChange={() => setTeacher(!isTeacher)} />}
                 label="Lærermodus"
-                sx={{ color: NAV_COLORS.text }}
               />
             </FormGroup>
 
             <IconButton>
               <NotificationsRoundedIcon sx={{ color: NAV_COLORS.text }} />
             </IconButton>
-            <IconButton>
-              <SettingsIcon sx={{ color: NAV_COLORS.text }} />
+            <IconButton onClick={handleOpen}>
+              <SettingsIcon sx={{ color: isDarkmode ? NAV_COLORS.text_dark : NAV_COLORS.text }} />
             </IconButton>
-            <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-              <AccountCircleIcon sx={{ color: NAV_COLORS.text }} />
+            <Modal open={open} onClose={handleClose} aria-labelledby="settings-modal-title">
+              <Box sx={style}>
+                <Typography id="settings-modal-title" variant="h5" component="h2" fontWeight="500">
+                  Innstillinger
+                </Typography>
+                <Stack direction="column" alignItems="left" mt={4} gap={1}>
+                  <FormGroup>
+                    <FormControlLabel
+                      control={<Switch defaultChecked={isDarkmode} onChange={() => setDarkmode(!isDarkmode)} />}
+                      label="Nettside mørk modus"
+                    />
+                  </FormGroup>
+                  <FormGroup>
+                    <FormControlLabel
+                      control={
+                        <Switch defaultChecked={editorDarkmode} onChange={() => setEditorDarkmode(!editorDarkmode)} />
+                      }
+                      label="Editor mørk modus"
+                    />
+                  </FormGroup>
+                </Stack>
+              </Box>
+            </Modal>
+            <IconButton
+              onClick={handleOpenUserMenu}
+              sx={{ p: 0, color: isDarkmode ? NAV_COLORS.text_dark : NAV_COLORS.text }}
+            >
+              <AccountCircleIcon />
             </IconButton>
             <Menu
               sx={{ mt: '45px' }}
@@ -486,11 +554,11 @@ export default function NavBar({ isEditor }: { isEditor: boolean }) {
               {settings.map((setting) => (
                 <MenuItem key={setting} onClick={handleCloseUserMenu}>
                   {setting === 'Logg ut' ? (
-                    <Link to="/signin" style={{ color: 'inherit' }}>
-                      <Typography sx={{ textAlign: 'center', color: NAV_COLORS.text }}>{setting}</Typography>
+                    <Link to="/login" style={{ color: 'inherit' }}>
+                      <Typography sx={{ textAlign: 'center' }}>{setting}</Typography>
                     </Link>
                   ) : (
-                    <Typography sx={{ textAlign: 'center', color: NAV_COLORS.text }}>{setting}</Typography>
+                    <Typography sx={{ textAlign: 'center' }}>{setting}</Typography>
                   )}
                 </MenuItem>
               ))}
