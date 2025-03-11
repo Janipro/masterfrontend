@@ -1,142 +1,62 @@
 import { Box, Container, CssBaseline, Fade, Grid2, Typography } from '@mui/material';
 import Table from '../Table';
 import SearchBar from '../SearchBar';
-import { GridActionsCellItem, GridColDef } from '@mui/x-data-grid';
-import { renderRequirement } from '../renderRequirement';
-import CheckBoxIcon from '@mui/icons-material/CheckBox';
-import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
-import IndeterminateCheckBoxIcon from '@mui/icons-material/IndeterminateCheckBox';
-
-const rows = [
-  {
-    id: 1,
-    title: 'Chicken Nuggets',
-    requirement: ['for-løkke', 'if-setning'],
-    level: 'VG1',
-    course: 'Matematikk',
-    type: 'Obligatorisk',
-    due: '14.02.2025 13:00',
-    status: 'Uncomplete',
-  },
-  {
-    id: 2,
-    title: 'Peter Griffith',
-    requirement: ['for-løkke'],
-    level: '10',
-    course: 'Matematikk',
-    type: 'Obligatorisk',
-    due: '14.02.2025 13:00',
-    status: 'Uncomplete',
-  },
-  {
-    id: 3,
-    title: 'Peter Griffin',
-    requirement: ['for-løkke', 'while-løkke'],
-    level: '9',
-    course: 'Matematikk',
-    type: 'Anbefalt',
-    due: '17.02.2025 13:00',
-    status: 'Uncomplete',
-  },
-  {
-    id: 4,
-    title: 'Peter Grizzler',
-    requirement: ['if-setning'],
-    level: '9',
-    course: 'Matematikk',
-    type: 'Obligatorisk',
-    due: '15.02.2025 15:00',
-    status: 'Uncomplete',
-  },
-  {
-    id: 5,
-    title: 'Peter Nuggets',
-    requirement: ['if-setning', 'while-løkke'],
-    level: '8',
-    course: 'Matematikk',
-    type: 'Anbefalt',
-    due: '14.02.2025 14:00',
-    status: 'Uncomplete',
-  },
-  {
-    id: 6,
-    title: 'Peter Gooner',
-    requirement: ['for-løkke', 'if-setning'],
-    level: '8',
-    course: 'Matematikk',
-    type: 'Anbefalt',
-    due: '14.02.2025 14:00',
-    status: 'Uncomplete',
-  },
-];
-
-const columns: GridColDef[] = [
-  { field: 'assigned', headerName: 'Tildelt', width: 100 },
-  { field: 'title', headerName: 'Tittel', width: 240 },
-  {
-    field: 'requirement',
-    display: 'flex',
-    renderCell: renderRequirement,
-    valueGetter: (value, row) =>
-      row.title == null || row.requirement == null ? null : { title: row.title, requirement: row.requirement },
-    filterable: false,
-    headerName: 'Krav',
-    width: 240,
-  } as GridColDef<{ requirement: string[]; title: string }>,
-  { field: 'level', headerName: 'Nivå', width: 60 },
-  { field: 'course', headerName: 'Fag', width: 120 },
-  { field: 'type', headerName: 'Type', width: 120 },
-  { field: 'due', headerName: 'Frist', width: 160 },
-  {
-    field: 'actions',
-    type: 'actions',
-    width: 80,
-    headerName: 'Status',
-    getActions: () => [
-      <GridActionsCellItem icon={<CheckBoxIcon sx={{ color: '#4CCC17' }} />} label="Fullført" showInMenu />,
-      <GridActionsCellItem
-        icon={<IndeterminateCheckBoxIcon sx={{ color: '#FCD703' }} />}
-        label="Underveis"
-        showInMenu
-      />,
-      <GridActionsCellItem icon={<CheckBoxOutlineBlankIcon />} label="Ikke fullført" showInMenu />,
-    ],
-  },
-];
-
-const columns2: GridColDef[] = [
-  { field: 'assigned', headerName: 'Tildelt', width: 100 },
-  { field: 'title', headerName: 'Tittel', width: 320 },
-  {
-    field: 'requirement',
-    display: 'flex',
-    renderCell: renderRequirement,
-    valueGetter: (value, row) =>
-      row.title == null || row.requirement == null ? null : { title: row.title, requirement: row.requirement },
-    filterable: false,
-    headerName: 'Krav',
-    width: 320,
-  } as GridColDef<{ requirement: string[]; title: string }>,
-  { field: 'level', headerName: 'Nivå', width: 60 },
-  { field: 'course', headerName: 'Fag', width: 140 },
-  {
-    field: 'actions',
-    type: 'actions',
-    width: 80,
-    headerName: 'Status',
-    getActions: () => [
-      <GridActionsCellItem icon={<CheckBoxIcon sx={{ color: '#4CCC17' }} />} label="Fullført" showInMenu />,
-      <GridActionsCellItem
-        icon={<IndeterminateCheckBoxIcon sx={{ color: '#FCD703' }} />}
-        label="Underveis"
-        showInMenu
-      />,
-      <GridActionsCellItem icon={<CheckBoxOutlineBlankIcon />} label="Ikke fullført" showInMenu />,
-    ],
-  },
-];
+import { columns, columns2 } from '../../types/userData';
+import { useQuery } from '@apollo/client';
+import { GET_ALL_TASKS } from '../../../graphql/queries/getAllTasks';
+import { GET_RECOMMENDED_TASKS } from '../../../graphql/queries/getRecommendedTasks';
+import { recommended, task, taskRequirement } from '../../types/tableProps';
 
 export default function StudentTasks() {
+  const { loading: tasksLoading, error: tasksError, data: allTasks } = useQuery(GET_ALL_TASKS);
+  const {
+    loading: recommendedsLoading,
+    error: recommendedsError,
+    data: recommendedTasks,
+  } = useQuery(GET_RECOMMENDED_TASKS, { variables: { userId: 1 } });
+
+  if (tasksLoading || recommendedsLoading) {
+    return (
+      <Box mt="30vh">
+        <p> Loading... </p>
+      </Box>
+    );
+  }
+
+  if (tasksError || recommendedsError) {
+    console.log('could not load from db');
+  }
+
+  const getAllTasks = (): task[] => {
+    return allTasks.allTasks.nodes.map((task: task) => ({
+      id: task.taskId,
+      course: task.courseByCourseId?.courseName,
+      title: task.taskName,
+      owner: task.userByUserId?.email,
+      requirement: task.taskrequirementsByTaskId
+        ? task.taskrequirementsByTaskId.nodes.map(
+            (req: taskRequirement) => req.requirementByRequirementId.requirementName
+          )
+        : [],
+      level: task.difficulty,
+    }));
+  };
+
+  const getRecommendedTasks = (): recommended[] => {
+    return recommendedTasks.allRecommendeds.nodes.map((recommended: recommended) => ({
+      id: recommended.taskByTaskId.taskId,
+      course: recommended.taskByTaskId.courseByCourseId?.courseName,
+      title: recommended.taskByTaskId.taskName,
+      owner: recommended.taskByTaskId.userByUserId?.email,
+      requirement: recommended.taskByTaskId.taskrequirementsByTaskId
+        ? recommended.taskByTaskId.taskrequirementsByTaskId.nodes.map(
+            (req: taskRequirement) => req.requirementByRequirementId.requirementName
+          )
+        : [],
+      level: recommended.taskByTaskId.difficulty,
+    }));
+  };
+
   return (
     <Fade in timeout={500}>
       <Box>
@@ -146,15 +66,15 @@ export default function StudentTasks() {
             <Typography variant="h5" noWrap component="div" sx={{ textAlign: 'left' }}>
               Anbefalte oppgaver
             </Typography>
-            <Table rows={rows} columns={columns} selectable={false} />
+            <Table rows={getRecommendedTasks()} columns={columns} selectable={false} />
 
             <Grid2 container spacing={2} direction="column">
               <Typography variant="h5" noWrap component="div" sx={{ textAlign: 'left' }}>
                 Alle oppgaver
               </Typography>
-              <SearchBar options={rows} prompt="Søk etter oppgaver" />
+              <SearchBar options={getAllTasks()} prompt="Søk etter oppgaver" />
             </Grid2>
-            <Table rows={rows} columns={columns2} selectable={false} />
+            <Table rows={getAllTasks()} columns={columns2} selectable={false} />
           </Grid2>
         </Container>
       </Box>

@@ -22,12 +22,65 @@ import { useState } from 'react';
 import Backdrop from '@mui/material/Backdrop';
 import { NAV_COLORS, style } from '../../types/navColors';
 import CreateIcon from '@mui/icons-material/Create';
-import { columns, columns2, columns3, rows, rows2, rows3 } from '../../types/userData';
+import { columns, columns2, columns3, rows2, rows3 } from '../../types/userData';
+import { task, taskRequirement } from '../../types/tableProps';
+import { useQuery } from '@apollo/client';
+import { GET_ALL_TASKS } from '../../../graphql/queries/getAllTasks';
+import { GET_GIVEN_TASKS } from '../../../graphql/queries/getGivenTasks';
 
 export default function TeacherTasks() {
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
+  const { loading: tasksLoading, error: tasksError, data: allTasks } = useQuery(GET_ALL_TASKS);
+  const {
+    loading: givenLoading,
+    error: givenError,
+    data: givenTasks,
+  } = useQuery(GET_GIVEN_TASKS, { variables: { userId: 2 } });
+
+  if (tasksLoading || givenLoading) {
+    return (
+      <Box mt="30vh">
+        <p> Loading... </p>
+      </Box>
+    );
+  }
+
+  if (tasksError || givenError) {
+    console.log('could not load from db');
+  }
+
+  const getAllTasks = (): task[] => {
+    return allTasks.allTasks.nodes.map((task: task) => ({
+      id: task.taskId,
+      course: task.courseByCourseId?.courseName,
+      title: task.taskName,
+      owner: task.userByUserId?.email,
+      requirement: task.taskrequirementsByTaskId
+        ? task.taskrequirementsByTaskId.nodes.map(
+            (req: taskRequirement) => req.requirementByRequirementId.requirementName
+          )
+        : [],
+      level: task.difficulty,
+    }));
+  };
+
+  const getGivenTasks = (): task[] => {
+    return givenTasks.allTasks.nodes.map((task: task) => ({
+      id: task.taskId,
+      course: task.courseByCourseId?.courseName,
+      title: task.taskName,
+      owner: task.userByUserId?.email,
+      requirement: task.taskrequirementsByTaskId
+        ? task.taskrequirementsByTaskId.nodes.map(
+            (req: taskRequirement) => req.requirementByRequirementId.requirementName
+          )
+        : [],
+      level: task.difficulty,
+    }));
+  };
+
   return (
     <Fade in timeout={500}>
       <Box>
@@ -81,7 +134,7 @@ export default function TeacherTasks() {
                 </FormGroup>
               </Grid2>
             </Grid2>
-            <Table rows={rows} columns={columns} selectable />
+            <Table rows={getGivenTasks()} columns={columns} selectable />
 
             <Grid2 spacing={2} container direction="column">
               <Typography variant="h5" noWrap component="div" sx={{ textAlign: 'left' }}>
@@ -160,7 +213,7 @@ export default function TeacherTasks() {
                 </Grid2>
               </Grid2>
             </Grid2>
-            <Table rows={rows2} columns={columns2} selectable />
+            <Table rows={getAllTasks()} columns={columns2} selectable />
           </Grid2>
         </Container>
       </Box>
