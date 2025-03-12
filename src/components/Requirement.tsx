@@ -11,11 +11,12 @@ export default function Requirement(text: { value: string; size: string }) {
         boxSizing: 'border-box',
         backgroundColor: text.value in colorMapping ? colorMapping[text.value] : '#EDEBEB',
         border: `${text.value in borderColorMapping ? borderColorMapping[text.value] : '#EDEBEB'} 3px solid`,
-        paddingX: '3px',
+        paddingX: '4px',
         paddingY: '0.5px',
         borderRadius: '20px',
         fontWeight: 'medium',
         boxShadow: 3,
+        textAlign: 'center',
       }}
     >
       {text.value in translation ? translation[text.value] : text.value}

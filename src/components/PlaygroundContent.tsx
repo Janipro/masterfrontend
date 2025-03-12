@@ -280,11 +280,9 @@ export default function PlaygroundContent() {
                         height="1.1em"
                         style={{ marginLeft: '0.4em', marginRight: '0.2em' }}
                       />
-                      <Typography
-                        sx={{ userSelect: 'none', fontWeight: 'medium', fontFamily: 'inter', fontSize: '0.95em' }}
-                      >
+                      <Box sx={{ userSelect: 'none', fontWeight: 550, typography: 'subtitle2', fontSize: '0.95em' }}>
                         Oppgavebeskrivelse
-                      </Typography>
+                      </Box>
                     </>
                   )}
                 </Box>
@@ -329,11 +327,10 @@ export default function PlaygroundContent() {
                     },
                   }}
                 >
-                  <Box sx={{ typography: 'h5', fontWeight: '600', fontFamily: 'inter' }}>Oppgave X</Box>
+                  <Box sx={{ typography: 'h3', fontWeight: 'medium', fontSize: '2em' }}>Oppgave X</Box>
                   <Box
                     sx={{
                       typography: 'body2',
-                      fontFamily: 'inter',
                       display: 'flex',
                       width: '100%',
                       flexWrap: 'wrap',
@@ -351,7 +348,6 @@ export default function PlaygroundContent() {
                     sx={{
                       typography: 'body2',
                       fontWeight: '600',
-                      fontFamily: 'inter',
                       display: 'flex',
                       width: '100%',
                       flexWrap: 'wrap',
@@ -368,7 +364,7 @@ export default function PlaygroundContent() {
                       Lærer:&nbsp;<Box sx={{ fontWeight: 'medium' }}>{taskDescription[2]}</Box>
                     </Box>
                   </Box>
-                  <Box sx={{ typography: 'body2', fontFamily: 'inter' }}>
+                  <Box sx={{ typography: 'body2' }}>
                     Lag en funksjon, enterWords, som har ingen innparametre, og returnerer ei liste, wordList, med ord
                     som brukeren selv har skrevet inn. Brukeren kan avslutte innskriving av ord ved å trykke enter ...
                   </Box>
@@ -458,9 +454,7 @@ export default function PlaygroundContent() {
                       height="1.35em"
                       style={{ marginLeft: '0.4em', marginRight: '0.2em' }}
                     />
-                    <Typography
-                      sx={{ fontWeight: 'medium', userSelect: 'none', fontFamily: 'inter', fontSize: '0.95em' }}
-                    >
+                    <Typography sx={{ fontWeight: 'medium', userSelect: 'none', fontSize: '0.95em' }}>
                       Python Kode
                     </Typography>
                   </Box>
@@ -547,9 +541,7 @@ export default function PlaygroundContent() {
                       height="1.3em"
                       style={{ marginLeft: '0.45em', marginRight: '0.2em' }}
                     />
-                    <Typography
-                      sx={{ fontWeight: 'medium', userSelect: 'none', fontFamily: 'inter', fontSize: '0.95em' }}
-                    >
+                    <Typography sx={{ fontWeight: 'medium', userSelect: 'none', fontSize: '0.95em' }}>
                       Terminal
                     </Typography>
                     <Box
@@ -570,11 +562,7 @@ export default function PlaygroundContent() {
                         color: '#FDA500',
                       }}
                     />
-                    <Typography
-                      sx={{ fontWeight: 'medium', userSelect: 'none', fontFamily: 'inter', fontSize: '0.95em' }}
-                    >
-                      Hjelp
-                    </Typography>
+                    <Typography sx={{ fontWeight: 'medium', userSelect: 'none', fontSize: '0.95em' }}>Hjelp</Typography>
                   </Box>
 
                   <IconButton onClick={handleTerminalCollapse} sx={{ padding: 0, mx: 0.4 }}>

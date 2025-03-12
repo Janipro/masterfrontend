@@ -11,7 +11,6 @@ export function renderRequirement(params: GridRenderCellParams<{ title: string; 
     <Box
       sx={{
         typography: 'body2',
-        fontFamily: 'inter',
         display: 'flex',
         width: '100%',
         flexWrap: 'wrap',
