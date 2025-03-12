@@ -1,3 +1,4 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap');
 :root {
   font-family:
     system-ui,
@@ -57,12 +58,19 @@ button {
   cursor: pointer;
   transition: border-color 0.25s;
 }
-button:hover {
-  border-color: #646cff;
+button:focus {
+  outline: none;
 }
-button:focus,
 button:focus-visible {
-  outline: 4px auto -webkit-focus-ring-color;
+  outline: none;
+}
+
+button {
+  transition: background-color 0.3s ease;
+}
+
+button:hover {
+  filter: brightness(97%);
 }
 
 @media (prefers-color-scheme: light) {
@@ -74,6 +82,6 @@ button:focus-visible {
     color: #747bff;
   }
   button {
-    background-color: #f9f9f9;
+    background-color: #ffffff;
   }
 }

@@ -1,6 +1,7 @@
 export const NAV_COLORS = {
   background: '#F0F4F9',
-  text: '#2B4F64',
+  navbarShadow: '#D6E4ED',
+  text: '#5D7285',
   background_dark: '#0f1314',
   text_dark: '#edfcff',
 };
