@@ -7,7 +7,7 @@ import CheckBoxIcon from '@mui/icons-material/CheckBox';
 import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
 import IndeterminateCheckBoxIcon from '@mui/icons-material/IndeterminateCheckBox';
 import Requirement from '../Requirement';
-import { TYPE_COLORS } from '../../types/typeColors';
+import { colorMapping } from '../../types/requirementData';
 import { BarChart } from '@mui/x-charts/BarChart';
 import { axisClasses } from '@mui/x-charts/ChartsAxis';
 
@@ -195,10 +195,10 @@ export default function StudentStatistics() {
                       { dataKey: 'inheritance', label: 'arv' },
                     ]}
                     colors={[
-                      TYPE_COLORS['if-statement'],
-                      TYPE_COLORS['for-loop'],
-                      TYPE_COLORS['while-loop'],
-                      TYPE_COLORS.inheritance,
+                      colorMapping['if-statement'],
+                      colorMapping['for-loop'],
+                      colorMapping['while-loop'],
+                      colorMapping.inheritance,
                     ]}
                     grid={{ vertical: false, horizontal: true }}
                     {...chartSetting}

@@ -17,7 +17,7 @@ import {
 } from '@mui/material';
 import { BarChart } from '@mui/x-charts/BarChart';
 import { axisClasses } from '@mui/x-charts/ChartsAxis';
-import { TYPE_COLORS } from '../../types/typeColors';
+import { colorMapping } from '../../types/requirementData';
 import { NAV_COLORS } from '../../types/navColors';
 
 const chartSetting = {
@@ -99,10 +99,10 @@ export default function StudentStatistics() {
                     { dataKey: 'inheritance', label: 'arv' },
                   ]}
                   colors={[
-                    TYPE_COLORS['if-statement'],
-                    TYPE_COLORS['for-loop'],
-                    TYPE_COLORS['while-loop'],
-                    TYPE_COLORS.inheritance,
+                    colorMapping['if-statement'],
+                    colorMapping['for-loop'],
+                    colorMapping['while-loop'],
+                    colorMapping.inheritance,
                   ]}
                   grid={{ vertical: false }}
                   {...chartSetting}
