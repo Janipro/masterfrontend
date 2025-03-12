@@ -98,7 +98,6 @@ export default function Requirement(text: { value: string; size: string }) {
         borderRadius: '20px',
         fontWeight: 'medium',
         boxShadow: 3,
-        fontFamily: 'inter',
       }}
     >
       {text.value in translation ? translation[text.value] : text.value}
