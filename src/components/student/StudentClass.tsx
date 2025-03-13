@@ -32,7 +32,7 @@ export default function StudentClass() {
             (req: taskRequirement) => req.requirementByRequirementId.requirementName
           )
         : [],
-      level: recommended.taskByTaskId.difficulty,
+      level: recommended.taskByTaskId.level,
     }));
   };
   return (

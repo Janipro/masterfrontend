@@ -38,7 +38,7 @@ export default function StudentTasks() {
             (req: taskRequirement) => req.requirementByRequirementId.requirementName
           )
         : [],
-      level: task.difficulty,
+      level: task.level,
     }));
   };
 
@@ -53,7 +53,7 @@ export default function StudentTasks() {
             (req: taskRequirement) => req.requirementByRequirementId.requirementName
           )
         : [],
-      level: recommended.taskByTaskId.difficulty,
+      level: recommended.taskByTaskId.level,
     }));
   };
 

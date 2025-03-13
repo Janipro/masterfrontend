@@ -35,7 +35,7 @@ export default function StudentDashboard() {
             (req: taskRequirement) => req.requirementByRequirementId.requirementName
           )
         : [],
-      level: recommended.taskByTaskId.difficulty,
+      level: recommended.taskByTaskId.level,
     }));
   };
   return (

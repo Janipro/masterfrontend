@@ -30,22 +30,27 @@ import { style } from '../../types/navColors';
 import { columns, columns3, rows3 } from '../../types/userData';
 import { useQuery } from '@apollo/client';
 import { GET_GIVEN_TASKS } from '../../../graphql/queries/getGivenTasks';
-import { task, taskRequirement } from '../../types/tableProps';
-
-const subjects = [1, 2, 3, 4, 5, 6, 7, 8];
+import { GET_ALL_COURSES } from '../../../graphql/queries/getAllCourses';
+import { GET_ALL_STUDY_GROUPS } from '../../../graphql/queries/getAllStudygroups';
+import { course, studygroup, task, taskRequirement } from '../../types/tableProps';
 
 export default function TeacherDashboard() {
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
-  const [age, setAge] = useState('');
+  const [course, setCourse] = useState('');
 
-  const handleChange = (event: SelectChangeEvent) => {
-    setAge(event.target.value);
+  const handleChangeCourse = (event: SelectChangeEvent) => {
+    setCourse(event.target.value);
   };
-  const { loading, error, data } = useQuery(GET_GIVEN_TASKS, { variables: { userId: 2 } });
 
-  if (loading) {
+  const { loading: taskLoading, error, data: taskData } = useQuery(GET_GIVEN_TASKS, { variables: { userId: 2 } });
+  const { loading: courseLoading, data: courseData } = useQuery(GET_ALL_COURSES);
+  const { loading: studygroupLoading, data: studygroupData } = useQuery(GET_ALL_STUDY_GROUPS, {
+    variables: { userId: 2 },
+  });
+
+  if (taskLoading || courseLoading || studygroupLoading) {
     return (
       <Box mt="30vh">
         <p> Loading... </p>
@@ -56,8 +61,11 @@ export default function TeacherDashboard() {
   if (error) {
     console.log('could not load from db');
   }
+
+  console.log(studygroupData);
+
   const getGivenTasks = (): task[] => {
-    return data.allTasks.nodes.map((task: task) => ({
+    return taskData.allTasks.nodes.map((task: task) => ({
       id: task.taskId,
       course: task.courseByCourseId?.courseName,
       title: task.taskName,
@@ -128,40 +136,43 @@ export default function TeacherDashboard() {
                               size="small"
                             />
                             <FormControl sx={{ minWidth: 100 }} size="small">
-                              <InputLabel id="demo-select-small-label">Fag</InputLabel>
+                              <InputLabel id="select-small-course">Fag</InputLabel>
                               <Select
-                                labelId="demo-select-small-label"
-                                id="demo-select-small"
-                                value={age}
-                                label="Age"
-                                onChange={handleChange}
+                                labelId="select-small-course"
+                                id="select-small"
+                                value={course}
+                                label="Course"
+                                onChange={handleChangeCourse}
                               >
-                                <MenuItem value={10}>R1</MenuItem>
-                                <MenuItem value={20}>IT1</MenuItem>
-                                <MenuItem value={30}>1T</MenuItem>
+                                {courseData.allCourses.nodes.map((course: course) => (
+                                  <MenuItem value={course.courseId}>{course.courseName}</MenuItem>
+                                ))}
                               </Select>
                             </FormControl>
-                            <FormControl sx={{ minWidth: 100 }} size="small">
-                              <InputLabel id="demo-select-small-label">Nivå</InputLabel>
+                            {/**<FormControl sx={{ minWidth: 100 }} size="small">
+                              <InputLabel id="select-small-level">Nivå</InputLabel>
                               <Select
-                                labelId="demo-select-small-label"
-                                id="demo-select-small"
-                                value={age}
-                                label="Age"
-                                onChange={handleChange}
+                                labelId="select-small-level"
+                                id="select-small"
+                                value={level}
+                                label="Level"
+                                onChange={handleChangeLevel}
                               >
-                                <MenuItem value={10}>VG1</MenuItem>
-                                <MenuItem value={20}>VG2</MenuItem>
-                                <MenuItem value={30}>VG3</MenuItem>
+                                <MenuItem value={8}>8</MenuItem>
+                                <MenuItem value={9}>9</MenuItem>
+                                <MenuItem value={10}>10</MenuItem>
+                                <MenuItem value={11}>VG1</MenuItem>
+                                <MenuItem value={12}>VG2</MenuItem>
+                                <MenuItem value={13}>VG3</MenuItem>
                               </Select>
-                            </FormControl>
+                            </FormControl>**/}
                           </Stack>
                           <TextField
                             id="keep-mounted-modal-description"
                             label="Kort beskrivelse av gruppen"
                             multiline
                             rows={3}
-                            sx={{ width: 440 }}
+                            sx={{ width: 400 }}
                           />
                           <Stack direction="row"></Stack>
                           <Table rows={rows3} columns={columns3} selectable />
@@ -187,8 +198,8 @@ export default function TeacherDashboard() {
                 </Stack>
               </Grid2>
               <Grid2 container direction={'row'} spacing={4} sx={{ m: 2, p: 1, maxWidth: 970 }}>
-                {subjects.map(() => (
-                  <InfoCard />
+                {studygroupData.allStudygroups.nodes.map((studygroup: studygroup) => (
+                  <InfoCard title={studygroup.studyGroupName} />
                 ))}
               </Grid2>
             </Grid2>

@@ -51,7 +51,7 @@ export default function TeacherClass() {
             (req: taskRequirement) => req.requirementByRequirementId.requirementName
           )
         : [],
-      level: task.difficulty,
+      level: task.level,
     }));
   };
   return (

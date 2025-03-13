@@ -62,7 +62,7 @@ export default function TeacherTasks() {
             (req: taskRequirement) => req.requirementByRequirementId.requirementName
           )
         : [],
-      level: task.difficulty,
+      level: task.level,
     }));
   };
 
@@ -77,7 +77,7 @@ export default function TeacherTasks() {
             (req: taskRequirement) => req.requirementByRequirementId.requirementName
           )
         : [],
-      level: task.difficulty,
+      level: task.level,
     }));
   };
 
