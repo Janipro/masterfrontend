@@ -42,7 +42,7 @@ export default function TeacherTasks() {
   if (tasksLoading || givenLoading) {
     return (
       <Box mt="30vh">
-        <p> Loading... </p>
+        <p> Laster inn... </p>
       </Box>
     );
   }
@@ -62,7 +62,7 @@ export default function TeacherTasks() {
             (req: taskRequirement) => req.requirementByRequirementId.requirementName
           )
         : [],
-      level: task.difficulty,
+      level: task.level,
     }));
   };
 
@@ -77,7 +77,7 @@ export default function TeacherTasks() {
             (req: taskRequirement) => req.requirementByRequirementId.requirementName
           )
         : [],
-      level: task.difficulty,
+      level: task.level,
     }));
   };
 

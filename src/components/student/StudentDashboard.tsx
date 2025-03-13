@@ -4,19 +4,21 @@ import InfoCard from '../InfoCard';
 import Calendar from '../Calendar';
 import Requirement from '../Requirement';
 import { useQuery } from '@apollo/client';
-import { recommended, taskRequirement } from '../../types/tableProps';
+import { recommended, taskRequirement, enrolment } from '../../types/tableProps';
 import { GET_RECOMMENDED_TASKS } from '../../../graphql/queries/getRecommendedTasks';
+import { GET_ALL_ENROLMENTS } from '../../../graphql/queries/getAllEnrolments';
 import { columns } from '../../types/userData';
 
-const subjects = [1, 2, 3, 4, 5, 6];
-
 export default function StudentDashboard() {
-  const { loading, error, data } = useQuery(GET_RECOMMENDED_TASKS, { variables: { userId: 1 } });
+  const { loading: taskLoading, error, data: taskData } = useQuery(GET_RECOMMENDED_TASKS, { variables: { userId: 1 } });
+  const { loading: studygroupLoading, data: studygroupData } = useQuery(GET_ALL_ENROLMENTS, {
+    variables: { userId: 1 },
+  });
 
-  if (loading) {
+  if (taskLoading || studygroupLoading) {
     return (
       <Box mt="30vh">
-        <p> Loading... </p>
+        <p> Laster inn... </p>
       </Box>
     );
   }
@@ -25,7 +27,7 @@ export default function StudentDashboard() {
     console.log('could not load from db');
   }
   const getRecommendedTasks = (): recommended[] => {
-    return data.allRecommendeds.nodes.map((recommended: recommended) => ({
+    return taskData.allRecommendeds.nodes.map((recommended: recommended) => ({
       id: recommended.taskByTaskId.taskId,
       course: recommended.taskByTaskId.courseByCourseId?.courseName,
       title: recommended.taskByTaskId.taskName,
@@ -35,7 +37,7 @@ export default function StudentDashboard() {
             (req: taskRequirement) => req.requirementByRequirementId.requirementName
           )
         : [],
-      level: recommended.taskByTaskId.difficulty,
+      level: recommended.taskByTaskId.level,
     }));
   };
   return (
@@ -55,8 +57,8 @@ export default function StudentDashboard() {
                 Mine fag
               </Typography>
               <Grid2 container direction={'row'} spacing={2} sx={{ m: 2, p: 1, maxWidth: 600 }}>
-                {subjects.map(() => (
-                  <InfoCard />
+                {studygroupData.allEnrolments.nodes.map((enrolment: enrolment) => (
+                  <InfoCard title={enrolment.studygroupByStudyGroupId.studyGroupName} />
                 ))}
               </Grid2>
             </Grid2>

@@ -7,6 +7,7 @@ import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import { NAV_COLORS } from '../types/navColors';
+import { announcement } from '../types/tableProps';
 
 const StyledTableCell = styled(TableCell)(() => ({
   [`&.${tableCellClasses.head}`]: {
@@ -28,18 +29,7 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
   },
 }));
 
-function createData(title: string, content: string, date: string) {
-  return { title, content, date };
-}
-
-const rows = [
-  createData('Frozen yoghurt', 'Kjøp frozen yoghurt i dag', '20.02.2025 15:00'),
-  createData('Ice cream sandwich', 'I love ice cream sandwich, sa Joe biden', '19.02.2025 17:30'),
-  createData('Frozen yoghurt', 'Kjøp frozen yoghurt i dag', '20.02.2025 15:00'),
-  createData('Ice cream sandwich', 'I love ice cream sandwich, sa Joe biden', '19.02.2025 17:30'),
-];
-
-export default function Announcements() {
+export default function Announcements({ rows }: { rows: announcement[] }) {
   return (
     <TableContainer component={Paper}>
       <Table sx={{ minWidth: 700 }} aria-label="customized table">
@@ -51,13 +41,13 @@ export default function Announcements() {
           </TableRow>
         </TableHead>
         <TableBody>
-          {rows.map((row) => (
+          {rows.map((row: announcement) => (
             <StyledTableRow key={row.title}>
               <StyledTableCell component="th" scope="row">
                 {row.title}
               </StyledTableCell>
               <StyledTableCell>{row.content}</StyledTableCell>
-              <StyledTableCell align="right">{row.date}</StyledTableCell>
+              <StyledTableCell align="right">{row.datePublished}</StyledTableCell>
             </StyledTableRow>
           ))}
         </TableBody>

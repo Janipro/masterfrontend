@@ -2,18 +2,22 @@ import { Box, Container, CssBaseline, Fade, Grid2, Stack, Typography } from '@mu
 import Table from '../Table';
 import { NAV_COLORS } from '../../types/navColors';
 import Announcements from '../Announcements';
-import { recommended, taskRequirement } from '../../types/tableProps';
+import { announcement, recommended, taskRequirement } from '../../types/tableProps';
 import { useQuery } from '@apollo/client';
 import { GET_RECOMMENDED_TASKS } from '../../../graphql/queries/getRecommendedTasks';
 import { columns } from '../../types/userData';
+import { GET_ALL_ANNOUNCEMENTS } from '../../../graphql/queries/getAllAnnouncements';
 
 export default function StudentClass() {
-  const { loading, error, data } = useQuery(GET_RECOMMENDED_TASKS, { variables: { userId: 1 } });
+  const { loading: taskLoading, error, data: taskData } = useQuery(GET_RECOMMENDED_TASKS, { variables: { userId: 1 } });
+  const { loading: announcementLoading, data: announcementData } = useQuery(GET_ALL_ANNOUNCEMENTS, {
+    variables: { studyGroupId: 1 },
+  });
 
-  if (loading) {
+  if (taskLoading || announcementLoading) {
     return (
       <Box mt="30vh">
-        <p> Loading... </p>
+        <p> Laster inn... </p>
       </Box>
     );
   }
@@ -22,7 +26,7 @@ export default function StudentClass() {
     console.log('could not load from db');
   }
   const getRecommendedTasks = (): recommended[] => {
-    return data.allRecommendeds.nodes.map((recommended: recommended) => ({
+    return taskData.allRecommendeds.nodes.map((recommended: recommended) => ({
       id: recommended.taskByTaskId.taskId,
       course: recommended.taskByTaskId.courseByCourseId?.courseName,
       title: recommended.taskByTaskId.taskName,
@@ -32,9 +36,19 @@ export default function StudentClass() {
             (req: taskRequirement) => req.requirementByRequirementId.requirementName
           )
         : [],
-      level: recommended.taskByTaskId.difficulty,
+      level: recommended.taskByTaskId.level,
     }));
   };
+
+  console.log(announcementData);
+  const getAllAnnouncements = (): announcement[] => {
+    return announcementData.allAnnouncements.nodes.map((announcement: announcement) => ({
+      title: announcement.title,
+      content: announcement.content,
+      datePublished: announcement.datePublished,
+    }));
+  };
+
   return (
     <Fade in timeout={500}>
       <Box>
@@ -53,7 +67,7 @@ export default function StudentClass() {
             <Typography variant="h5" noWrap component="div" sx={{ textAlign: 'left' }}>
               Kunngjøringer
             </Typography>
-            <Announcements />
+            <Announcements rows={getAllAnnouncements()} />
             <Grid2 container spacing={2} direction="column">
               <Typography variant="h5" noWrap component="div" sx={{ textAlign: 'left' }}>
                 Anbefalte oppgaver

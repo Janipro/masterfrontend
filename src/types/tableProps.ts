@@ -12,6 +12,8 @@ export type task = {
   assigned: string;
   school: string;
   class: string;
+  isActive: boolean;
+  isPublic: boolean;
 };
 
 export type course = {
@@ -34,6 +36,13 @@ export type requirement = {
   requirementName: string;
 };
 
+export type announcement = {
+  announcementId: number;
+  title: string;
+  content: string;
+  datePublished: string;
+};
+
 export type taskRequirement = {
   taskRequirementId: number;
   taskId: number;
@@ -43,4 +52,15 @@ export type taskRequirement = {
 
 export type noderequirementsProps = {
   nodes: taskRequirement[];
+};
+
+export type studygroup = {
+  studyGroupId: number;
+  studyGroupName: string;
+  description: string;
+  isActive: boolean;
+};
+
+export type enrolment = {
+  studygroupByStudyGroupId: studygroup;
 };

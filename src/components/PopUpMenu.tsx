@@ -58,7 +58,7 @@ export default function Menu() {
         </Typography>
         <Divider />
         <Typography textTransform="none" typography="h6" fontWeight="medium">
-          <Link to="/" style={{ color: 'inherit' }}>
+          <Link to="/" style={{ color: 'inherit', textDecoration: 'none' }}>
             <ListItem key={'Dashboard'} disablePadding>
               <ListItemButton>
                 <ListItemIcon>
@@ -68,7 +68,7 @@ export default function Menu() {
               </ListItemButton>
             </ListItem>
           </Link>
-          <Link to="/tasks" style={{ color: 'inherit' }}>
+          <Link to="/tasks" style={{ color: 'inherit', textDecoration: 'none' }}>
             <ListItem key={'Tasks'} disablePadding>
               <ListItemButton onClick={handleClick}>
                 <ListItemIcon>
@@ -91,7 +91,7 @@ export default function Menu() {
             ))}
           </List>
         </Collapse>*/}
-          <Link to="/class" style={{ color: 'inherit' }}>
+          <Link to="/class" style={{ color: 'inherit', textDecoration: 'none' }}>
             <ListItem key={'Class'} disablePadding>
               <ListItemButton>
                 <ListItemIcon>
@@ -101,7 +101,7 @@ export default function Menu() {
               </ListItemButton>
             </ListItem>
           </Link>
-          <Link to="/statistics" style={{ color: 'inherit' }}>
+          <Link to="/statistics" style={{ color: 'inherit', textDecoration: 'none' }}>
             <ListItem key={'Statistics'} disablePadding>
               <ListItemButton>
                 <ListItemIcon>
@@ -111,7 +111,7 @@ export default function Menu() {
               </ListItemButton>
             </ListItem>
           </Link>
-          <Link to="/playground" style={{ color: 'inherit' }}>
+          <Link to="/playground" style={{ color: 'inherit', textDecoration: 'none' }}>
             <ListItem key={'Playground'} disablePadding>
               <ListItemButton>
                 <ListItemIcon>

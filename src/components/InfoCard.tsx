@@ -5,15 +5,15 @@ import Typography from '@mui/material/Typography';
 import CardActionArea from '@mui/material/CardActionArea';
 import { Link } from 'react-router-dom';
 
-export default function InfoCard() {
+export default function InfoCard({ title }: { title: string }) {
   return (
     <Card sx={{ maxWidth: 170 }}>
       <CardActionArea>
-        <Link to="/class" style={{ color: 'inherit' }}>
+        <Link to="/class" style={{ color: 'inherit', textDecoration: 'none' }}>
           <CardMedia component="img" height="60" image="src/assets/math.jpg" alt="math" />
           <CardContent>
             <Typography gutterBottom variant="h6" component="div">
-              Matematikk R1
+              {title}
             </Typography>
           </CardContent>
         </Link>
