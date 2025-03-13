@@ -28,10 +28,11 @@ import InfoCard from '../InfoCard';
 import { useState } from 'react';
 import { style } from '../../types/navColors';
 import { columns, columns3, rows3 } from '../../types/userData';
-import { useQuery } from '@apollo/client';
+import { useMutation, useQuery } from '@apollo/client';
 import { GET_GIVEN_TASKS } from '../../../graphql/queries/getGivenTasks';
 import { GET_ALL_COURSES } from '../../../graphql/queries/getAllCourses';
 import { GET_ALL_STUDY_GROUPS } from '../../../graphql/queries/getAllStudygroups';
+import { CREATE_STUDY_GROUP } from '../../../graphql/mutations/createStudygroup';
 import { course, studygroup, task, taskRequirement } from '../../types/tableProps';
 
 export default function TeacherDashboard() {
@@ -39,6 +40,8 @@ export default function TeacherDashboard() {
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
   const [course, setCourse] = useState('');
+  const [description, setDescription] = useState('');
+  const [studygroupName, setStudygroupName] = useState('');
 
   const handleChangeCourse = (event: SelectChangeEvent) => {
     setCourse(event.target.value);
@@ -48,6 +51,9 @@ export default function TeacherDashboard() {
   const { loading: courseLoading, data: courseData } = useQuery(GET_ALL_COURSES);
   const { loading: studygroupLoading, data: studygroupData } = useQuery(GET_ALL_STUDY_GROUPS, {
     variables: { userId: 2 },
+  });
+  const [createStudygroup] = useMutation(CREATE_STUDY_GROUP, {
+    refetchQueries: [{ query: GET_ALL_STUDY_GROUPS, variables: { userId: 2 } }],
   });
 
   if (taskLoading || courseLoading || studygroupLoading) {
@@ -61,8 +67,6 @@ export default function TeacherDashboard() {
   if (error) {
     console.log('could not load from db');
   }
-
-  console.log(studygroupData);
 
   const getGivenTasks = (): task[] => {
     return taskData.allTasks.nodes.map((task: task) => ({
@@ -78,6 +82,24 @@ export default function TeacherDashboard() {
       level: task.difficulty,
     }));
   };
+
+  const handleCreate = async () => {
+    try {
+      await createStudygroup({
+        variables: {
+          courseId: course,
+          description: description,
+          schoolId: 3,
+          studyGroupName: studygroupName,
+          userId: 2,
+        },
+      });
+      handleClose();
+    } catch (error) {
+      console.log('Error creating studygroup: ', error);
+    }
+  };
+
   return (
     <Fade in timeout={500}>
       <Box component={'main'} sx={{ bgcolor: 'background.default' }}>
@@ -134,6 +156,9 @@ export default function TeacherDashboard() {
                               variant="outlined"
                               sx={{ width: 200 }}
                               size="small"
+                              onChange={(e) => {
+                                setStudygroupName(e.target.value);
+                              }}
                             />
                             <FormControl sx={{ minWidth: 100 }} size="small">
                               <InputLabel id="select-small-course">Fag</InputLabel>
@@ -173,6 +198,9 @@ export default function TeacherDashboard() {
                             multiline
                             rows={3}
                             sx={{ width: 400 }}
+                            onChange={(e) => {
+                              setDescription(e.target.value);
+                            }}
                           />
                           <Stack direction="row"></Stack>
                           <Table rows={rows3} columns={columns3} selectable />
@@ -183,7 +211,7 @@ export default function TeacherDashboard() {
                               textTransform: 'none',
                               ml: 'auto',
                             }}
-                            onClick={handleOpen}
+                            onClick={handleCreate}
                             size="small"
                           >
                             Opprett undervisningsgruppe
