@@ -18,7 +18,7 @@ export default function StudentTasks() {
   if (tasksLoading || recommendedsLoading) {
     return (
       <Box mt="30vh">
-        <p> Loading... </p>
+        <p> Laster inn... </p>
       </Box>
     );
   }

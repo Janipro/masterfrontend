@@ -21,7 +21,7 @@ export function renderRequirement(params: GridRenderCellParams<{ title: string; 
       }}
     >
       {params.value.requirement.map((item: string) => (
-        <Requirement value={item} size="x-small" />
+        <Requirement value={item} size="x-small" key={item} />
       ))}
     </Box>
   );

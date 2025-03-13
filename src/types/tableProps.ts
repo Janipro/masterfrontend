@@ -36,6 +36,13 @@ export type requirement = {
   requirementName: string;
 };
 
+export type announcement = {
+  announcementId: number;
+  title: string;
+  content: string;
+  datePublished: string;
+};
+
 export type taskRequirement = {
   taskRequirementId: number;
   taskId: number;
@@ -52,4 +59,8 @@ export type studygroup = {
   studyGroupName: string;
   description: string;
   isActive: boolean;
+};
+
+export type enrolment = {
+  studygroupByStudyGroupId: studygroup;
 };

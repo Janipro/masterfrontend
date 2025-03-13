@@ -59,7 +59,7 @@ export default function TeacherDashboard() {
   if (taskLoading || courseLoading || studygroupLoading) {
     return (
       <Box mt="30vh">
-        <p> Loading... </p>
+        <p> Laster inn... </p>
       </Box>
     );
   }
