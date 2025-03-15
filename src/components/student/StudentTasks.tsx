@@ -55,6 +55,7 @@ export default function StudentTasks() {
           )
         : [],
       level: recommended.taskByTaskId.level,
+      type: recommended.taskByTaskId.type,
     }));
   };
 

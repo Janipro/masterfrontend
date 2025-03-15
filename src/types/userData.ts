@@ -214,7 +214,7 @@ export const columns: GridColDef[] = [
   } as GridColDef<{ requirement: string[]; title: string }>,
   { field: 'level', headerName: 'Nivå', width: 60 },
   { field: 'type', headerName: 'Type', width: 100 },
-  { field: 'due', headerName: 'Frist', width: 160 },
+  /*{ field: 'due', headerName: 'Frist', width: 160 },*/
 ];
 
 export const columns2: GridColDef[] = [

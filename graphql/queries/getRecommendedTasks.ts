@@ -12,6 +12,7 @@ export const GET_RECOMMENDED_TASKS = gql`
           publicAccess
           taskName
           level
+          type
           userByUserId {
             email
           }

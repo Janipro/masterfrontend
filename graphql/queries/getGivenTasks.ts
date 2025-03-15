@@ -11,6 +11,7 @@ export const GET_GIVEN_TASKS = gql`
         publicAccess
         taskName
         level
+        type
         userByUserId {
           email
         }
