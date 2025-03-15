@@ -38,6 +38,7 @@ export default function StudentDashboard() {
           )
         : [],
       level: recommended.taskByTaskId.level,
+      type: recommended.taskByTaskId.type,
     }));
   };
   return (

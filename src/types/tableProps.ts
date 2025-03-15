@@ -64,3 +64,11 @@ export type studygroup = {
 export type enrolment = {
   studygroupByStudyGroupId: studygroup;
 };
+
+export type student = {
+  id: number;
+  title: string;
+  level: string;
+  class: string;
+  school: string;
+};

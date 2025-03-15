@@ -39,6 +39,7 @@ export default function StudentTasks() {
           )
         : [],
       level: task.level,
+      type: task.type,
     }));
   };
 

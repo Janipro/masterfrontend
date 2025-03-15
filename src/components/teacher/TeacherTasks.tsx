@@ -63,6 +63,7 @@ export default function TeacherTasks() {
           )
         : [],
       level: task.level,
+      type: task.type,
     }));
   };
 

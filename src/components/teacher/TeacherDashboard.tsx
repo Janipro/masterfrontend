@@ -79,7 +79,8 @@ export default function TeacherDashboard() {
             (req: taskRequirement) => req.requirementByRequirementId.requirementName
           )
         : [],
-      level: task.difficulty,
+      level: task.level,
+      type: task.type,
     }));
   };
 
