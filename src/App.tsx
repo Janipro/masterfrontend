@@ -47,7 +47,7 @@ function App() {
             <Route path="/register" element={<Register />} />
             <Route path="/playground" element={<Playground />} />
             <Route path="/tasks" element={<Tasks />} />
-            <Route path="/class" element={<Class />} />
+            <Route path="/class/:id" element={<Class />} />
             <Route path="/statistics" element={<Statistics />} />
           </Routes>
         </Router>

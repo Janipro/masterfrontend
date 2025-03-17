@@ -42,7 +42,7 @@ export default function Announcements({ rows }: { rows: announcement[] }) {
         </TableHead>
         <TableBody>
           {rows.map((row: announcement) => (
-            <StyledTableRow key={row.title}>
+            <StyledTableRow key={row.announcementId}>
               <StyledTableCell component="th" scope="row">
                 {row.title}
               </StyledTableCell>
