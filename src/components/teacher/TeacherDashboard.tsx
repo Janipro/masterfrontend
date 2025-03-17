@@ -228,7 +228,7 @@ export default function TeacherDashboard() {
               </Grid2>
               <Grid2 container direction={'row'} spacing={4} sx={{ m: 2, p: 1, maxWidth: 970 }}>
                 {studygroupData.allStudygroups.nodes.map((studygroup: studygroup) => (
-                  <InfoCard title={studygroup.studyGroupName} />
+                  <InfoCard title={studygroup.studyGroupName} id={studygroup.studyGroupId} />
                 ))}
               </Grid2>
             </Grid2>
