@@ -5,6 +5,14 @@ export const GET_STUDY_GROUP_BY_STUDY_GROUP_ID = gql`
     studygroupByStudyGroupId(studyGroupId: $studyGroupId) {
       studyGroupName
       description
+      userByUserId {
+        email
+        firstname
+        lastname
+      }
+      courseByCourseId {
+        courseName
+      }
     }
   }
 `;

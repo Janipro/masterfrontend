@@ -91,8 +91,8 @@ export default function Menu() {
             ))}
           </List>
         </Collapse>*/}
-          <Link to="/class" style={{ color: 'inherit', textDecoration: 'none' }}>
-            <ListItem key={'Class'} disablePadding>
+          <Link to="/classes" style={{ color: 'inherit', textDecoration: 'none' }}>
+            <ListItem key={'Classes'} disablePadding>
               <ListItemButton>
                 <ListItemIcon>
                   <SchoolIcon sx={{ color: isDarkmode ? NAV_COLORS.text_dark : NAV_COLORS.text }} />

@@ -24,6 +24,8 @@ import { useMutation, useQuery } from '@apollo/client';
 import { GET_GIVEN_TASKS } from '../../../graphql/queries/getGivenTasks';
 import { GET_ALL_ANNOUNCEMENTS } from '../../../graphql/queries/getAllAnnouncements';
 import { CREATE_ANNOUNCEMENT } from '../../../graphql/mutations/createAnnouncement';
+import { GET_STUDY_GROUP_BY_STUDY_GROUP_ID } from '../../../graphql/queries/getStudygroupByStudyGroupId';
+import { useParams } from 'react-router-dom';
 
 export default function TeacherClass() {
   const [open, setOpen] = useState(false);
@@ -31,15 +33,19 @@ export default function TeacherClass() {
   const handleClose = () => setOpen(false);
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
+  const { id } = useParams();
   const { loading: taskLoading, error, data: taskData } = useQuery(GET_GIVEN_TASKS, { variables: { userId: 2 } });
   const { loading: announcementLoading, data: announcementData } = useQuery(GET_ALL_ANNOUNCEMENTS, {
-    variables: { studyGroupId: 1 },
+    variables: { studyGroupId: parseInt(id!) },
+  });
+  const { loading: studygroupLoading, data: studygroupData } = useQuery(GET_STUDY_GROUP_BY_STUDY_GROUP_ID, {
+    variables: { studyGroupId: parseInt(id!) },
   });
   const [createAnnouncement] = useMutation(CREATE_ANNOUNCEMENT, {
     refetchQueries: [{ query: GET_ALL_ANNOUNCEMENTS, variables: { studyGroupId: 1 } }],
   });
 
-  if (taskLoading || announcementLoading) {
+  if (taskLoading || announcementLoading || studygroupLoading) {
     return (
       <Box mt="30vh">
         <p> Laster inn... </p>
@@ -98,7 +104,7 @@ export default function TeacherClass() {
           <Grid2 direction="column" container spacing={2} mt={10}>
             <Stack direction="row">
               <Typography variant="h4" noWrap component="div" sx={{ textAlign: 'left' }}>
-                R1 - Leksehjelp
+                {studygroupData.studygroupByStudyGroupId.studyGroupName}
               </Typography>
               <Button
                 variant="contained"
@@ -114,12 +120,14 @@ export default function TeacherClass() {
                 Rediger
               </Button>
             </Stack>
-            <Stack direction="row" spacing={8} mb={4} color={NAV_COLORS.text}>
+            <Stack direction="row" spacing={8} color={NAV_COLORS.text}>
               <Typography>Fag: R1</Typography>
               <Typography>Lærer: Petter Swemann</Typography>
               <Typography>E-post: Petter.swemann@stovgs.no</Typography>
             </Stack>
-
+            <Typography sx={{ textAlign: 'left', mb: 4 }} color={NAV_COLORS.text}>
+              {studygroupData.studygroupByStudyGroupId.description}
+            </Typography>
             <Stack direction="row">
               <Typography variant="h5" noWrap component="div" sx={{ textAlign: 'left' }}>
                 Kunngjøringer

@@ -63,11 +63,11 @@ export default function StudentClass() {
               {studygroupData.studygroupByStudyGroupId.studyGroupName}
             </Typography>
             <Stack direction="row" spacing={8} color={NAV_COLORS.text}>
-              <Typography>Fag: Matematikk</Typography>
-              <Typography>Lærer: Ole Bull</Typography>
-              <Typography>E-post: ole.bull@osloskolen.no</Typography>
+              <Typography>{`Fag: ${studygroupData.studygroupByStudyGroupId.courseByCourseId.courseName}`}</Typography>
+              <Typography>{`Lærer: ${studygroupData.studygroupByStudyGroupId.userByUserId.firstname} ${studygroupData.studygroupByStudyGroupId.userByUserId.lastname}`}</Typography>
+              <Typography>{`E-post: ${studygroupData.studygroupByStudyGroupId.userByUserId.email}`}</Typography>
             </Stack>
-            <Typography sx={{ textAlign: 'left' }} color={NAV_COLORS.text}>
+            <Typography sx={{ textAlign: 'left', mb: 4 }} color={NAV_COLORS.text}>
               {studygroupData.studygroupByStudyGroupId.description}
             </Typography>
 
