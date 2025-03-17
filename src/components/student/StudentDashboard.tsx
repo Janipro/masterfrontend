@@ -14,7 +14,6 @@ export default function StudentDashboard() {
   const { loading: studygroupLoading, data: studygroupData } = useQuery(GET_ALL_ENROLMENTS, {
     variables: { userId: 1 },
   });
-
   if (taskLoading || studygroupLoading) {
     return (
       <Box mt="30vh">
@@ -59,7 +58,10 @@ export default function StudentDashboard() {
               </Typography>
               <Grid2 container direction={'row'} spacing={2} sx={{ m: 2, p: 1, maxWidth: 600 }}>
                 {studygroupData.allEnrolments.nodes.map((enrolment: enrolment) => (
-                  <InfoCard title={enrolment.studygroupByStudyGroupId.studyGroupName} />
+                  <InfoCard
+                    title={enrolment.studygroupByStudyGroupId.studyGroupName}
+                    id={enrolment.studygroupByStudyGroupId.studyGroupId}
+                  />
                 ))}
               </Grid2>
             </Grid2>

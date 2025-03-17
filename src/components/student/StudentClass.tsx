@@ -7,14 +7,20 @@ import { useQuery } from '@apollo/client';
 import { GET_RECOMMENDED_TASKS } from '../../../graphql/queries/getRecommendedTasks';
 import { columns } from '../../types/userData';
 import { GET_ALL_ANNOUNCEMENTS } from '../../../graphql/queries/getAllAnnouncements';
+import { GET_STUDY_GROUP_BY_STUDY_GROUP_ID } from '../../../graphql/queries/getStudygroupByStudyGroupId';
+import { useParams } from 'react-router-dom';
 
 export default function StudentClass() {
+  const { id } = useParams();
   const { loading: taskLoading, error, data: taskData } = useQuery(GET_RECOMMENDED_TASKS, { variables: { userId: 1 } });
   const { loading: announcementLoading, data: announcementData } = useQuery(GET_ALL_ANNOUNCEMENTS, {
-    variables: { studyGroupId: 1 },
+    variables: { studyGroupId: parseInt(id!) },
+  });
+  const { loading: studygroupLoading, data: studygroupData } = useQuery(GET_STUDY_GROUP_BY_STUDY_GROUP_ID, {
+    variables: { studyGroupId: parseInt(id!) },
   });
 
-  if (taskLoading || announcementLoading) {
+  if (taskLoading || announcementLoading || studygroupLoading) {
     return (
       <Box mt="30vh">
         <p> Laster inn... </p>
@@ -40,7 +46,6 @@ export default function StudentClass() {
     }));
   };
 
-  console.log(announcementData);
   const getAllAnnouncements = (): announcement[] => {
     return announcementData.allAnnouncements.nodes.map((announcement: announcement) => ({
       title: announcement.title,
@@ -48,7 +53,6 @@ export default function StudentClass() {
       datePublished: announcement.datePublished,
     }));
   };
-
   return (
     <Fade in timeout={500}>
       <Box>
@@ -56,13 +60,16 @@ export default function StudentClass() {
         <Container component={'main'} sx={{ bgcolor: 'background.default' }}>
           <Grid2 direction="column" container spacing={2} mt={10}>
             <Typography variant="h4" noWrap component="div" sx={{ textAlign: 'left' }}>
-              R1 - klasse 1
+              {studygroupData.studygroupByStudyGroupId.studyGroupName}
             </Typography>
-            <Stack direction="row" spacing={8} mb={4} color={NAV_COLORS.text}>
-              <Typography>Fag: Matematikk</Typography>
-              <Typography>Lærer: Ole Bull</Typography>
-              <Typography>E-post: ole.bull@osloskolen.no</Typography>
+            <Stack direction="row" spacing={8} color={NAV_COLORS.text}>
+              <Typography>{`Fag: ${studygroupData.studygroupByStudyGroupId.courseByCourseId.courseName}`}</Typography>
+              <Typography>{`Lærer: ${studygroupData.studygroupByStudyGroupId.userByUserId.firstname} ${studygroupData.studygroupByStudyGroupId.userByUserId.lastname}`}</Typography>
+              <Typography>{`E-post: ${studygroupData.studygroupByStudyGroupId.userByUserId.email}`}</Typography>
             </Stack>
+            <Typography sx={{ textAlign: 'left', mb: 4 }} color={NAV_COLORS.text}>
+              {studygroupData.studygroupByStudyGroupId.description}
+            </Typography>
 
             <Typography variant="h5" noWrap component="div" sx={{ textAlign: 'left' }}>
               Kunngjøringer

@@ -12,6 +12,7 @@ import useDarkmodeStore from './stores/useDarkmodeStore';
 import Home from './pages/Home';
 import client from './apolloClient';
 import { ApolloProvider } from '@apollo/client';
+import Classes from './pages/Classes';
 
 const darkTheme = createTheme({
   palette: {
@@ -47,7 +48,8 @@ function App() {
             <Route path="/register" element={<Register />} />
             <Route path="/playground" element={<Playground />} />
             <Route path="/tasks" element={<Tasks />} />
-            <Route path="/class" element={<Class />} />
+            <Route path="/class/:id" element={<Class />} />
+            <Route path="/classes" element={<Classes />} />
             <Route path="/statistics" element={<Statistics />} />
           </Routes>
         </Router>
