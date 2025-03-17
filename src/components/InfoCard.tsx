@@ -7,12 +7,12 @@ import { Link } from 'react-router-dom';
 
 export default function InfoCard({ title, id }: { title: string; id: number }) {
   return (
-    <Card sx={{ maxWidth: 170 }}>
+    <Card sx={{ maxWidth: 170, height: 130 }}>
       <CardActionArea>
         <Link to={`/class/${id}`} style={{ color: 'inherit', textDecoration: 'none' }}>
           <CardMedia component="img" height="60" image="src/assets/math.jpg" alt="math" />
           <CardContent>
-            <Typography gutterBottom variant="h6" component="div">
+            <Typography gutterBottom variant="h6" component="div" sx={{ overflow: 'hidden', whiteSpace: 'nowrap' }}>
               {title}
             </Typography>
           </CardContent>
