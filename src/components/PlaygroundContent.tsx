@@ -10,6 +10,7 @@ import Editor from './Editor';
 import { Container, CssBaseline, Grid2, IconButton, useTheme } from '@mui/material';
 import { NAV_COLORS } from '../types/navColors';
 import Requirement from './Requirement';
+import Terminal from './Terminal';
 
 export default function PlaygroundContent() {
   const theme = useTheme();
@@ -95,7 +96,7 @@ export default function PlaygroundContent() {
     if (isResizingVertical.current && containerRef.current) {
       requestAnimationFrame(() => {
         const newWidth = e.clientX;
-        if (newWidth > 200 && newWidth < window.innerWidth - 210) {
+        if (newWidth > 200 && newWidth < window.innerWidth - 240) {
           containerRef.current!.style.setProperty('--left-width', `${newWidth - 2}px`);
         }
       });
@@ -494,7 +495,7 @@ export default function PlaygroundContent() {
         )}
 
         {/* Bottom Right Pane */}
-        <Box sx={{ flex: 1 }}>
+        <Box sx={{ flex: 1, overflowY: 'auto' }}>
           <CssBaseline />
           <Container
             component={'main'}
@@ -575,7 +576,7 @@ export default function PlaygroundContent() {
                     />
                   </IconButton>
                 </Grid2>
-                {terminalCollapsed ? null : <Box sx={{ padding: '10px' }}>Hei</Box>}
+                <Terminal terminalCollapsed={terminalCollapsed} />
               </Box>
             </Grid2>
           </Container>

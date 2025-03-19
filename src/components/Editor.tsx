@@ -1,10 +1,11 @@
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback } from 'react';
 import CodeMirror from '@uiw/react-codemirror';
 import { python } from '@codemirror/lang-python';
 import { indentUnit } from '@codemirror/language';
 import { EditorView } from '@codemirror/view';
 import { highlightSelectionMatches } from '@codemirror/search';
 import Box from '@mui/material/Box';
+import { useTaskCodeStore } from '../stores/useTaskCodeStore';
 
 const lightTheme = EditorView.theme({
   '&': {
@@ -54,32 +55,17 @@ const lightTheme = EditorView.theme({
 });
 
 export default function Editor() {
-  const [value, setValue] = useState(`def fortnite():\n    print("9 crowns")`);
-  const editorRef = useRef<HTMLDivElement | null>(null);
+  const { code, setCode } = useTaskCodeStore();
 
-  useEffect(() => {
-    if (!editorRef.current) return;
-
-    const observer = new ResizeObserver(() => {
-      if (editorRef.current) {
-        const newHeight = editorRef.current.clientHeight;
-        editorRef.current.style.height = `${newHeight}px`;
-      }
-    });
-
-    observer.observe(editorRef.current);
-
-    return () => observer.disconnect();
-  }, []);
-
-  const onChange = useCallback((val: string) => {
-    console.log('val:', val);
-    setValue(val);
-  }, []);
+  const onChange = useCallback(
+    (val: string) => {
+      setCode(val);
+    },
+    [setCode]
+  );
 
   return (
     <Box
-      ref={editorRef}
       sx={{
         marginRight: '2px',
         borderRadius: '0 0 10px 10px',
@@ -106,7 +92,7 @@ export default function Editor() {
       }}
     >
       <CodeMirror
-        value={value}
+        value={code}
         height="100%"
         width="100%"
         basicSetup={{ lineNumbers: true }}
