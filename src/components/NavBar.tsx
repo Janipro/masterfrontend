@@ -24,6 +24,7 @@ import NotificationsRoundedIcon from '@mui/icons-material/NotificationsRounded';
 import { useNavigate } from 'react-router-dom';
 import { useState } from 'react';
 import useDarkmodeStore from '../stores/useDarkmodeStore';
+import { useTaskCodeStore } from '../stores/useTaskCodeStore';
 
 const functions = ['Kjør', 'Hjelp', 'Lever', 'Innsendingshistorikk'];
 const settings = ['Profil', 'Logg ut'];
@@ -47,6 +48,7 @@ export default function NavBar({ isEditor }: { isEditor: boolean }) {
   const [editorDarkmode, setEditorDarkmode] = useState(false);
   const { isTeacher, setTeacher } = useTeacherStore();
   const { isDarkmode, setDarkmode } = useDarkmodeStore();
+  const { executeCode } = useTaskCodeStore();
 
   const navigate = useNavigate();
 
@@ -256,6 +258,7 @@ export default function NavBar({ isEditor }: { isEditor: boolean }) {
                     }}
                   >
                     <Button
+                      onClick={executeCode}
                       key={functions[0]}
                       sx={{
                         color: NAV_COLORS.text,
