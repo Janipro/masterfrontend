@@ -67,6 +67,7 @@ export default function Editor() {
   return (
     <Box
       sx={{
+        minHeight: '60px',
         marginRight: '2px',
         borderRadius: '0 0 10px 10px',
         overflowY: 'scroll',

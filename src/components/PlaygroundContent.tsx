@@ -108,7 +108,11 @@ export default function PlaygroundContent() {
       requestAnimationFrame(() => {
         const newHeight = e.clientY;
         if (newHeight > 160 && newHeight < window.innerHeight - 100) {
-          containerRef.current!.style.setProperty('--top-right-height', `${newHeight - 80}px`);
+          let finalHeight = newHeight - 80;
+          if (finalHeight < 82) {
+            finalHeight = 82;
+          }
+          containerRef.current!.style.setProperty('--top-right-height', `${finalHeight}px`);
         }
       });
     }
@@ -173,35 +177,33 @@ export default function PlaygroundContent() {
   }, [handleMouseMoveVertical, handleMouseMoveHorizontal]);
 
   useEffect(() => {
-    const handleResize = () => {
-      const windowHeight = window.innerHeight;
+    const observer = new ResizeObserver(() => {
+      if (!containerRef.current || !leftPaneRef.current) return;
 
-      let computedHeight = parseInt(getComputedStyle(containerRef.current!).getPropertyValue('--top-right-height'), 10);
+      const containerHeight = containerRef.current.clientHeight;
+      const computedHeight = parseInt(
+        getComputedStyle(containerRef.current).getPropertyValue('--top-right-height'),
+        10
+      );
 
-      if (isNaN(computedHeight)) {
-        computedHeight = topRightHeight;
+      if (isNaN(computedHeight)) return;
+      if (computedHeight > containerHeight - 108 && containerHeight - 108 >= 82) {
+        const newHeight = containerHeight - 108;
+        setTopRightHeight(newHeight);
+        containerRef.current.style.setProperty('--top-right-height', `${newHeight}px`);
+      } else if (computedHeight < 82 || computedHeight > containerHeight - 108) {
+        const newHeight = 84;
+        setTopRightHeight(newHeight);
+        containerRef.current.style.setProperty('--top-right-height', `${newHeight}px`);
       }
+    });
 
-      if (computedHeight > windowHeight / 2.5) {
-        setTopRightHeight(windowHeight / 2.5);
-        containerRef.current!.style.setProperty('--top-right-height', `${windowHeight / 2}px`);
-      }
-    };
-
-    // Listen to window resizes
-    window.addEventListener('resize', handleResize);
-
-    // Observe left pane changes
-    const observer = new ResizeObserver(handleResize);
     if (leftPaneRef.current) {
       observer.observe(leftPaneRef.current);
     }
 
-    return () => {
-      window.removeEventListener('resize', handleResize);
-      observer.disconnect(); // Cleanup observer
-    };
-  }, []);
+    return () => observer.disconnect();
+  }, [topRightHeight]);
 
   return (
     <Box
@@ -211,7 +213,7 @@ export default function PlaygroundContent() {
         marginTop: '60px',
         width: '100vw',
         height: 'calc(100vh - 73px)',
-        minHeight: '150px',
+        minHeight: '190px',
         '--left-width': `${leftWidth}px`,
         '--top-right-height': `${topRightHeight}px`,
         ...theme.mixins.toolbar,
@@ -221,7 +223,7 @@ export default function PlaygroundContent() {
       <Box
         sx={{
           flexShrink: 0,
-          minHeight: '150px',
+          minHeight: '190px',
           width: taskCollapsed ? '43.5px' : 'var(--left-width)',
         }}
       >
@@ -229,7 +231,12 @@ export default function PlaygroundContent() {
         <Container
           component={'main'}
           maxWidth={false}
-          sx={{ bgcolor: 'background.default', padding: '5px 7px 7px 14px !important', height: '100%' }}
+          sx={{
+            bgcolor: 'background.default',
+            padding: '5px 7px 7px 14px !important',
+            height: '100%',
+            minHeight: '190.5px',
+          }}
         >
           <Grid2
             component="div"
@@ -495,7 +502,7 @@ export default function PlaygroundContent() {
         )}
 
         {/* Bottom Right Pane */}
-        <Box sx={{ flex: 1, overflowY: 'auto' }}>
+        <Box sx={{ flex: 1, overflowY: 'auto', minHeight: '91.5px' }}>
           <CssBaseline />
           <Container
             component={'main'}
