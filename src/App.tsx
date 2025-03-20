@@ -44,7 +44,6 @@ function App() {
         <Router>
           <Routes>
             <Route path="/" element={loggedIn ? <Home /> : <Login />} />
-            <Route path="/login" element={loggedIn ? <Home /> : <Login />} />
             {/*<Route path="/register" element={<Register />} />*/}
             <Route path="/playground" element={<Playground />} />
             <Route path="/tasks" element={<Tasks />} />

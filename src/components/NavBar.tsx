@@ -551,7 +551,14 @@ export default function NavBar({ isEditor }: { isEditor: boolean }) {
               {settings.map((setting) => (
                 <MenuItem key={setting} onClick={handleCloseUserMenu}>
                   {setting === 'Logg ut' ? (
-                    <Link to="/login" style={{ color: 'inherit' }}>
+                    <Link
+                      to="/"
+                      style={{ color: 'inherit' }}
+                      onClick={() => {
+                        localStorage.removeItem('id');
+                        navigate(0);
+                      }}
+                    >
                       <Typography sx={{ textAlign: 'center' }}>{setting}</Typography>
                     </Link>
                   ) : (

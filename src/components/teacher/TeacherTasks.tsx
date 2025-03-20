@@ -32,12 +32,13 @@ export default function TeacherTasks() {
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
+  const userId = parseInt(localStorage.getItem('id')!);
   const { loading: tasksLoading, error: tasksError, data: allTasks } = useQuery(GET_ALL_TASKS);
   const {
     loading: givenLoading,
     error: givenError,
     data: givenTasks,
-  } = useQuery(GET_GIVEN_TASKS, { variables: { userId: 2 } });
+  } = useQuery(GET_GIVEN_TASKS, { variables: { userId: userId } });
 
   if (tasksLoading || givenLoading) {
     return (

@@ -73,9 +73,8 @@ export default function Login() {
       localStorage.setItem('id', result[0].user_id);
     } catch (error) {
       console.log('Could not login', error);
-    } finally {
-      navigate('/');
     }
+    navigate(0);
   };
 
   const validateInputs = () => {

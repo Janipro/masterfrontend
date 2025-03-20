@@ -10,14 +10,14 @@ import { GET_ALL_ENROLMENTS } from '../../../graphql/queries/getAllEnrolments';
 import { columns } from '../../types/userData';
 
 export default function StudentDashboard() {
-  const id = localStorage.getItem('id');
+  const userId = parseInt(localStorage.getItem('id')!);
   const {
     loading: taskLoading,
     error,
     data: taskData,
-  } = useQuery(GET_RECOMMENDED_TASKS, { variables: { userId: id } });
+  } = useQuery(GET_RECOMMENDED_TASKS, { variables: { userId: userId } });
   const { loading: studygroupLoading, data: studygroupData } = useQuery(GET_ALL_ENROLMENTS, {
-    variables: { userId: id },
+    variables: { userId: userId },
   });
   if (taskLoading || studygroupLoading) {
     return (
@@ -28,6 +28,7 @@ export default function StudentDashboard() {
   }
 
   if (error) {
+    console.log(localStorage.getItem('id'));
     console.log('could not load from db');
   }
   const getRecommendedTasks = (): recommended[] => {
