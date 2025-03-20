@@ -8,12 +8,13 @@ import { GET_RECOMMENDED_TASKS } from '../../../graphql/queries/getRecommendedTa
 import { recommended, task, taskRequirement } from '../../types/tableProps';
 
 export default function StudentTasks() {
+  const userId = parseInt(localStorage.getItem('id')!);
   const { loading: tasksLoading, error: tasksError, data: allTasks } = useQuery(GET_ALL_TASKS);
   const {
     loading: recommendedsLoading,
     error: recommendedsError,
     data: recommendedTasks,
-  } = useQuery(GET_RECOMMENDED_TASKS, { variables: { userId: 1 } });
+  } = useQuery(GET_RECOMMENDED_TASKS, { variables: { userId: userId } });
 
   if (tasksLoading || recommendedsLoading) {
     return (

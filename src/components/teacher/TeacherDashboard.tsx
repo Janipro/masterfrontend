@@ -42,18 +42,19 @@ export default function TeacherDashboard() {
   const [course, setCourse] = useState('');
   const [description, setDescription] = useState('');
   const [studygroupName, setStudygroupName] = useState('');
+  const userId = parseInt(localStorage.getItem('id')!);
 
   const handleChangeCourse = (event: SelectChangeEvent) => {
     setCourse(event.target.value);
   };
 
-  const { loading: taskLoading, error, data: taskData } = useQuery(GET_GIVEN_TASKS, { variables: { userId: 2 } });
+  const { loading: taskLoading, error, data: taskData } = useQuery(GET_GIVEN_TASKS, { variables: { userId: userId } });
   const { loading: courseLoading, data: courseData } = useQuery(GET_ALL_COURSES);
   const { loading: studygroupLoading, data: studygroupData } = useQuery(GET_ALL_STUDY_GROUPS, {
-    variables: { userId: 2 },
+    variables: { userId: userId },
   });
   const [createStudygroup] = useMutation(CREATE_STUDY_GROUP, {
-    refetchQueries: [{ query: GET_ALL_STUDY_GROUPS, variables: { userId: 2 } }],
+    refetchQueries: [{ query: GET_ALL_STUDY_GROUPS, variables: { userId: userId } }],
   });
 
   if (taskLoading || courseLoading || studygroupLoading) {

@@ -12,7 +12,12 @@ import { useParams } from 'react-router-dom';
 
 export default function StudentClass() {
   const { id } = useParams();
-  const { loading: taskLoading, error, data: taskData } = useQuery(GET_RECOMMENDED_TASKS, { variables: { userId: 1 } });
+  const userId = parseInt(localStorage.getItem('id')!);
+  const {
+    loading: taskLoading,
+    error,
+    data: taskData,
+  } = useQuery(GET_RECOMMENDED_TASKS, { variables: { userId: userId } });
   const { loading: announcementLoading, data: announcementData } = useQuery(GET_ALL_ANNOUNCEMENTS, {
     variables: { studyGroupId: parseInt(id!) },
   });

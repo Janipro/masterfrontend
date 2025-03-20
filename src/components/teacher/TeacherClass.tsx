@@ -34,7 +34,8 @@ export default function TeacherClass() {
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
   const { id } = useParams();
-  const { loading: taskLoading, error, data: taskData } = useQuery(GET_GIVEN_TASKS, { variables: { userId: 2 } });
+  const userId = parseInt(localStorage.getItem('id')!);
+  const { loading: taskLoading, error, data: taskData } = useQuery(GET_GIVEN_TASKS, { variables: { userId: userId } });
   const { loading: announcementLoading, data: announcementData } = useQuery(GET_ALL_ANNOUNCEMENTS, {
     variables: { studyGroupId: parseInt(id!) },
   });
@@ -42,7 +43,7 @@ export default function TeacherClass() {
     variables: { studyGroupId: parseInt(id!) },
   });
   const [createAnnouncement] = useMutation(CREATE_ANNOUNCEMENT, {
-    refetchQueries: [{ query: GET_ALL_ANNOUNCEMENTS, variables: { studyGroupId: 1 } }],
+    refetchQueries: [{ query: GET_ALL_ANNOUNCEMENTS, variables: { studyGroupId: parseInt(id!) } }],
   });
 
   if (taskLoading || announcementLoading || studygroupLoading) {

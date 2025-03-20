@@ -3,7 +3,6 @@ import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
 import FormControl from '@mui/material/FormControl';
-import Link from '@mui/material/Link';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
 import Stack from '@mui/material/Stack';
@@ -51,23 +50,31 @@ const SignInContainer = styled(Stack)(({ theme }) => ({
 }));
 
 export default function Login() {
+  const [email, setEmail] = React.useState('');
+  const [password, setPassword] = React.useState('');
   const [emailError, setEmailError] = React.useState(false);
   const [emailErrorMessage, setEmailErrorMessage] = React.useState('');
   const [passwordError, setPasswordError] = React.useState(false);
   const [passwordErrorMessage, setPasswordErrorMessage] = React.useState('');
   const navigate = useNavigate();
 
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-    if (emailError || passwordError) {
-      event.preventDefault();
+  const handleSubmit = async () => {
+    if (!validateInputs()) {
       return;
     }
-    const data = new FormData(event.currentTarget);
-    console.log({
-      email: data.get('email'),
-      password: data.get('password'),
-    });
-    navigate('/');
+    const user = { email, password };
+    try {
+      const response = await fetch('http://localhost:6001/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ user }),
+      });
+      const result = await response.json();
+      localStorage.setItem('id', result[0].user_id);
+    } catch (error) {
+      console.log('Could not login', error);
+    }
+    navigate(0);
   };
 
   const validateInputs = () => {
@@ -85,9 +92,9 @@ export default function Login() {
       setEmailErrorMessage('');
     }
 
-    if (!password.value || password.value.length < 6) {
+    if (!password.value || password.value.length < 4) {
       setPasswordError(true);
-      setPasswordErrorMessage('Passord må være minst 6 karakterer langt.');
+      setPasswordErrorMessage('Passord må være minst 4 karakterer langt.');
       isValid = false;
     } else {
       setPasswordError(false);
@@ -111,20 +118,15 @@ export default function Login() {
               unselectable="on"
               draggable={false}
               style={{
-                userSelect: 'none',
-                msUserSelect: 'none',
-                MozUserSelect: 'none',
-                WebkitUserSelect: 'none',
+                cursor: 'Pointer',
+                zIndex: 100,
               }}
-            ></img>
+            />
             <Typography color={NAV_COLORS.text} typography="h6" fontWeight="medium" marginLeft={0.25}>
               EduCode
             </Typography>
           </Stack>
           <Box
-            component="form"
-            onSubmit={handleSubmit}
-            noValidate
             sx={{
               display: 'flex',
               flexDirection: 'column',
@@ -134,6 +136,7 @@ export default function Login() {
           >
             <FormControl>
               <TextField
+                value={email}
                 error={emailError}
                 helperText={emailErrorMessage}
                 id="email"
@@ -145,11 +148,13 @@ export default function Login() {
                 required
                 fullWidth
                 variant="outlined"
+                onChange={(e) => setEmail(e.target.value)}
                 color={emailError ? 'error' : 'primary'}
               />
             </FormControl>
             <FormControl>
               <TextField
+                value={password}
                 error={passwordError}
                 helperText={passwordErrorMessage}
                 name="password"
@@ -161,13 +166,15 @@ export default function Login() {
                 required
                 fullWidth
                 variant="outlined"
+                onChange={(e) => setPassword(e.target.value)}
                 color={passwordError ? 'error' : 'primary'}
               />
             </FormControl>
-            <Button type="submit" fullWidth variant="contained" onClick={validateInputs} sx={{ textTransform: 'none' }}>
+            <Button type="submit" fullWidth variant="contained" onClick={handleSubmit} sx={{ textTransform: 'none' }}>
               Logg inn
             </Button>
           </Box>
+          {/**
           <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
             <Typography sx={{ textAlign: 'center' }}>
               Har du ikke bruker?
@@ -175,7 +182,7 @@ export default function Login() {
                 Registrer deg
               </Link>
             </Typography>
-          </Box>
+          </Box>**/}
         </Card>
       </SignInContainer>
     </Box>
