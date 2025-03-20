@@ -3,7 +3,6 @@ import './App.css';
 import { createTheme, CssBaseline } from '@mui/material';
 import { BrowserRouter, Route, Routes, StaticRouter } from 'react-router-dom';
 import Login from './pages/Login';
-import Register from './pages/Register';
 import Playground from './pages/Playground';
 import Tasks from './pages/Tasks';
 import Class from './pages/Class';
@@ -37,15 +36,16 @@ function Router(props: { children?: React.ReactNode }) {
 
 function App() {
   const { isDarkmode } = useDarkmodeStore();
+  const loggedIn = localStorage.getItem('id');
   return (
     <ApolloProvider client={client}>
       <ThemeProvider theme={isDarkmode ? darkTheme : defaultTheme}>
         <CssBaseline />
         <Router>
           <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/login" element={<Login />} />
-            <Route path="/register" element={<Register />} />
+            <Route path="/" element={loggedIn ? <Home /> : <Login />} />
+            <Route path="/login" element={loggedIn ? <Home /> : <Login />} />
+            {/*<Route path="/register" element={<Register />} />*/}
             <Route path="/playground" element={<Playground />} />
             <Route path="/tasks" element={<Tasks />} />
             <Route path="/class/:id" element={<Class />} />
