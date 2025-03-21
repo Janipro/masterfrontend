@@ -43,6 +43,7 @@ export default function TeacherDashboard() {
   const [description, setDescription] = useState('');
   const [studygroupName, setStudygroupName] = useState('');
   const userId = parseInt(localStorage.getItem('id')!);
+  const schoolId = parseInt(localStorage.getItem('school_id')!);
 
   const handleChangeCourse = (event: SelectChangeEvent) => {
     setCourse(event.target.value);
@@ -91,9 +92,9 @@ export default function TeacherDashboard() {
         variables: {
           courseId: course,
           description: description,
-          schoolId: 3,
+          schoolId: schoolId,
           studyGroupName: studygroupName,
-          userId: 2,
+          userId: userId,
         },
       });
       handleClose();

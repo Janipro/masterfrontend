@@ -71,6 +71,7 @@ export default function Login() {
       });
       const result = await response.json();
       localStorage.setItem('id', result[0].user_id);
+      localStorage.setItem('school_id', result[0].school_id);
     } catch (error) {
       console.log('Could not login', error);
     }

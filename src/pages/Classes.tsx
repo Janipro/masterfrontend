@@ -8,8 +8,9 @@ import useTeacherStore from '../stores/useTeacherStore';
 
 export default function Classes() {
   const { isTeacher } = useTeacherStore();
+  const userId = parseInt(localStorage.getItem('id')!);
   const { loading, error, data } = useQuery(GET_ALL_ENROLMENTS, {
-    variables: { userId: 1 },
+    variables: { userId: userId },
   });
   if (loading) {
     return (

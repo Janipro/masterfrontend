@@ -84,11 +84,11 @@ export default function TeacherClass() {
     try {
       await createAnnouncement({
         variables: {
-          userId: 2,
+          userId: userId,
           title: title,
           content: content,
           datePublished: new Date(),
-          studyGroupId: 1,
+          studyGroupId: parseInt(id!),
         },
       });
       handleClose();
