@@ -16,6 +16,18 @@ import Classes from './pages/Classes';
 const darkTheme = createTheme({
   palette: {
     mode: 'dark',
+    background: {
+      default: '#0F0F0F',
+    },
+  },
+  components: {
+    MuiPaper: {
+      styleOverrides: {
+        root: {
+          '--Paper-overlay': 'none !important',
+        },
+      },
+    },
   },
 });
 

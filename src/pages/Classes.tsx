@@ -25,7 +25,7 @@ export default function Classes() {
   return (
     <Fade in timeout={500}>
       <Box>
-        <NavBar isEditor={false} />
+        <NavBar />
         <Container component={'main'} sx={{ bgcolor: 'background.default' }}>
           <Grid2 sx={{ display: 'flex' }}>
             <Grid2

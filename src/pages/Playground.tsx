@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
 import { Box } from '@mui/material';
 import PlaygroundContent from '../components/PlaygroundContent';
-import NavBar from '../components/NavBar';
+import NavBarEditor from '../components/NavBarEditor';
 
 export default function EditorPage() {
   useEffect(() => {
@@ -15,7 +15,7 @@ export default function EditorPage() {
 
   return (
     <Box>
-      <NavBar isEditor />
+      <NavBarEditor />
       <PlaygroundContent />
     </Box>
   );
