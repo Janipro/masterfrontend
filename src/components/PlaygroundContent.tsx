@@ -138,11 +138,7 @@ export default function PlaygroundContent() {
       localStorage.setItem('leftWidth', leftWidth.toString());
       localStorage.setItem('rightTopHeight', rightTopHeight.toString());
     }
-  }, [
-    enableInteractions,
-    handleMouseMoveVertical,
-    handleMouseMoveHorizontal, //error on this line
-  ]);
+  }, [enableInteractions, handleMouseMoveVertical, handleMouseMoveHorizontal]);
 
   useEffect(() => {
     if (isDarkmodeEditor) {
