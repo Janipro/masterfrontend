@@ -25,8 +25,18 @@ const darkTheme = createTheme({
       styleOverrides: {
         root: {
           '--Paper-overlay': 'none !important',
+          'padding-right': '0px',
         },
       },
+    },
+  },
+  breakpoints: {
+    values: {
+      xs: 0,
+      sm: 476,
+      md: 859,
+      lg: 1425,
+      xl: 1536,
     },
   },
 });
@@ -34,6 +44,24 @@ const darkTheme = createTheme({
 const defaultTheme = createTheme({
   palette: {
     mode: 'light',
+  },
+  breakpoints: {
+    values: {
+      xs: 0,
+      sm: 476,
+      md: 859,
+      lg: 1425,
+      xl: 1536,
+    },
+  },
+  components: {
+    MuiPaper: {
+      styleOverrides: {
+        root: {
+          'padding-right': '0px',
+        },
+      },
+    },
   },
 });
 

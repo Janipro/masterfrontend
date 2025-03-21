@@ -132,7 +132,7 @@ export default function NavBar() {
             </Modal>
             <IconButton
               onClick={handleOpenUserMenu}
-              sx={{ p: 0, color: isDarkmode ? NAV_COLORS.text_dark : NAV_COLORS.text }}
+              sx={{ p: 0, m: '8px', color: isDarkmode ? NAV_COLORS.text_dark : NAV_COLORS.text }}
             >
               <AccountCircleIcon />
             </IconButton>

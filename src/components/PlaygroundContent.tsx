@@ -261,6 +261,7 @@ export default function PlaygroundContent() {
         sx={{
           flexShrink: 0,
           minHeight: '190px',
+          minWidth: taskCollapsed ? null : '200px',
           width: taskCollapsed ? '43.5px' : 'var(--left-width)',
         }}
       >
@@ -461,7 +462,7 @@ export default function PlaygroundContent() {
       )}
 
       {/* Right Section */}
-      <Box sx={{ flex: 1, display: 'flex', flexDirection: 'column', minHeight: '150px' }}>
+      <Box sx={{ flex: 1, display: 'flex', flexDirection: 'column', minHeight: '150px', minWidth: '208px' }}>
         {/* Top Right Pane */}
         <Box>
           <CssBaseline />

@@ -21,6 +21,7 @@ import WbIncandescentRoundedIcon from '@mui/icons-material/WbIncandescentRounded
 import CloudUploadRoundedIcon from '@mui/icons-material/CloudUploadRounded';
 import HistoryRoundedIcon from '@mui/icons-material/HistoryRounded';
 import NotificationsRoundedIcon from '@mui/icons-material/NotificationsRounded';
+import ExpandLessRoundedIcon from '@mui/icons-material/ExpandLessRounded';
 import { useNavigate } from 'react-router-dom';
 import useDarkmodeStore from '../stores/useDarkmodeStore';
 import useDarkmodeEditorStore from '../stores/useDarkmodeEditorStore';
@@ -45,6 +46,7 @@ const style = {
 
 export default function NavBarEditor() {
   const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(null);
+  const [anchorElNavbar, setAnchorElNavbar] = React.useState<null | HTMLElement>(null);
   const { isTeacher, setTeacher } = useTeacherStore();
   const { isDarkmode, setDarkmode } = useDarkmodeStore();
   const { isDarkmodeEditor, setDarkmodeEditor } = useDarkmodeEditorStore();
@@ -58,6 +60,14 @@ export default function NavBarEditor() {
 
   const handleCloseUserMenu = () => {
     setAnchorElUser(null);
+  };
+
+  const handleOpenExpandedNavbar = (event: React.MouseEvent<HTMLElement>) => {
+    setAnchorElNavbar(event.currentTarget);
+  };
+
+  const handleCloseExpandedNavbar = () => {
+    setAnchorElNavbar(null);
   };
 
   const [open, setOpen] = React.useState(false);
@@ -118,8 +128,8 @@ export default function NavBarEditor() {
                 sx={{
                   display: 'flex',
                   justifyContent: 'center',
-                  mx: 2,
-                  alignItems: { md: 'flex-end' },
+                  mx: { xs: 0.5, sm: 2, md: 2, lg: 2, xl: 2 },
+                  alignItems: 'flex-end',
                 }}
               >
                 <Box
@@ -160,7 +170,7 @@ export default function NavBarEditor() {
                       my: 0,
                       textTransform: 'none',
                       height: '100%',
-                      px: 1.5,
+                      px: { xs: 1, sm: 1, md: 1, lg: 1.5, xl: 1.5 },
                       minWidth: 'auto',
                       width: 'fit-content',
                     }}
@@ -169,7 +179,7 @@ export default function NavBarEditor() {
                       sx={{
                         color: isDarkmodeEditor
                           ? NAV_COLORS.editor_icon_redo_undo_background_dark
-                          : NAV_COLORS.editor_icon_redo_undo_background,
+                          : NAV_COLORS.editor_icon_background,
                         fontSize: 'large',
                       }}
                     />
@@ -216,7 +226,7 @@ export default function NavBarEditor() {
                       my: 0,
                       textTransform: 'none',
                       height: '100%',
-                      px: 1.5,
+                      px: { xs: 1, sm: 1, md: 1, lg: 1.5, xl: 1.5 },
                       minWidth: 'auto',
                       width: 'fit-content',
                     }}
@@ -225,7 +235,7 @@ export default function NavBarEditor() {
                       sx={{
                         color: isDarkmodeEditor
                           ? NAV_COLORS.editor_icon_redo_undo_background_dark
-                          : NAV_COLORS.editor_icon_redo_undo_background,
+                          : NAV_COLORS.editor_icon_background,
                         fontSize: 'large',
                         transform: 'scaleX(-1)',
                       }}
@@ -238,8 +248,8 @@ export default function NavBarEditor() {
                 sx={{
                   display: 'flex',
                   justifyContent: 'center',
-                  mx: 2,
-                  alignItems: { md: 'flex-end' },
+                  mx: { xs: 0.5, sm: 2, md: 2, lg: 2, xl: 2 },
+                  alignItems: 'flex-end',
                 }}
               >
                 <Box
@@ -281,7 +291,7 @@ export default function NavBarEditor() {
                       my: 0,
                       textTransform: 'none',
                       height: '100%',
-                      px: 1.5,
+                      px: { xs: 1, sm: 1, md: 1, lg: 1.5, xl: 1.5 },
                       minWidth: 'auto',
                       width: 'fit-content',
                     }}
@@ -296,6 +306,7 @@ export default function NavBarEditor() {
                     />
                     <Typography
                       sx={{
+                        display: { xs: 'none', sm: 'none', md: 'block', lg: 'block', xl: 'block' },
                         color: isDarkmodeEditor ? NAV_COLORS.editor_text_dark : NAV_COLORS.editor_text,
                       }}
                     >
@@ -343,7 +354,7 @@ export default function NavBarEditor() {
                       my: 0,
                       textTransform: 'none',
                       height: '100%',
-                      px: 1.5,
+                      px: { xs: 1, sm: 1, md: 1, lg: 1.5, xl: 1.5 },
                       minWidth: 'auto',
                       width: 'fit-content',
                     }}
@@ -358,6 +369,7 @@ export default function NavBarEditor() {
                     />
                     <Typography
                       sx={{
+                        display: { xs: 'none', sm: 'none', md: 'block', lg: 'block', xl: 'block' },
                         color: isDarkmodeEditor ? NAV_COLORS.editor_text_dark : NAV_COLORS.editor_text,
                       }}
                     >
@@ -408,7 +420,7 @@ export default function NavBarEditor() {
                       my: 0,
                       textTransform: 'none',
                       height: '100%',
-                      px: 1.5,
+                      px: { xs: 1, sm: 1, md: 1, lg: 1.5, xl: 1.5 },
                       minWidth: 'auto',
                       width: 'fit-content',
                     }}
@@ -422,6 +434,7 @@ export default function NavBarEditor() {
                     />
                     <Typography
                       sx={{
+                        display: { xs: 'none', sm: 'none', md: 'block', lg: 'block', xl: 'block' },
                         color: isDarkmodeEditor ? NAV_COLORS.editor_text_dark : NAV_COLORS.editor_text,
                       }}
                     >
@@ -444,8 +457,8 @@ export default function NavBarEditor() {
                 sx={{
                   display: 'flex',
                   justifyContent: 'center',
-                  mx: 2,
-                  alignItems: { md: 'flex-end' },
+                  mx: { xs: 1, sm: 1, md: 1, lg: 2, xl: 2 },
+                  alignItems: 'flex-end',
                 }}
               >
                 <Box
@@ -483,7 +496,7 @@ export default function NavBarEditor() {
                       my: 0,
                       textTransform: 'none',
                       height: '100%',
-                      px: 1.5,
+                      px: { xs: 1, sm: 1, md: 1, lg: 1.5, xl: 1.5 },
                       minWidth: 'auto',
                       width: 'fit-content',
                     }}
@@ -496,6 +509,7 @@ export default function NavBarEditor() {
                     />
                     <Typography
                       sx={{
+                        display: { xs: 'none', sm: 'none', md: 'block', lg: 'block', xl: 'block' },
                         color: isDarkmodeEditor ? NAV_COLORS.editor_text_dark : NAV_COLORS.editor_text,
                         fontSize: 'small',
                       }}
@@ -506,87 +520,238 @@ export default function NavBarEditor() {
                 </Box>
               </Box>
             </Box>
-            <FormGroup>
-              <FormControlLabel
-                control={
-                  <Switch
-                    defaultChecked={isTeacher}
-                    onChange={() => setTeacher(!isTeacher)}
-                    sx={{
-                      '& .MuiSwitch-thumb': {
-                        backgroundColor: isDarkmodeEditor ? '#e0e0e0' : '#FFFFFF',
-                        opacity: 1,
-                      },
-                      '& .MuiSwitch-track': {
-                        backgroundColor: isDarkmodeEditor ? '#575757' : '#9e9e9e',
-                        opacity: 1,
-                      },
-                      '& .MuiSwitch-switchBase.Mui-checked .MuiSwitch-thumb': {
-                        backgroundColor: isDarkmodeEditor ? '#90caf9' : '#1976d2',
-                        opacity: 1,
-                      },
-                      '& .MuiSwitch-switchBase.Mui-checked + .MuiSwitch-track': {
-                        backgroundColor: isDarkmodeEditor ? '#4f6c84' : '#85b5e5',
-                        opacity: 1,
-                      },
-                    }}
-                  />
-                }
-                label="Lærermodus"
-              />
-            </FormGroup>
 
-            <IconButton>
-              <NotificationsRoundedIcon
-                sx={{
-                  color: isDarkmodeEditor ? NAV_COLORS.editor_icon_background_dark : NAV_COLORS.editor_icon_background,
-                }}
-              />
-            </IconButton>
-            <IconButton onClick={handleOpen}>
-              <SettingsIcon
-                sx={{
-                  color: isDarkmodeEditor ? NAV_COLORS.editor_icon_background_dark : NAV_COLORS.editor_icon_background,
-                }}
-              />
-            </IconButton>
-            <Modal open={open} onClose={handleClose} aria-labelledby="settings-modal-title">
-              <Box sx={style}>
-                <Typography id="settings-modal-title" variant="h5" component="h2" fontWeight="500">
-                  Innstillinger
-                </Typography>
-                <Stack direction="column" alignItems="left" mt={4} gap={1}>
-                  <FormGroup>
-                    <FormControlLabel
-                      control={<Switch defaultChecked={isDarkmode} onChange={() => setDarkmode(!isDarkmode)} />}
-                      label="Nettside mørk modus"
-                    />
-                  </FormGroup>
-                  <FormGroup>
-                    <FormControlLabel
-                      control={
-                        <Switch
-                          defaultChecked={isDarkmodeEditor}
-                          onChange={() => setDarkmodeEditor(!isDarkmodeEditor)}
-                        />
-                      }
-                      label="Editor mørk modus"
-                    />
-                  </FormGroup>
-                </Stack>
-              </Box>
-            </Modal>
-            <IconButton
-              onClick={handleOpenUserMenu}
+            <Container
               sx={{
-                p: 0,
-                color: isDarkmodeEditor ? NAV_COLORS.editor_icon_background_dark : NAV_COLORS.editor_icon_background,
+                display: { xs: 'none', sm: 'none', md: 'none', lg: 'flex' },
+                flexDirection: 'row',
+                paddingX: '0px !important',
               }}
             >
-              <AccountCircleIcon />
-            </IconButton>
+              <FormGroup sx={{ justifyContent: 'flex-end' }}>
+                <FormControlLabel
+                  control={
+                    <Switch
+                      defaultChecked={isTeacher}
+                      onChange={() => setTeacher(!isTeacher)}
+                      sx={{
+                        '& .MuiSwitch-thumb': {
+                          backgroundColor: isDarkmodeEditor ? '#e0e0e0' : '#FFFFFF',
+                          opacity: 1,
+                        },
+                        '& .MuiSwitch-track': {
+                          backgroundColor: isDarkmodeEditor ? '#575757' : '#9e9e9e',
+                          opacity: 1,
+                        },
+                        '& .MuiSwitch-switchBase.Mui-checked .MuiSwitch-thumb': {
+                          backgroundColor: isDarkmodeEditor ? '#90caf9' : '#1976d2',
+                          opacity: 1,
+                        },
+                        '& .MuiSwitch-switchBase.Mui-checked + .MuiSwitch-track': {
+                          backgroundColor: isDarkmodeEditor ? '#4f6c84' : '#85b5e5',
+                          opacity: 1,
+                        },
+                      }}
+                    />
+                  }
+                  label="Lærermodus"
+                />
+              </FormGroup>
+
+              <IconButton>
+                <NotificationsRoundedIcon
+                  sx={{
+                    color: isDarkmodeEditor
+                      ? NAV_COLORS.editor_icon_background_dark
+                      : NAV_COLORS.editor_icon_background,
+                  }}
+                />
+              </IconButton>
+              <IconButton onClick={handleOpen}>
+                <SettingsIcon
+                  sx={{
+                    color: isDarkmodeEditor
+                      ? NAV_COLORS.editor_icon_background_dark
+                      : NAV_COLORS.editor_icon_background,
+                  }}
+                />
+              </IconButton>
+              <IconButton
+                onClick={handleOpenUserMenu}
+                sx={{
+                  p: 0,
+                  marginY: '8px',
+                  marginLeft: '8px',
+                  color: isDarkmodeEditor ? NAV_COLORS.editor_icon_background_dark : NAV_COLORS.editor_icon_background,
+                }}
+              >
+                <AccountCircleIcon />
+              </IconButton>
+            </Container>
+
+            <Box
+              sx={{
+                flexGrow: 1,
+                display: { xs: 'flex', sm: 'flex', md: 'flex', lg: 'none', xl: 'none' },
+                justifyContent: 'center',
+              }}
+            >
+              <Box
+                sx={{
+                  display: 'flex',
+                  justifyContent: 'center',
+                  marginLeft: { xs: 0, sm: 0.5, md: 0.5, lg: 0.5, xl: 0.5 },
+                  alignItems: 'flex-end',
+                }}
+              >
+                <Box
+                  sx={{
+                    my: 2,
+                    color: isDarkmodeEditor ? NAV_COLORS.editor_text_dark : NAV_COLORS.editor_text,
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    backgroundColor: isDarkmodeEditor
+                      ? NAV_COLORS.editor_button_background_dark
+                      : NAV_COLORS.editor_button_background,
+                    borderRadius: '20px',
+                    mx: 0,
+                    textTransform: 'none',
+                    height: '40%',
+                    px: 0,
+                    minWidth: 'auto',
+                    width: 'fit-content',
+                    boxShadow: 2,
+                  }}
+                >
+                  <Button
+                    key={'expandNavbar'}
+                    onClick={handleOpenExpandedNavbar}
+                    sx={{
+                      color: isDarkmodeEditor ? NAV_COLORS.editor_text_dark : NAV_COLORS.editor_text,
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      backgroundColor: isDarkmodeEditor
+                        ? NAV_COLORS.editor_button_background_dark
+                        : NAV_COLORS.editor_button_background,
+                      borderRadius: 20,
+                      mx: 0,
+                      my: 0,
+                      textTransform: 'none',
+                      height: '100%',
+                      px: 0.75,
+                      minWidth: 'auto',
+                      width: 'fit-content',
+                    }}
+                  >
+                    <ExpandLessRoundedIcon
+                      sx={{
+                        color: isDarkmodeEditor
+                          ? NAV_COLORS.editor_icon_redo_undo_background_dark
+                          : NAV_COLORS.editor_icon_background,
+                        fontSize: 'large',
+                        transform: anchorElNavbar ? 'rotate(180deg)' : null,
+                      }}
+                    />
+                  </Button>
+                </Box>
+              </Box>
+            </Box>
+
             <Menu
-              sx={{ mt: '45px' }}
+              sx={{ display: { xs: 'block', sm: 'block', md: 'block', lg: 'none', xl: 'none' }, mt: '35px' }}
+              id="navbar-appbar"
+              anchorEl={anchorElNavbar}
+              anchorOrigin={{
+                vertical: 'top',
+                horizontal: 'right',
+              }}
+              keepMounted
+              transformOrigin={{
+                vertical: 'top',
+                horizontal: 'right',
+              }}
+              open={Boolean(anchorElNavbar)}
+              onClose={handleCloseExpandedNavbar}
+            >
+              <MenuItem key={'notificationButton'} onClick={handleCloseExpandedNavbar}>
+                <IconButton>
+                  <NotificationsRoundedIcon
+                    sx={{
+                      color: isDarkmodeEditor
+                        ? NAV_COLORS.editor_icon_background_dark
+                        : NAV_COLORS.editor_icon_background,
+                    }}
+                  />
+                </IconButton>
+              </MenuItem>
+              <MenuItem key={'settingsButton'} onClick={handleCloseExpandedNavbar}>
+                <IconButton onClick={handleOpen}>
+                  <SettingsIcon
+                    sx={{
+                      color: isDarkmodeEditor
+                        ? NAV_COLORS.editor_icon_background_dark
+                        : NAV_COLORS.editor_icon_background,
+                    }}
+                  />
+                </IconButton>
+              </MenuItem>
+              <MenuItem key={'accountButton'}>
+                <IconButton
+                  onClick={handleOpenUserMenu}
+                  sx={{
+                    p: 0,
+                    marginY: '8px',
+                    marginLeft: '8px',
+                    color: isDarkmodeEditor
+                      ? NAV_COLORS.editor_icon_background_dark
+                      : NAV_COLORS.editor_icon_background,
+                  }}
+                >
+                  <AccountCircleIcon />
+                </IconButton>
+              </MenuItem>
+            </Menu>
+
+            <Menu
+              sx={{ mt: '35px', display: { xs: 'block', sm: 'block', md: 'block', lg: 'none', xl: 'none' } }}
+              id="menu-appbar"
+              anchorEl={anchorElUser}
+              anchorOrigin={{
+                vertical: 'top',
+                horizontal: 'right',
+              }}
+              keepMounted
+              transformOrigin={{
+                vertical: 77,
+                horizontal: 140,
+              }}
+              open={Boolean(anchorElUser)}
+              onClose={handleCloseUserMenu}
+            >
+              {settings.map((setting) => (
+                <MenuItem key={setting} onClick={handleCloseUserMenu}>
+                  {setting === 'Logg ut' ? (
+                    <Link
+                      to="/"
+                      style={{ color: 'inherit' }}
+                      onClick={() => {
+                        localStorage.removeItem('id');
+                        navigate(0);
+                      }}
+                    >
+                      <Typography sx={{ textAlign: 'center' }}>{setting}</Typography>
+                    </Link>
+                  ) : (
+                    <Typography sx={{ textAlign: 'center' }}>{setting}</Typography>
+                  )}
+                </MenuItem>
+              ))}
+            </Menu>
+
+            <Menu
+              sx={{ mt: '35px', display: { xs: 'none', sm: 'none', md: 'none', lg: 'block', xl: 'block' } }}
               id="menu-appbar"
               anchorEl={anchorElUser}
               anchorOrigin={{
@@ -620,6 +785,32 @@ export default function NavBarEditor() {
                 </MenuItem>
               ))}
             </Menu>
+            <Modal open={open} onClose={handleClose} aria-labelledby="settings-modal-title">
+              <Box sx={style}>
+                <Typography id="settings-modal-title" variant="h5" component="h2" fontWeight="500">
+                  Innstillinger
+                </Typography>
+                <Stack direction="column" alignItems="left" mt={4} gap={1}>
+                  <FormGroup>
+                    <FormControlLabel
+                      control={<Switch defaultChecked={isDarkmode} onChange={() => setDarkmode(!isDarkmode)} />}
+                      label="Nettside mørk modus"
+                    />
+                  </FormGroup>
+                  <FormGroup>
+                    <FormControlLabel
+                      control={
+                        <Switch
+                          defaultChecked={isDarkmodeEditor}
+                          onChange={() => setDarkmodeEditor(!isDarkmodeEditor)}
+                        />
+                      }
+                      label="Editor mørk modus"
+                    />
+                  </FormGroup>
+                </Stack>
+              </Box>
+            </Modal>
           </Stack>
         </Toolbar>
       </Container>
