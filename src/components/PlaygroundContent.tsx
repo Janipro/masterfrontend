@@ -120,13 +120,13 @@ export default function PlaygroundContent() {
     }
   }, []);
 
-  const handleMouseUpImpl = () => {
+  const handleMouseUp = useCallback(() => {
     isResizingVertical.current = false;
     isResizingHorizontal.current = false;
     enableInteractions();
     document.removeEventListener('mousemove', handleMouseMoveVertical);
     document.removeEventListener('mousemove', handleMouseMoveHorizontal);
-    document.removeEventListener('mouseup', handleMouseUpImpl);
+    document.removeEventListener('mouseup', handleMouseUp);
 
     if (containerRef.current) {
       const leftWidth = parseInt(getComputedStyle(containerRef.current).getPropertyValue('--left-width'));
@@ -138,12 +138,10 @@ export default function PlaygroundContent() {
       localStorage.setItem('leftWidth', leftWidth.toString());
       localStorage.setItem('rightTopHeight', rightTopHeight.toString());
     }
-  };
-
-  const handleMouseUp = useCallback(handleMouseUpImpl, [
+  }, [
     enableInteractions,
     handleMouseMoveVertical,
-    handleMouseMoveHorizontal,
+    handleMouseMoveHorizontal, //error on this line
   ]);
 
   useEffect(() => {
@@ -159,13 +157,11 @@ export default function PlaygroundContent() {
   }, [isDarkmodeEditor]);
 
   useEffect(() => {
-    const cleanup = () => {
+    return () => {
       document.removeEventListener('mousemove', handleMouseMoveVertical);
       document.removeEventListener('mousemove', handleMouseMoveHorizontal);
       document.removeEventListener('mouseup', handleMouseUp);
     };
-
-    return cleanup;
   }, [handleMouseMoveVertical, handleMouseMoveHorizontal, handleMouseUp]);
 
   useEffect(() => {
