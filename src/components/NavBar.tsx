@@ -163,6 +163,8 @@ export default function NavBar() {
                       style={{ color: 'inherit' }}
                       onClick={() => {
                         localStorage.removeItem('id');
+                        localStorage.removeItem('school_id');
+                        localStorage.removeItem('class_id');
                         navigate(0);
                       }}
                     >

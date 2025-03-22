@@ -33,6 +33,7 @@ import { GET_GIVEN_TASKS } from '../../../graphql/queries/getGivenTasks';
 import { GET_ALL_COURSES } from '../../../graphql/queries/getAllCourses';
 import { GET_ALL_STUDY_GROUPS } from '../../../graphql/queries/getAllStudygroups';
 import { CREATE_STUDY_GROUP } from '../../../graphql/mutations/createStudygroup';
+import { CREATE_ENROLMENT } from '../../../graphql/mutations/createEnrolment';
 import { course, studygroup, task, taskRequirement } from '../../types/tableProps';
 
 export default function TeacherDashboard() {
@@ -57,6 +58,7 @@ export default function TeacherDashboard() {
   const [createStudygroup] = useMutation(CREATE_STUDY_GROUP, {
     refetchQueries: [{ query: GET_ALL_STUDY_GROUPS, variables: { userId: userId } }],
   });
+  const [createEnrolment] = useMutation(CREATE_ENROLMENT);
 
   if (taskLoading || courseLoading || studygroupLoading) {
     return (
@@ -86,9 +88,9 @@ export default function TeacherDashboard() {
     }));
   };
 
-  const handleCreate = async () => {
+  const handleCreate = async (userIds: number[]) => {
     try {
-      await createStudygroup({
+      const response = await createStudygroup({
         variables: {
           courseId: course,
           description: description,
@@ -97,6 +99,15 @@ export default function TeacherDashboard() {
           userId: userId,
         },
       });
+      const studyGroupId = response.data.createStudygroup.studygroup.studyGroupId;
+      for (const number in userIds) {
+        await createEnrolment({
+          variables: {
+            studyGroupId: studyGroupId,
+            userId: number,
+          },
+        });
+      }
       handleClose();
     } catch (error) {
       console.log('Error creating studygroup: ', error);
