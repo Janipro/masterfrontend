@@ -22,25 +22,29 @@ import { useState } from 'react';
 import Backdrop from '@mui/material/Backdrop';
 import { NAV_COLORS, style } from '../../types/navColors';
 import CreateIcon from '@mui/icons-material/Create';
-import { columns, columns2, columns3, rows2, rows3 } from '../../types/userData';
-import { task, taskRequirement } from '../../types/tableProps';
+import { classTranslation, columns, columns2, columns3, rows2 } from '../../types/userData';
+import { task, taskRequirement, user } from '../../types/tableProps';
 import { useQuery } from '@apollo/client';
 import { GET_ALL_TASKS } from '../../../graphql/queries/getAllTasks';
 import { GET_GIVEN_TASKS } from '../../../graphql/queries/getGivenTasks';
+import { GET_ALL_STUDENTS } from '../../../graphql/queries/getAllStudents';
 
 export default function TeacherTasks() {
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
   const userId = parseInt(localStorage.getItem('id')!);
+  const classId = parseInt(localStorage.getItem('class_id')!);
   const { loading: tasksLoading, error: tasksError, data: allTasks } = useQuery(GET_ALL_TASKS);
   const {
     loading: givenLoading,
     error: givenError,
     data: givenTasks,
   } = useQuery(GET_GIVEN_TASKS, { variables: { userId: userId } });
-
-  if (tasksLoading || givenLoading) {
+  const { loading: studentsLoading, data: studentsData } = useQuery(GET_ALL_STUDENTS, {
+    variables: { classId: classId },
+  });
+  if (tasksLoading || givenLoading || studentsLoading) {
     return (
       <Box mt="30vh">
         <p> Laster inn... </p>
@@ -84,6 +88,15 @@ export default function TeacherTasks() {
     }));
   };
 
+  const createClass = () => {
+    return studentsData.allUsers.nodes.map((student: user) => ({
+      id: student.userId,
+      title: `${student.firstname} ${student.lastname}`,
+      level: student.classByClassId?.grade in classTranslation ? classTranslation[student.classByClassId?.grade] : 0,
+      class: student.classByClassId?.className,
+      school: student.schoolBySchoolId?.schoolName,
+    }));
+  };
   return (
     <Fade in timeout={500}>
       <Box>
@@ -196,7 +209,7 @@ export default function TeacherTasks() {
                           </Typography>
                           {/*<SearchBar options={rows3} prompt="Søk etter elever" />
                           TODO: ADD SEARCH FUNCTIONALITY */}
-                          <Table rows={rows3} columns={columns3} selectable />
+                          <Table rows={createClass()} columns={columns3} selectable />
                           <Button
                             variant="contained"
                             startIcon={<ShareIcon />}
