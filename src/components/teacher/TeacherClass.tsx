@@ -84,11 +84,11 @@ export default function TeacherClass() {
     try {
       await createAnnouncement({
         variables: {
-          userId: 2,
+          userId: userId,
           title: title,
           content: content,
           datePublished: new Date(),
-          studyGroupId: 1,
+          studyGroupId: parseInt(id!),
         },
       });
       handleClose();
@@ -122,9 +122,9 @@ export default function TeacherClass() {
               </Button>
             </Stack>
             <Stack direction="row" spacing={8} color={NAV_COLORS.text}>
-              <Typography>Fag: R1</Typography>
-              <Typography>Lærer: Petter Swemann</Typography>
-              <Typography>E-post: Petter.swemann@stovgs.no</Typography>
+              <Typography>{`Fag: ${studygroupData.studygroupByStudyGroupId.courseByCourseId.courseName}`}</Typography>
+              <Typography>{`Lærer: ${studygroupData.studygroupByStudyGroupId.userByUserId.firstname} ${studygroupData.studygroupByStudyGroupId.userByUserId.lastname}`}</Typography>
+              <Typography>{`E-post: ${studygroupData.studygroupByStudyGroupId.userByUserId.email}`}</Typography>
             </Stack>
             <Typography sx={{ textAlign: 'left', mb: 4 }} color={NAV_COLORS.text}>
               {studygroupData.studygroupByStudyGroupId.description}

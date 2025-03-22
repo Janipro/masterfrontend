@@ -38,27 +38,38 @@ export default function NavBarEditor() {
   const { isDarkmodeEditor, setDarkmodeEditor } = useDarkmodeEditorStore();
   const { executeCode } = useTaskCodeStore();
 
+  const [open, setOpen] = React.useState(false);
+  const handleOpen = () => setOpen(true);
+  const handleClose = () => setOpen(false);
   const navigate = useNavigate();
 
   const handleOpenUserMenu = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorElUser(event.currentTarget);
   };
 
-  const handleCloseUserMenu = () => {
+  const handleCloseUserMenu = React.useCallback(() => {
     setAnchorElUser(null);
-  };
+  }, []);
 
   const handleOpenExpandedNavbar = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorElNavbar(event.currentTarget);
   };
 
-  const handleCloseExpandedNavbar = () => {
+  const handleCloseExpandedNavbar = React.useCallback(() => {
     setAnchorElNavbar(null);
-  };
+  }, []);
 
-  const [open, setOpen] = React.useState(false);
-  const handleOpen = () => setOpen(true);
-  const handleClose = () => setOpen(false);
+  React.useEffect(() => {
+    const handleResize = () => {
+      handleCloseUserMenu();
+      handleCloseExpandedNavbar();
+    };
+
+    window.addEventListener('resize', handleResize);
+    return () => {
+      window.removeEventListener('resize', handleResize);
+    };
+  }, [handleCloseUserMenu, handleCloseExpandedNavbar]);
 
   return (
     <AppBar

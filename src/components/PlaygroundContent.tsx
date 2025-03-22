@@ -261,7 +261,7 @@ export default function PlaygroundContent() {
         sx={{
           flexShrink: 0,
           minHeight: '190px',
-          minWidth: taskCollapsed ? null : '200px',
+          minWidth: taskCollapsed ? null : '222px',
           width: taskCollapsed ? '43.5px' : 'var(--left-width)',
         }}
       >
@@ -358,7 +358,7 @@ export default function PlaygroundContent() {
                     gap: '15px',
                     display: 'flex',
                     flexDirection: 'column',
-                    height: 'calc(100% - 51px)',
+                    height: 'calc(100% - 24px)',
                     overflowY: 'scroll',
                     overflowX: 'hidden',
                     marginRight: '2px',
