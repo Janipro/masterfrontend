@@ -26,6 +26,7 @@ export const CREATE_STUDY_GROUP = gql`
         isActive
         schoolId
         studyGroupName
+        studyGroupId
         userId
       }
     }

@@ -4,6 +4,8 @@ import { nbNO } from '@mui/x-data-grid/locales/nbNO';
 import { useMemo, useState } from 'react';
 import { task, student, recommended } from '../types/tableProps';
 import useTeacherStore from '../stores/useTeacherStore';
+import useSelectedStore from '../stores/useSelectedStore';
+import { useStore } from 'zustand';
 
 const paginationModel = { page: 0, pageSize: 5 };
 
@@ -29,6 +31,8 @@ export default function Table({
   );*/
   }
 
+  const { selectionModel, setSelectionModel } = useStore(useSelectedStore);
+
   const columnVisibilityModel = useMemo(() => {
     if (isTeacher) {
       return {
@@ -53,6 +57,10 @@ export default function Table({
           checkboxSelection={selectable}
           columnVisibilityModel={columnVisibilityModel}
           density="compact"
+          onRowSelectionModelChange={(newSelectionModel) => {
+            setSelectionModel(newSelectionModel);
+          }}
+          rowSelectionModel={selectionModel}
         />
       </Paper>
     </Box>

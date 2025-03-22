@@ -27,13 +27,17 @@ import Table from '../Table';
 import InfoCard from '../InfoCard';
 import { useState } from 'react';
 import { style } from '../../types/navColors';
-import { columns, columns3, rows3 } from '../../types/userData';
+import { classTranslation, columns, columns3 } from '../../types/userData';
 import { useMutation, useQuery } from '@apollo/client';
 import { GET_GIVEN_TASKS } from '../../../graphql/queries/getGivenTasks';
 import { GET_ALL_COURSES } from '../../../graphql/queries/getAllCourses';
+import { GET_ALL_STUDENTS } from '../../../graphql/queries/getAllStudents';
 import { GET_ALL_STUDY_GROUPS } from '../../../graphql/queries/getAllStudygroups';
 import { CREATE_STUDY_GROUP } from '../../../graphql/mutations/createStudygroup';
-import { course, studygroup, task, taskRequirement } from '../../types/tableProps';
+import { CREATE_ENROLMENT } from '../../../graphql/mutations/createEnrolment';
+import { course, studygroup, task, taskRequirement, user } from '../../types/tableProps';
+import useSelectedStore from '../../stores/useSelectedStore';
+import { useStore } from 'zustand';
 
 export default function TeacherDashboard() {
   const [open, setOpen] = useState(false);
@@ -44,6 +48,8 @@ export default function TeacherDashboard() {
   const [studygroupName, setStudygroupName] = useState('');
   const userId = parseInt(localStorage.getItem('id')!);
   const schoolId = parseInt(localStorage.getItem('school_id')!);
+  const classId = parseInt(localStorage.getItem('class_id')!);
+  const { selectionModel } = useStore(useSelectedStore);
 
   const handleChangeCourse = (event: SelectChangeEvent) => {
     setCourse(event.target.value);
@@ -54,11 +60,15 @@ export default function TeacherDashboard() {
   const { loading: studygroupLoading, data: studygroupData } = useQuery(GET_ALL_STUDY_GROUPS, {
     variables: { userId: userId },
   });
+  const { loading: studentsLoading, data: studentsData } = useQuery(GET_ALL_STUDENTS, {
+    variables: { classId: classId },
+  });
   const [createStudygroup] = useMutation(CREATE_STUDY_GROUP, {
     refetchQueries: [{ query: GET_ALL_STUDY_GROUPS, variables: { userId: userId } }],
   });
+  const [createEnrolment] = useMutation(CREATE_ENROLMENT);
 
-  if (taskLoading || courseLoading || studygroupLoading) {
+  if (taskLoading || courseLoading || studygroupLoading || studentsLoading) {
     return (
       <Box mt="30vh">
         <p> Laster inn... </p>
@@ -88,7 +98,7 @@ export default function TeacherDashboard() {
 
   const handleCreate = async () => {
     try {
-      await createStudygroup({
+      const response = await createStudygroup({
         variables: {
           courseId: course,
           description: description,
@@ -97,12 +107,30 @@ export default function TeacherDashboard() {
           userId: userId,
         },
       });
+      const studyGroupId = response.data.createStudygroup.studygroup.studyGroupId;
+      for (const selectedStudent in selectionModel) {
+        await createEnrolment({
+          variables: {
+            studyGroupId: studyGroupId,
+            userId: selectionModel[selectedStudent],
+          },
+        });
+      }
       handleClose();
     } catch (error) {
       console.log('Error creating studygroup: ', error);
     }
   };
 
+  const createClass = () => {
+    return studentsData.allUsers.nodes.map((student: user) => ({
+      id: student.userId,
+      title: `${student.firstname} ${student.lastname}`,
+      level: student.classByClassId?.grade in classTranslation ? classTranslation[student.classByClassId?.grade] : 0,
+      class: student.classByClassId?.className,
+      school: student.schoolBySchoolId?.schoolName,
+    }));
+  };
   return (
     <Fade in timeout={500}>
       <Box component={'main'} sx={{ bgcolor: 'background.default' }}>
@@ -206,7 +234,7 @@ export default function TeacherDashboard() {
                             }}
                           />
                           <Stack direction="row"></Stack>
-                          <Table rows={rows3} columns={columns3} selectable />
+                          <Table rows={createClass()} columns={columns3} selectable />
                           <Button
                             variant="contained"
                             startIcon={<CreateIcon />}

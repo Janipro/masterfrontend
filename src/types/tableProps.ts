@@ -24,6 +24,10 @@ export type course = {
 export type user = {
   userId: number;
   email: string;
+  firstname: string;
+  lastname: string;
+  classByClassId: sclass;
+  schoolBySchoolId: school;
 };
 
 export type recommended = {
@@ -71,4 +75,15 @@ export type student = {
   level: string;
   class: string;
   school: string;
+};
+
+export type school = {
+  schoolId: number;
+  schoolName: string;
+};
+
+export type sclass = {
+  classId: number;
+  className: string;
+  grade: number;
 };
