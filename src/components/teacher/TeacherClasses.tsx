@@ -3,11 +3,11 @@ import NavBar from '../../components/NavBar';
 import { useQuery } from '@apollo/client';
 import InfoCard from '../../components/InfoCard';
 import { studygroup } from '../../types/tableProps';
-import { GET_ALL_STUDY_GROUPS } from '../../../graphql/queries/getAllStudygroups';
+import { GET_ALL_ACTIVE_STUDY_GROUPS } from '../../../graphql/queries/getAllActiveStudygroups';
 
 export default function TeacherClasses() {
   const userId = parseInt(localStorage.getItem('id')!);
-  const { loading, error, data } = useQuery(GET_ALL_STUDY_GROUPS, {
+  const { loading, error, data } = useQuery(GET_ALL_ACTIVE_STUDY_GROUPS, {
     variables: { userId: userId },
   });
   if (loading) {

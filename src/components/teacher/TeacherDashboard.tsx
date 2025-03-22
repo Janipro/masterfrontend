@@ -29,10 +29,12 @@ import { useState } from 'react';
 import { style } from '../../types/navColors';
 import { classTranslation, columns, columns3 } from '../../types/userData';
 import { useMutation, useQuery } from '@apollo/client';
+import { GET_ACTIVE_GIVEN_TASKS } from '../../../graphql/queries/getActiveGivenTasks';
 import { GET_GIVEN_TASKS } from '../../../graphql/queries/getGivenTasks';
 import { GET_ALL_COURSES } from '../../../graphql/queries/getAllCourses';
 import { GET_ALL_STUDENTS } from '../../../graphql/queries/getAllStudents';
 import { GET_ALL_STUDY_GROUPS } from '../../../graphql/queries/getAllStudygroups';
+import { GET_ALL_ACTIVE_STUDY_GROUPS } from '../../../graphql/queries/getAllActiveStudygroups';
 import { CREATE_STUDY_GROUP } from '../../../graphql/mutations/createStudygroup';
 import { CREATE_ENROLMENT } from '../../../graphql/mutations/createEnrolment';
 import { course, student, studygroup, task, taskRequirement, user } from '../../types/tableProps';
@@ -44,6 +46,8 @@ export default function TeacherDashboard() {
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
   const [course, setCourse] = useState('');
+  const [inactiveTasks, setInactiveTasks] = useState(false);
+  const [inactiveStudygroups, setInactiveStudygroups] = useState(false);
   const [description, setDescription] = useState('');
   const [studygroupName, setStudygroupName] = useState('');
   const userId = parseInt(localStorage.getItem('id')!);
@@ -56,7 +60,13 @@ export default function TeacherDashboard() {
   };
 
   const { loading: taskLoading, error, data: taskData } = useQuery(GET_GIVEN_TASKS, { variables: { userId: userId } });
+  const { loading: activeTaskLoading, data: activeTaskData } = useQuery(GET_ACTIVE_GIVEN_TASKS, {
+    variables: { userId: userId },
+  });
   const { loading: courseLoading, data: courseData } = useQuery(GET_ALL_COURSES);
+  const { loading: activeStudygroupLoading, data: activeStudygroupData } = useQuery(GET_ALL_ACTIVE_STUDY_GROUPS, {
+    variables: { userId: userId },
+  });
   const { loading: studygroupLoading, data: studygroupData } = useQuery(GET_ALL_STUDY_GROUPS, {
     variables: { userId: userId },
   });
@@ -64,11 +74,18 @@ export default function TeacherDashboard() {
     variables: { classId: classId },
   });
   const [createStudygroup] = useMutation(CREATE_STUDY_GROUP, {
-    refetchQueries: [{ query: GET_ALL_STUDY_GROUPS, variables: { userId: userId } }],
+    refetchQueries: [{ query: GET_ALL_ACTIVE_STUDY_GROUPS, variables: { userId: userId } }],
   });
   const [createEnrolment] = useMutation(CREATE_ENROLMENT);
 
-  if (taskLoading || courseLoading || studygroupLoading || studentsLoading) {
+  if (
+    taskLoading ||
+    courseLoading ||
+    activeStudygroupLoading ||
+    studentsLoading ||
+    studygroupLoading ||
+    activeTaskLoading
+  ) {
     return (
       <Box mt="30vh">
         <p> Laster inn... </p>
@@ -82,6 +99,22 @@ export default function TeacherDashboard() {
 
   const getGivenTasks = (): task[] => {
     return taskData.allTasks.nodes.map((task: task) => ({
+      id: task.taskId,
+      course: task.courseByCourseId?.courseName,
+      title: task.taskName,
+      owner: task.userByUserId?.email,
+      requirement: task.taskrequirementsByTaskId
+        ? task.taskrequirementsByTaskId.nodes.map(
+            (req: taskRequirement) => req.requirementByRequirementId.requirementName
+          )
+        : [],
+      level: task.level,
+      type: task.type,
+    }));
+  };
+
+  const getActiveGivenTasks = (): task[] => {
+    return activeTaskData.allTasks.nodes.map((task: task) => ({
       id: task.taskId,
       course: task.courseByCourseId?.courseName,
       title: task.taskName,
@@ -252,14 +285,23 @@ export default function TeacherDashboard() {
                     </Fade>
                   </Modal>
                   <FormGroup>
-                    <FormControlLabel control={<Checkbox size="small" />} label="Vis inaktive" />
+                    <FormControlLabel
+                      control={<Checkbox size="small" />}
+                      label="Vis inaktive"
+                      value={inactiveStudygroups}
+                      onChange={() => setInactiveStudygroups(!inactiveStudygroups)}
+                    />
                   </FormGroup>
                 </Stack>
               </Grid2>
               <Grid2 container direction={'row'} spacing={4} sx={{ m: 2, p: 1, maxWidth: 970 }}>
-                {studygroupData.allStudygroups.nodes.map((studygroup: studygroup) => (
-                  <InfoCard title={studygroup.studyGroupName} id={studygroup.studyGroupId} />
-                ))}
+                {inactiveStudygroups
+                  ? studygroupData.allStudygroups.nodes.map((studygroup: studygroup) => (
+                      <InfoCard title={studygroup.studyGroupName} id={studygroup.studyGroupId} />
+                    ))
+                  : activeStudygroupData.allStudygroups.nodes.map((studygroup: studygroup) => (
+                      <InfoCard title={studygroup.studyGroupName} id={studygroup.studyGroupId} />
+                    ))}
               </Grid2>
             </Grid2>
           </Grid2>
@@ -303,11 +345,16 @@ export default function TeacherDashboard() {
                   Slett
                 </Button>
                 <FormGroup>
-                  <FormControlLabel control={<Checkbox size="small" />} label="Vis inaktive" />
+                  <FormControlLabel
+                    control={<Checkbox size="small" />}
+                    label="Vis inaktive"
+                    value={inactiveTasks}
+                    onChange={() => setInactiveTasks(!inactiveTasks)}
+                  />
                 </FormGroup>
               </Grid2>
             </Grid2>
-            <Table rows={getGivenTasks()} columns={columns} selectable />
+            <Table rows={inactiveTasks ? getGivenTasks() : getActiveGivenTasks()} columns={columns} selectable />
           </Grid2>
         </Container>
       </Box>
