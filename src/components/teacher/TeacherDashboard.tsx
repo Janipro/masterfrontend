@@ -108,11 +108,11 @@ export default function TeacherDashboard() {
         },
       });
       const studyGroupId = response.data.createStudygroup.studygroup.studyGroupId;
-      for (const studentId of selectionModel) {
+      for (const selectedStudent in selectionModel) {
         await createEnrolment({
           variables: {
             studyGroupId: studyGroupId,
-            userId: studentId,
+            userId: selectionModel[selectedStudent],
           },
         });
       }
