@@ -574,7 +574,7 @@ export default function PlaygroundContent() {
               ref={rightBottomPaneRef}
               sx={{
                 borderRadius: '5px',
-                height: terminalCollapsed ? '25px' : '100%',
+                height: terminalCollapsed ? '23px' : '100%',
                 flexShrink: 0,
                 textAlign: 'left',
                 bgcolor: isDarkmodeEditor ? NAV_COLORS.editor_pane_background_dark : NAV_COLORS.editor_pane_background,

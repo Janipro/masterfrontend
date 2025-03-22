@@ -8,6 +8,7 @@ import Box from '@mui/material/Box';
 import { useTaskCodeStore } from '../stores/useTaskCodeStore';
 import useDarkmodeEditorStore from '../stores/useDarkmodeEditorStore';
 import { NAV_COLORS } from '../types/navColors';
+import useEditorViewStore from '../stores/useEditorViewStore';
 
 const lightTheme = EditorView.theme({
   '&': {
@@ -155,6 +156,9 @@ export default function Editor() {
         extensions={[python(), indentUnit.of('    '), EditorView.lineWrapping, highlightSelectionMatches()]}
         onChange={onChange}
         theme={isDarkmodeEditor ? darkTheme : lightTheme}
+        onCreateEditor={(view) => {
+          useEditorViewStore.getState().setEditorView(view);
+        }}
       />
     </Box>
   );
