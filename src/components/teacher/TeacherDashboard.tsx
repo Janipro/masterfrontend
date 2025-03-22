@@ -35,7 +35,7 @@ import { GET_ALL_STUDENTS } from '../../../graphql/queries/getAllStudents';
 import { GET_ALL_STUDY_GROUPS } from '../../../graphql/queries/getAllStudygroups';
 import { CREATE_STUDY_GROUP } from '../../../graphql/mutations/createStudygroup';
 import { CREATE_ENROLMENT } from '../../../graphql/mutations/createEnrolment';
-import { course, studygroup, task, taskRequirement, user } from '../../types/tableProps';
+import { course, student, studygroup, task, taskRequirement, user } from '../../types/tableProps';
 import useSelectedStore from '../../stores/useSelectedStore';
 import { useStore } from 'zustand';
 
@@ -122,7 +122,7 @@ export default function TeacherDashboard() {
     }
   };
 
-  const createClass = (): user[] => {
+  const createClass = (): student[] => {
     return studentsData.allUsers.nodes.map((student: user) => ({
       id: student.userId,
       title: `${student.firstname} ${student.lastname}`,

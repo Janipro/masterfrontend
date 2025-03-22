@@ -23,7 +23,7 @@ import Backdrop from '@mui/material/Backdrop';
 import { NAV_COLORS, style } from '../../types/navColors';
 import CreateIcon from '@mui/icons-material/Create';
 import { classTranslation, columns, columns2, columns3, rows2 } from '../../types/userData';
-import { task, taskRequirement, user } from '../../types/tableProps';
+import { student, task, taskRequirement, user } from '../../types/tableProps';
 import { useQuery } from '@apollo/client';
 import { GET_ALL_TASKS } from '../../../graphql/queries/getAllTasks';
 import { GET_GIVEN_TASKS } from '../../../graphql/queries/getGivenTasks';
@@ -88,7 +88,7 @@ export default function TeacherTasks() {
     }));
   };
 
-  const createClass = (): user[] => {
+  const createClass = (): student[] => {
     return studentsData.allUsers.nodes.map((student: user) => ({
       id: student.userId,
       title: `${student.firstname} ${student.lastname}`,
