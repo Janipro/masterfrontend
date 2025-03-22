@@ -279,7 +279,7 @@ export default function TeacherDashboard() {
                   variant="contained"
                   startIcon={<VisibilityIcon />}
                   sx={{ backgroundColor: '#EDEBEB', color: '#3F3F3F', textTransform: 'none' }}
-                  disabled
+                  disabled={selectionModel.length === 0}
                   size="small"
                 >
                   Aktiver
@@ -288,7 +288,7 @@ export default function TeacherDashboard() {
                   variant="contained"
                   startIcon={<VisibilityOffIcon />}
                   sx={{ backgroundColor: '#EDEBEB', color: '#3F3F3F', textTransform: 'none' }}
-                  disabled
+                  disabled={selectionModel.length === 0}
                   size="small"
                 >
                   Deaktiver
@@ -297,7 +297,7 @@ export default function TeacherDashboard() {
                   variant="contained"
                   startIcon={<DeleteIcon />}
                   sx={{ backgroundColor: '#EDEBEB', color: '#3F3F3F', textTransform: 'none' }}
-                  disabled
+                  disabled={selectionModel.length === 0}
                   size="small"
                 >
                   Slett
