@@ -127,7 +127,7 @@ export default function Editor() {
         overflowX: 'hidden',
         height: 'calc(100% - 24px) !important',
         '&::-webkit-scrollbar': {
-          width: '8px',
+          width: '6px',
           borderRadius: '5px',
         },
         '&::-webkit-scrollbar-track': {

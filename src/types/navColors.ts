@@ -16,9 +16,11 @@ export const NAV_COLORS = {
   editor_button_background: '#FFFFFF',
   editor_button_background_dark: '#323232',
   editor_icon_background: '#5D7285',
-  editor_icon_background_dark: '#808080',
+  editor_icon_background_dark: '#A7A7A7',
   editor_icon_redo_undo_background: '#323232',
   editor_icon_redo_undo_background_dark: '#A7A7A7',
+  editor_menu_background_highlight: '#F5F5F5',
+  editor_menu_background_highlight_dark: '#404040',
 };
 
 export const style = {

@@ -21,20 +21,6 @@ import useDarkmodeEditorStore from '../stores/useDarkmodeEditorStore';
 
 const settings = ['Profil', 'Logg ut'];
 
-const style = {
-  position: 'absolute',
-  top: '50%',
-  left: '50%',
-  transform: 'translate(-50%, -50%)',
-  width: 300,
-  heigth: 'auto',
-  bgcolor: 'background.paper',
-  border: '2px solid #000',
-  boxShadow: 24,
-  p: 4,
-  textAlign: 'center',
-};
-
 export default function NavBar() {
   const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(null);
   const { isTeacher, setTeacher } = useTeacherStore();
@@ -105,7 +91,24 @@ export default function NavBar() {
               <SettingsIcon sx={{ color: isDarkmode ? NAV_COLORS.text_dark : NAV_COLORS.text }} />
             </IconButton>
             <Modal open={open} onClose={handleClose} aria-labelledby="settings-modal-title">
-              <Box sx={style}>
+              <Box
+                sx={{
+                  position: 'absolute',
+                  top: '50%',
+                  left: '50%',
+                  transform: 'translate(-50%, -50%)',
+                  width: 300,
+                  heigth: 'auto',
+                  bgcolor: isDarkmode ? NAV_COLORS.editor_button_background_dark : NAV_COLORS.editor_button_background,
+                  color: isDarkmode
+                    ? NAV_COLORS.editor_icon_redo_undo_background_dark
+                    : NAV_COLORS.editor_icon_background,
+                  boxShadow: 5,
+                  borderRadius: '5px',
+                  p: 4,
+                  textAlign: 'center',
+                }}
+              >
                 <Typography id="settings-modal-title" variant="h5" component="h2" fontWeight="500">
                   Innstillinger
                 </Typography>

@@ -358,12 +358,12 @@ export default function PlaygroundContent() {
                     gap: '15px',
                     display: 'flex',
                     flexDirection: 'column',
-                    height: 'calc(100% - 49.5px)',
+                    height: 'calc(100% - 51px)',
                     overflowY: 'scroll',
                     overflowX: 'hidden',
                     marginRight: '2px',
                     '&::-webkit-scrollbar': {
-                      width: '8px',
+                      width: '6px',
                       borderRadius: '5px',
                     },
                     '&::-webkit-scrollbar-track': {
@@ -478,6 +478,7 @@ export default function PlaygroundContent() {
               component="div"
               ref={rightTopPaneRef}
               sx={{
+                borderRadius: '5px',
                 height: terminalCollapsed ? `calc(100vh - 122px)` : 'var(--top-right-height)',
                 minHeight: terminalCollapsed ? '142px' : null,
                 flexShrink: 0,
@@ -572,6 +573,7 @@ export default function PlaygroundContent() {
               component="div"
               ref={rightBottomPaneRef}
               sx={{
+                borderRadius: '5px',
                 height: terminalCollapsed ? '25px' : '100%',
                 flexShrink: 0,
                 textAlign: 'left',

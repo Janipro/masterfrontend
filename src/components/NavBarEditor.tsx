@@ -30,20 +30,6 @@ import { useTaskCodeStore } from '../stores/useTaskCodeStore';
 const functions = ['Kjør', 'Hjelp', 'Lever', 'Innsendingshistorikk'];
 const settings = ['Profil', 'Logg ut'];
 
-const style = {
-  position: 'absolute',
-  top: '50%',
-  left: '50%',
-  transform: 'translate(-50%, -50%)',
-  width: 300,
-  heigth: 'auto',
-  bgcolor: 'background.paper',
-  border: '2px solid #000',
-  boxShadow: 24,
-  p: 4,
-  textAlign: 'center',
-};
-
 export default function NavBarEditor() {
   const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(null);
   const [anchorElNavbar, setAnchorElNavbar] = React.useState<null | HTMLElement>(null);
@@ -128,7 +114,7 @@ export default function NavBarEditor() {
                 sx={{
                   display: 'flex',
                   justifyContent: 'center',
-                  mx: { xs: 0.5, sm: 2, md: 2, lg: 2, xl: 2 },
+                  mx: { xs: 0.95, sm: 2, md: 2, lg: 2, xl: 2 },
                   alignItems: 'flex-end',
                 }}
               >
@@ -248,7 +234,7 @@ export default function NavBarEditor() {
                 sx={{
                   display: 'flex',
                   justifyContent: 'center',
-                  mx: { xs: 0.5, sm: 2, md: 2, lg: 2, xl: 2 },
+                  mx: { xs: 0.95, sm: 2, md: 2, lg: 2, xl: 2 },
                   alignItems: 'flex-end',
                 }}
               >
@@ -579,9 +565,6 @@ export default function NavBarEditor() {
               <IconButton
                 onClick={handleOpenUserMenu}
                 sx={{
-                  p: 0,
-                  marginY: '8px',
-                  marginLeft: '8px',
                   color: isDarkmodeEditor ? NAV_COLORS.editor_icon_background_dark : NAV_COLORS.editor_icon_background,
                 }}
               >
@@ -660,7 +643,30 @@ export default function NavBarEditor() {
             </Box>
 
             <Menu
-              sx={{ display: { xs: 'block', sm: 'block', md: 'block', lg: 'none', xl: 'none' }, mt: '35px' }}
+              sx={{
+                display: {
+                  xs: 'block',
+                  sm: 'block',
+                  md: 'block',
+                  lg: 'none',
+                  xl: 'none',
+                },
+                mt: '35px',
+                '& .MuiPaper-root': {
+                  backgroundColor: isDarkmodeEditor
+                    ? NAV_COLORS.editor_button_background_dark
+                    : NAV_COLORS.editor_button_background,
+                  color: isDarkmodeEditor ? NAV_COLORS.editor_icon_background_dark : NAV_COLORS.editor_icon_background,
+                },
+                '& .MuiMenuItem-root': {
+                  color: isDarkmodeEditor ? NAV_COLORS.editor_icon_background_dark : NAV_COLORS.editor_icon_background,
+                  '&:hover': {
+                    backgroundColor: isDarkmodeEditor
+                      ? NAV_COLORS.editor_menu_background_highlight_dark
+                      : NAV_COLORS.editor_menu_background_highlight,
+                  },
+                },
+              }}
               id="navbar-appbar"
               anchorEl={anchorElNavbar}
               anchorOrigin={{
@@ -686,8 +692,14 @@ export default function NavBarEditor() {
                   />
                 </IconButton>
               </MenuItem>
-              <MenuItem key={'settingsButton'} onClick={handleCloseExpandedNavbar}>
-                <IconButton onClick={handleOpen}>
+              <MenuItem
+                key={'settingsButton'}
+                onClick={() => {
+                  handleOpen();
+                  handleCloseExpandedNavbar();
+                }}
+              >
+                <IconButton>
                   <SettingsIcon
                     sx={{
                       color: isDarkmodeEditor
@@ -697,13 +709,10 @@ export default function NavBarEditor() {
                   />
                 </IconButton>
               </MenuItem>
-              <MenuItem key={'accountButton'}>
+              <MenuItem key={'accountButton'} onClick={handleOpenUserMenu}>
                 <IconButton
-                  onClick={handleOpenUserMenu}
                   sx={{
-                    p: 0,
-                    marginY: '8px',
-                    marginLeft: '8px',
+                    p: '8px',
                     color: isDarkmodeEditor
                       ? NAV_COLORS.editor_icon_background_dark
                       : NAV_COLORS.editor_icon_background,
@@ -715,7 +724,30 @@ export default function NavBarEditor() {
             </Menu>
 
             <Menu
-              sx={{ mt: '35px', display: { xs: 'block', sm: 'block', md: 'block', lg: 'none', xl: 'none' } }}
+              sx={{
+                mt: '35px',
+                display: {
+                  xs: 'block',
+                  sm: 'block',
+                  md: 'block',
+                  lg: 'none',
+                  xl: 'none',
+                },
+                '& .MuiPaper-root': {
+                  backgroundColor: isDarkmodeEditor
+                    ? NAV_COLORS.editor_button_background_dark
+                    : NAV_COLORS.editor_button_background,
+                  color: isDarkmodeEditor ? NAV_COLORS.editor_icon_background_dark : NAV_COLORS.editor_icon_background,
+                },
+                '& .MuiMenuItem-root': {
+                  color: isDarkmodeEditor ? NAV_COLORS.editor_icon_background_dark : NAV_COLORS.editor_icon_background,
+                  '&:hover': {
+                    backgroundColor: isDarkmodeEditor
+                      ? NAV_COLORS.editor_menu_background_highlight_dark
+                      : NAV_COLORS.editor_menu_background_highlight,
+                  },
+                },
+              }}
               id="menu-appbar"
               anchorEl={anchorElUser}
               anchorOrigin={{
@@ -724,8 +756,8 @@ export default function NavBarEditor() {
               }}
               keepMounted
               transformOrigin={{
-                vertical: 77,
-                horizontal: 140,
+                vertical: 63,
+                horizontal: 164,
               }}
               open={Boolean(anchorElUser)}
               onClose={handleCloseUserMenu}
@@ -786,14 +818,56 @@ export default function NavBarEditor() {
               ))}
             </Menu>
             <Modal open={open} onClose={handleClose} aria-labelledby="settings-modal-title">
-              <Box sx={style}>
+              <Box
+                sx={{
+                  position: 'absolute',
+                  top: '50%',
+                  left: '50%',
+                  transform: 'translate(-50%, -50%)',
+                  width: 300,
+                  heigth: 'auto',
+                  bgcolor: isDarkmodeEditor
+                    ? NAV_COLORS.editor_button_background_dark
+                    : NAV_COLORS.editor_button_background,
+                  color: isDarkmodeEditor
+                    ? NAV_COLORS.editor_icon_redo_undo_background_dark
+                    : NAV_COLORS.editor_icon_background,
+                  boxShadow: 5,
+                  borderRadius: '5px',
+                  p: 4,
+                  textAlign: 'center',
+                }}
+              >
                 <Typography id="settings-modal-title" variant="h5" component="h2" fontWeight="500">
                   Innstillinger
                 </Typography>
                 <Stack direction="column" alignItems="left" mt={4} gap={1}>
                   <FormGroup>
                     <FormControlLabel
-                      control={<Switch defaultChecked={isDarkmode} onChange={() => setDarkmode(!isDarkmode)} />}
+                      control={
+                        <Switch
+                          defaultChecked={isDarkmode}
+                          onChange={() => setDarkmode(!isDarkmode)}
+                          sx={{
+                            '& .MuiSwitch-thumb': {
+                              backgroundColor: isDarkmodeEditor ? '#e0e0e0' : '#FFFFFF',
+                              opacity: 1,
+                            },
+                            '& .MuiSwitch-track': {
+                              backgroundColor: isDarkmodeEditor ? '#575757' : '#9e9e9e',
+                              opacity: 1,
+                            },
+                            '& .MuiSwitch-switchBase.Mui-checked .MuiSwitch-thumb': {
+                              backgroundColor: isDarkmodeEditor ? '#90caf9' : '#1976d2',
+                              opacity: 1,
+                            },
+                            '& .MuiSwitch-switchBase.Mui-checked + .MuiSwitch-track': {
+                              backgroundColor: isDarkmodeEditor ? '#4f6c84' : '#85b5e5',
+                              opacity: 1,
+                            },
+                          }}
+                        />
+                      }
                       label="Nettside mørk modus"
                     />
                   </FormGroup>
@@ -803,6 +877,24 @@ export default function NavBarEditor() {
                         <Switch
                           defaultChecked={isDarkmodeEditor}
                           onChange={() => setDarkmodeEditor(!isDarkmodeEditor)}
+                          sx={{
+                            '& .MuiSwitch-thumb': {
+                              backgroundColor: isDarkmodeEditor ? '#e0e0e0' : '#FFFFFF',
+                              opacity: 1,
+                            },
+                            '& .MuiSwitch-track': {
+                              backgroundColor: isDarkmodeEditor ? '#575757' : '#9e9e9e',
+                              opacity: 1,
+                            },
+                            '& .MuiSwitch-switchBase.Mui-checked .MuiSwitch-thumb': {
+                              backgroundColor: isDarkmodeEditor ? '#90caf9' : '#1976d2',
+                              opacity: 1,
+                            },
+                            '& .MuiSwitch-switchBase.Mui-checked + .MuiSwitch-track': {
+                              backgroundColor: isDarkmodeEditor ? '#4f6c84' : '#85b5e5',
+                              opacity: 1,
+                            },
+                          }}
                         />
                       }
                       label="Editor mørk modus"

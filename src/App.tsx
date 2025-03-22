@@ -33,9 +33,9 @@ const darkTheme = createTheme({
   breakpoints: {
     values: {
       xs: 0,
-      sm: 476,
+      sm: 504,
       md: 859,
-      lg: 1425,
+      lg: 1383,
       xl: 1536,
     },
   },
@@ -48,9 +48,9 @@ const defaultTheme = createTheme({
   breakpoints: {
     values: {
       xs: 0,
-      sm: 476,
-      md: 859,
-      lg: 1425,
+      sm: 504,
+      md: 854,
+      lg: 1383,
       xl: 1536,
     },
   },
