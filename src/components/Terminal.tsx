@@ -1,6 +1,8 @@
 import { Box } from '@mui/material';
 import { useTaskCodeStore } from '../stores/useTaskCodeStore';
 import { useEffect, useRef } from 'react';
+import useDarkmodeEditorStore from '../stores/useDarkmodeEditorStore';
+import { NAV_COLORS } from '../types/navColors';
 
 interface TerminalProps {
   terminalCollapsed: boolean;
@@ -9,6 +11,7 @@ interface TerminalProps {
 export default function Terminal({ terminalCollapsed }: TerminalProps) {
   const { outputHistory } = useTaskCodeStore();
   const terminalRef = useRef<HTMLDivElement | null>(null);
+  const { isDarkmodeEditor } = useDarkmodeEditorStore();
 
   useEffect(() => {
     if (terminalRef.current) {
@@ -31,11 +34,13 @@ export default function Terminal({ terminalCollapsed }: TerminalProps) {
         overflowX: 'hidden',
         height: 'calc(100% - 24px) !important',
         '&::-webkit-scrollbar': {
-          width: '8px',
+          width: '6px',
           borderRadius: '5px',
         },
         '&::-webkit-scrollbar-track': {
-          backgroundColor: '#ffffff',
+          backgroundColor: isDarkmodeEditor
+            ? NAV_COLORS.editor_pane_background_dark
+            : NAV_COLORS.editor_pane_background,
           borderRadius: '0 0 3px 0',
           marginTop: '1.5px',
           marginBottom: '1.5px',

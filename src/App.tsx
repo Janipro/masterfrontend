@@ -16,12 +16,52 @@ import Classes from './pages/Classes';
 const darkTheme = createTheme({
   palette: {
     mode: 'dark',
+    background: {
+      default: '#0F0F0F',
+    },
+  },
+  components: {
+    MuiPaper: {
+      styleOverrides: {
+        root: {
+          '--Paper-overlay': 'none !important',
+          'padding-right': '0px',
+        },
+      },
+    },
+  },
+  breakpoints: {
+    values: {
+      xs: 0,
+      sm: 504,
+      md: 859,
+      lg: 1383,
+      xl: 1536,
+    },
   },
 });
 
 const defaultTheme = createTheme({
   palette: {
     mode: 'light',
+  },
+  breakpoints: {
+    values: {
+      xs: 0,
+      sm: 504,
+      md: 854,
+      lg: 1383,
+      xl: 1536,
+    },
+  },
+  components: {
+    MuiPaper: {
+      styleOverrides: {
+        root: {
+          'padding-right': '0px',
+        },
+      },
+    },
   },
 });
 

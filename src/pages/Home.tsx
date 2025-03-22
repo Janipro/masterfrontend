@@ -8,7 +8,7 @@ export default function Home() {
   const { isTeacher } = useTeacherStore();
   return (
     <Box>
-      <NavBar isEditor={false} />
+      <NavBar />
       {isTeacher ? <TeacherDashboard /> : <StudentDashboard />}
     </Box>
   );

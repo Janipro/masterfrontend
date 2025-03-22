@@ -11,9 +11,11 @@ import { Container, CssBaseline, Grid2, IconButton, useTheme } from '@mui/materi
 import { NAV_COLORS } from '../types/navColors';
 import Requirement from './Requirement';
 import Terminal from './Terminal';
+import useDarkmodeEditorStore from '../stores/useDarkmodeEditorStore';
 
 export default function PlaygroundContent() {
   const theme = useTheme();
+  const { isDarkmodeEditor } = useDarkmodeEditorStore();
 
   const [terminalCollapsed, setTerminalCollapsed] = useState(() => {
     return localStorage.getItem('terminalCollapsed') === 'true';
@@ -96,7 +98,7 @@ export default function PlaygroundContent() {
     if (isResizingVertical.current && containerRef.current) {
       requestAnimationFrame(() => {
         const newWidth = e.clientX;
-        if (newWidth > 200 && newWidth < window.innerWidth - 240) {
+        if (newWidth > 200 && newWidth < window.innerWidth - 265) {
           containerRef.current!.style.setProperty('--left-width', `${newWidth - 2}px`);
         }
       });
@@ -118,21 +120,7 @@ export default function PlaygroundContent() {
     }
   }, []);
 
-  const handleMouseDownVertical = () => {
-    isResizingVertical.current = true;
-    disableInteractions();
-    document.addEventListener('mousemove', handleMouseMoveVertical);
-    document.addEventListener('mouseup', handleMouseUp);
-  };
-
-  const handleMouseDownHorizontal = () => {
-    isResizingHorizontal.current = true;
-    disableInteractions();
-    document.addEventListener('mousemove', handleMouseMoveHorizontal);
-    document.addEventListener('mouseup', handleMouseUp);
-  };
-
-  const handleMouseUp = () => {
+  const handleMouseUp = useCallback(() => {
     isResizingVertical.current = false;
     isResizingHorizontal.current = false;
     enableInteractions();
@@ -150,23 +138,19 @@ export default function PlaygroundContent() {
       localStorage.setItem('leftWidth', leftWidth.toString());
       localStorage.setItem('rightTopHeight', rightTopHeight.toString());
     }
-  };
+  }, [enableInteractions, handleMouseMoveVertical, handleMouseMoveHorizontal]);
 
-  const handleTerminalCollapse = () => {
-    setTerminalCollapsed((prev) => {
-      const newValue = !prev;
-      localStorage.setItem('terminalCollapsed', newValue.toString());
-      return newValue;
-    });
-  };
+  useEffect(() => {
+    if (isDarkmodeEditor) {
+      document.body.style.backgroundColor = NAV_COLORS.editor_background_dark;
+    } else {
+      document.body.style.backgroundColor = NAV_COLORS.editor_background;
+    }
 
-  const handleTaskCollapse = () => {
-    setTaskCollapsed((prev) => {
-      const newValue = !prev;
-      localStorage.setItem('taskCollapsed', newValue.toString());
-      return newValue;
-    });
-  };
+    return () => {
+      document.body.style.removeProperty('background-color');
+    };
+  }, [isDarkmodeEditor]);
 
   useEffect(() => {
     return () => {
@@ -174,7 +158,7 @@ export default function PlaygroundContent() {
       document.removeEventListener('mousemove', handleMouseMoveHorizontal);
       document.removeEventListener('mouseup', handleMouseUp);
     };
-  }, [handleMouseMoveVertical, handleMouseMoveHorizontal]);
+  }, [handleMouseMoveVertical, handleMouseMoveHorizontal, handleMouseUp]);
 
   useEffect(() => {
     const observer = new ResizeObserver(() => {
@@ -203,12 +187,65 @@ export default function PlaygroundContent() {
     }
 
     return () => observer.disconnect();
-  }, [topRightHeight]);
+  }, []);
+
+  useEffect(() => {
+    const observer = new ResizeObserver(() => {
+      if (!containerRef.current || !leftPaneRef.current) return;
+
+      const containerWidth = containerRef.current.clientWidth;
+      const computedWidth = parseInt(getComputedStyle(containerRef.current).getPropertyValue('--left-width'), 10);
+
+      if (isNaN(computedWidth)) return;
+      if (computedWidth > containerWidth - 268 && containerWidth - 268 >= 82) {
+        const newWidth = containerWidth - 268;
+        setLeftWidth(newWidth);
+        containerRef.current.style.setProperty('--left-width', `${newWidth}px`);
+      }
+    });
+
+    if (containerRef.current) {
+      observer.observe(containerRef.current);
+    }
+
+    return () => observer.disconnect();
+  }, []);
+
+  const handleMouseDownVertical = () => {
+    isResizingVertical.current = true;
+    disableInteractions();
+    document.addEventListener('mousemove', handleMouseMoveVertical);
+    document.addEventListener('mouseup', handleMouseUp);
+  };
+
+  const handleMouseDownHorizontal = () => {
+    isResizingHorizontal.current = true;
+    disableInteractions();
+    document.addEventListener('mousemove', handleMouseMoveHorizontal);
+    document.addEventListener('mouseup', handleMouseUp);
+  };
+
+  const handleTerminalCollapse = () => {
+    setTerminalCollapsed((prev) => {
+      const newValue = !prev;
+      localStorage.setItem('terminalCollapsed', newValue.toString());
+      return newValue;
+    });
+  };
+
+  const handleTaskCollapse = () => {
+    setTaskCollapsed((prev) => {
+      const newValue = !prev;
+      localStorage.setItem('taskCollapsed', newValue.toString());
+      return newValue;
+    });
+  };
 
   return (
     <Box
       ref={containerRef}
       sx={{
+        color: isDarkmodeEditor ? NAV_COLORS.editor_text_dark : NAV_COLORS.editor_text,
         display: 'flex',
         marginTop: '60px',
         width: '100vw',
@@ -224,6 +261,7 @@ export default function PlaygroundContent() {
         sx={{
           flexShrink: 0,
           minHeight: '190px',
+          minWidth: taskCollapsed ? null : '222px',
           width: taskCollapsed ? '43.5px' : 'var(--left-width)',
         }}
       >
@@ -232,7 +270,7 @@ export default function PlaygroundContent() {
           component={'main'}
           maxWidth={false}
           sx={{
-            bgcolor: 'background.default',
+            bgcolor: isDarkmodeEditor ? NAV_COLORS.editor_background_dark : NAV_COLORS.editor_pane_background,
             padding: '5px 7px 7px 14px !important',
             height: '100%',
             minHeight: '190.5px',
@@ -245,7 +283,7 @@ export default function PlaygroundContent() {
               height: '100%',
               flexShrink: 0,
               textAlign: 'left',
-              bgcolor: 'background.default',
+              bgcolor: isDarkmodeEditor ? 'NAV_COLORS.editor_pane_background_dark' : NAV_COLORS.editor_pane_background,
               pointerEvents: 'auto',
               userSelect: 'auto',
             }}
@@ -259,7 +297,13 @@ export default function PlaygroundContent() {
                 position: 'relative',
                 borderTopRightRadius: '5px',
                 borderTopLeftRadius: '5px',
-                backgroundColor: taskCollapsed ? NAV_COLORS.background : 'inherit',
+                backgroundColor: isDarkmodeEditor
+                  ? taskCollapsed
+                    ? NAV_COLORS.editor_header_background_dark
+                    : NAV_COLORS.editor_pane_background_dark
+                  : taskCollapsed
+                    ? NAV_COLORS.editor_header_background
+                    : NAV_COLORS.editor_pane_background,
               }}
             >
               <Grid2
@@ -268,7 +312,9 @@ export default function PlaygroundContent() {
                 flexDirection={'row'}
                 justifyContent={taskCollapsed ? 'center' : 'space-between'}
                 gap={0.5}
-                bgcolor={NAV_COLORS.background}
+                bgcolor={
+                  isDarkmodeEditor ? NAV_COLORS.editor_header_background_dark : NAV_COLORS.editor_header_background
+                }
                 alignItems="center"
                 borderRadius="5px 5px 0 0"
               >
@@ -300,7 +346,7 @@ export default function PlaygroundContent() {
                     sx={{
                       fontSize: '0.95em',
                       transform: taskCollapsed ? 'rotate(180deg)' : null,
-                      color: '#9AB6D7',
+                      color: isDarkmodeEditor ? '#828282' : '#9AB6D7',
                     }}
                   />
                 </IconButton>
@@ -312,16 +358,18 @@ export default function PlaygroundContent() {
                     gap: '15px',
                     display: 'flex',
                     flexDirection: 'column',
-                    height: 'calc(100% - 49.5px)',
+                    height: 'calc(100% - 24px)',
                     overflowY: 'scroll',
                     overflowX: 'hidden',
                     marginRight: '2px',
                     '&::-webkit-scrollbar': {
-                      width: '8px',
+                      width: '6px',
                       borderRadius: '5px',
                     },
                     '&::-webkit-scrollbar-track': {
-                      backgroundColor: '#ffffff',
+                      backgroundColor: isDarkmodeEditor
+                        ? NAV_COLORS.editor_pane_background_dark
+                        : NAV_COLORS.editor_pane_background,
                       borderRadius: '0 0 3px 0',
                       marginTop: '1.5px',
                       marginBottom: '1.5px',
@@ -346,6 +394,7 @@ export default function PlaygroundContent() {
                       justifyContent: 'left',
                       alignItems: 'center',
                       gap: '10px',
+                      color: 'black',
                     }}
                   >
                     {programmingConstructs.map((item) => (
@@ -391,7 +440,7 @@ export default function PlaygroundContent() {
             flexShrink: 0,
             display: 'flex',
             alignItems: 'center',
-            backgroundColor: '#ffffff',
+            backgroundColor: isDarkmodeEditor ? NAV_COLORS.editor_background_dark : NAV_COLORS.editor_background,
             minHeight: '150px',
           }}
         >
@@ -401,10 +450,10 @@ export default function PlaygroundContent() {
               width: '100%',
               height: '120px',
               borderRadius: '20px',
-              backgroundColor: '#B7B7B7',
+              backgroundColor: isDarkmodeEditor ? '#6D6D6D' : '#B7B7B7',
               userSelect: 'none',
               ':hover': {
-                backgroundColor: '#9E9E9E',
+                backgroundColor: isDarkmodeEditor ? '#545454' : '#9E9E9E',
               },
             }}
             onMouseDown={handleMouseDownVertical}
@@ -413,23 +462,28 @@ export default function PlaygroundContent() {
       )}
 
       {/* Right Section */}
-      <Box sx={{ flex: 1, display: 'flex', flexDirection: 'column', minHeight: '150px' }}>
+      <Box sx={{ flex: 1, display: 'flex', flexDirection: 'column', minHeight: '150px', minWidth: '208px' }}>
         {/* Top Right Pane */}
         <Box>
           <CssBaseline />
           <Container
             component={'main'}
             maxWidth={false}
-            sx={{ bgcolor: 'background.default', padding: '5px 13px 7px 7px !important' }}
+            sx={{
+              bgcolor: isDarkmodeEditor ? NAV_COLORS.editor_background_dark : NAV_COLORS.editor_pane_background,
+              padding: '5px 13px 7px 7px !important',
+            }}
           >
             <Grid2
               component="div"
               ref={rightTopPaneRef}
               sx={{
+                borderRadius: '5px',
                 height: terminalCollapsed ? `calc(100vh - 122px)` : 'var(--top-right-height)',
+                minHeight: terminalCollapsed ? '142px' : null,
                 flexShrink: 0,
                 textAlign: 'left',
-                bgcolor: 'background.default',
+                bgcolor: isDarkmodeEditor ? NAV_COLORS.editor_pane_background_dark : NAV_COLORS.editor_pane_background,
                 pointerEvents: 'auto',
                 userSelect: 'auto',
               }}
@@ -451,7 +505,9 @@ export default function PlaygroundContent() {
                   flexDirection={'row'}
                   justifyContent={'space-between'}
                   gap={0.5}
-                  bgcolor={NAV_COLORS.background}
+                  bgcolor={
+                    isDarkmodeEditor ? NAV_COLORS.editor_header_background_dark : NAV_COLORS.editor_header_background
+                  }
                   alignItems="center"
                   borderRadius="5px 5px 0 0"
                 >
@@ -481,7 +537,7 @@ export default function PlaygroundContent() {
               flexShrink: 0,
               display: 'flex',
               justifyContent: 'center',
-              backgroundColor: '#ffffff',
+              backgroundColor: isDarkmodeEditor ? NAV_COLORS.editor_background_dark : NAV_COLORS.editor_background,
             }}
           >
             <Box
@@ -490,10 +546,10 @@ export default function PlaygroundContent() {
                 height: '100%',
                 width: '120px',
                 borderRadius: '20px',
-                backgroundColor: '#B7B7B7',
+                backgroundColor: isDarkmodeEditor ? '#6D6D6D' : '#B7B7B7',
                 userSelect: 'none',
                 ':hover': {
-                  backgroundColor: '#9E9E9E',
+                  backgroundColor: isDarkmodeEditor ? '#545454' : '#9E9E9E',
                 },
               }}
               onMouseDown={handleMouseDownHorizontal}
@@ -502,21 +558,26 @@ export default function PlaygroundContent() {
         )}
 
         {/* Bottom Right Pane */}
-        <Box sx={{ flex: 1, overflowY: 'auto', minHeight: '91.5px' }}>
+        <Box sx={{ flex: 1, overflowY: 'auto', minHeight: terminalCollapsed ? '37px' : '89.5px' }}>
           <CssBaseline />
           <Container
             component={'main'}
             maxWidth={false}
-            sx={{ bgcolor: 'background.default', padding: '7px 13px 7px 7px !important', height: '100%' }}
+            sx={{
+              bgcolor: isDarkmodeEditor ? NAV_COLORS.editor_background_dark : NAV_COLORS.editor_pane_background,
+              padding: '7px 13px 7px 7px !important',
+              height: '100%',
+            }}
           >
             <Grid2
               component="div"
               ref={rightBottomPaneRef}
               sx={{
+                borderRadius: '5px',
                 height: terminalCollapsed ? '25px' : '100%',
                 flexShrink: 0,
                 textAlign: 'left',
-                bgcolor: 'background.default',
+                bgcolor: isDarkmodeEditor ? NAV_COLORS.editor_pane_background_dark : NAV_COLORS.editor_pane_background,
                 pointerEvents: 'auto',
                 userSelect: 'auto',
               }}
@@ -538,7 +599,9 @@ export default function PlaygroundContent() {
                   flexDirection={'row'}
                   justifyContent={'space-between'}
                   gap={0.5}
-                  bgcolor={NAV_COLORS.background}
+                  bgcolor={
+                    isDarkmodeEditor ? NAV_COLORS.editor_header_background_dark : NAV_COLORS.editor_header_background
+                  }
                   alignItems="center"
                   borderRadius={terminalCollapsed ? '5px' : '5px 5px 0 0'}
                 >
@@ -557,7 +620,7 @@ export default function PlaygroundContent() {
                         display: 'block',
                         width: '1.5px',
                         height: '13px',
-                        backgroundColor: '#d7e1ed',
+                        backgroundColor: isDarkmodeEditor ? '#5E5E5E' : '#d7e1ed',
                         marginLeft: '0.2em',
                       }}
                     ></Box>
@@ -578,7 +641,7 @@ export default function PlaygroundContent() {
                       sx={{
                         fontSize: '0.95em',
                         transform: terminalCollapsed ? 'rotate(180deg)' : null,
-                        color: '#9AB6D7',
+                        color: isDarkmodeEditor ? '#828282' : '#9AB6D7',
                       }}
                     />
                   </IconButton>

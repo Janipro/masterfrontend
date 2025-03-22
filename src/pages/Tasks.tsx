@@ -8,7 +8,7 @@ export default function Tasks() {
   const { isTeacher } = useTeacherStore();
   return (
     <Box>
-      <NavBar isEditor={false} />
+      <NavBar />
       {isTeacher ? <TeacherTasks /> : <StudentTasks />}
     </Box>
   );
