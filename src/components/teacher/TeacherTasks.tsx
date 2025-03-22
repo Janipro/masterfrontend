@@ -88,7 +88,7 @@ export default function TeacherTasks() {
     }));
   };
 
-  const createClass = () => {
+  const createClass = (): user[] => {
     return studentsData.allUsers.nodes.map((student: user) => ({
       id: student.userId,
       title: `${student.firstname} ${student.lastname}`,

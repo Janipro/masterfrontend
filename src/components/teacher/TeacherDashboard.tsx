@@ -122,7 +122,7 @@ export default function TeacherDashboard() {
     }
   };
 
-  const createClass = () => {
+  const createClass = (): user[] => {
     return studentsData.allUsers.nodes.map((student: user) => ({
       id: student.userId,
       title: `${student.firstname} ${student.lastname}`,
