@@ -24,27 +24,44 @@ import { NAV_COLORS, style } from '../../types/navColors';
 import CreateIcon from '@mui/icons-material/Create';
 import { classTranslation, columns, columns2, columns3, rows2 } from '../../types/userData';
 import { student, task, taskRequirement, user } from '../../types/tableProps';
-import { useQuery } from '@apollo/client';
+import { useMutation, useQuery } from '@apollo/client';
 import { GET_ALL_TASKS } from '../../../graphql/queries/getAllTasks';
+import { GET_ACTIVE_GIVEN_TASKS } from '../../../graphql/queries/getActiveGivenTasks';
 import { GET_GIVEN_TASKS } from '../../../graphql/queries/getGivenTasks';
 import { GET_ALL_STUDENTS } from '../../../graphql/queries/getAllStudents';
+import { CREATE_RECOMMENDED } from '../../../graphql/mutations/createRecommended';
+import { useStore } from 'zustand';
+import useSelectedStore from '../../stores/useSelectedStore';
 
 export default function TeacherTasks() {
   const [open, setOpen] = useState(false);
-  const handleOpen = () => setOpen(true);
+  const [selectedIds, setSelectedIds] = useState([]);
+  const handleOpen = () => {
+    setOpen(true);
+    setSelectedIds(Object.values(selectionModel));
+    setSelectionModel([]);
+  };
   const handleClose = () => setOpen(false);
+  const [inactiveTasks, setInactiveTasks] = useState(false);
   const userId = parseInt(localStorage.getItem('id')!);
   const classId = parseInt(localStorage.getItem('class_id')!);
+  const { selectionModel, setSelectionModel } = useStore(useSelectedStore);
   const { loading: tasksLoading, error: tasksError, data: allTasks } = useQuery(GET_ALL_TASKS);
   const {
     loading: givenLoading,
     error: givenError,
     data: givenTasks,
   } = useQuery(GET_GIVEN_TASKS, { variables: { userId: userId } });
+  const { loading: activeTaskLoading, data: activeGivenTasks } = useQuery(GET_ACTIVE_GIVEN_TASKS, {
+    variables: { userId: userId },
+  });
   const { loading: studentsLoading, data: studentsData } = useQuery(GET_ALL_STUDENTS, {
     variables: { classId: classId },
   });
-  if (tasksLoading || givenLoading || studentsLoading) {
+  const [createRecommended] = useMutation(CREATE_RECOMMENDED, {
+    refetchQueries: [{ query: GET_ACTIVE_GIVEN_TASKS, variables: { userId: userId } }],
+  });
+  if (tasksLoading || givenLoading || studentsLoading || activeTaskLoading) {
     return (
       <Box mt="30vh">
         <p> Laster inn... </p>
@@ -88,6 +105,22 @@ export default function TeacherTasks() {
     }));
   };
 
+  const getActiveGivenTasks = (): task[] => {
+    return activeGivenTasks.allTasks.nodes.map((task: task) => ({
+      id: task.taskId,
+      course: task.courseByCourseId?.courseName,
+      title: task.taskName,
+      owner: task.userByUserId?.email,
+      requirement: task.taskrequirementsByTaskId
+        ? task.taskrequirementsByTaskId.nodes.map(
+            (req: taskRequirement) => req.requirementByRequirementId.requirementName
+          )
+        : [],
+      level: task.level,
+      type: task.type,
+    }));
+  };
+
   const createClass = (): student[] => {
     return studentsData.allUsers.nodes.map((student: user) => ({
       id: student.userId,
@@ -97,6 +130,32 @@ export default function TeacherTasks() {
       school: student.schoolBySchoolId?.schoolName,
     }));
   };
+
+  const handleShare = async () => {
+    try {
+      for (const taskId in selectedIds) {
+        await createRecommended({
+          variables: {
+            userId: userId,
+            taskId: selectedIds[taskId],
+          },
+        });
+        for (const userId in selectionModel) {
+          await createRecommended({
+            variables: {
+              userId: selectionModel[userId],
+              taskId: selectedIds[taskId],
+            },
+          });
+        }
+      }
+      setSelectionModel([]);
+      handleClose();
+    } catch (error) {
+      console.log('Could not share task', error);
+    }
+  };
+
   return (
     <Fade in timeout={500}>
       <Box>
@@ -114,7 +173,7 @@ export default function TeacherTasks() {
                     color: NAV_COLORS.text,
                     textTransform: 'none',
                   }}
-                  disabled
+                  disabled={selectionModel.length === 0}
                   size="small"
                 >
                   Aktiver
@@ -127,7 +186,7 @@ export default function TeacherTasks() {
                     color: NAV_COLORS.text,
                     textTransform: 'none',
                   }}
-                  disabled
+                  disabled={selectionModel.length === 0}
                   size="small"
                 >
                   Deaktiver
@@ -140,17 +199,22 @@ export default function TeacherTasks() {
                     color: NAV_COLORS.text,
                     textTransform: 'none',
                   }}
-                  disabled
+                  disabled={selectionModel.length === 0}
                   size="small"
                 >
                   Slett
                 </Button>
                 <FormGroup>
-                  <FormControlLabel control={<Checkbox size="small" />} label="Vis inaktive" />
+                  <FormControlLabel
+                    control={<Checkbox size="small" />}
+                    label="Vis inaktive"
+                    value={inactiveTasks}
+                    onChange={() => setInactiveTasks(!inactiveTasks)}
+                  />
                 </FormGroup>
               </Grid2>
             </Grid2>
-            <Table rows={getGivenTasks()} columns={columns} selectable />
+            <Table rows={inactiveTasks ? getGivenTasks() : getActiveGivenTasks()} columns={columns} selectable />
 
             <Grid2 spacing={2} container direction="column">
               <Typography variant="h5" noWrap component="div" sx={{ textAlign: 'left' }}>
@@ -217,7 +281,7 @@ export default function TeacherTasks() {
                               textTransform: 'none',
                               ml: 'auto',
                             }}
-                            onClick={handleOpen}
+                            onClick={handleShare}
                             size="small"
                           >
                             Del
