@@ -214,7 +214,12 @@ export default function TeacherTasks() {
                 </FormGroup>
               </Grid2>
             </Grid2>
-            <Table rows={inactiveTasks ? getGivenTasks() : getActiveGivenTasks()} columns={columns} selectable />
+            <Table
+              rows={inactiveTasks ? getGivenTasks() : getActiveGivenTasks()}
+              columns={columns}
+              selectable
+              key={inactiveTasks ? 'inactive' : 'active'}
+            />
 
             <Grid2 spacing={2} container direction="column">
               <Typography variant="h5" noWrap component="div" sx={{ textAlign: 'left' }}>
@@ -244,6 +249,7 @@ export default function TeacherTasks() {
                     }}
                     onClick={handleOpen}
                     size="small"
+                    disabled={selectionModel.length === 0}
                   >
                     Del oppgave
                   </Button>
