@@ -12,6 +12,7 @@ export const GET_STUDY_GROUP_BY_STUDY_GROUP_ID = gql`
       }
       courseByCourseId {
         courseName
+        courseId
       }
     }
   }

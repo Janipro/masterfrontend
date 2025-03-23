@@ -1,8 +1,11 @@
 import { gql } from '@apollo/client';
 
-export const GET_GIVEN_TASKS = gql`
+export const GET_ACTIVE_GIVEN_TASKS = gql`
   query GivenTasks($userId: Int!) {
-    allTasks(filter: { recommendedsByTaskId: { some: { userId: { equalTo: $userId } } } }) {
+    allTasks(
+      condition: { isActive: true }
+      filter: { recommendedsByTaskId: { some: { userId: { equalTo: $userId } } } }
+    ) {
       nodes {
         taskId
         difficulty
