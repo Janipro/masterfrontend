@@ -8,6 +8,7 @@ interface CodeState {
   setOutput: (newOutput: string) => void;
   setTask: (taskId: number) => Promise<void>;
   executeCode: () => Promise<void>;
+  codeHelp: () => Promise<void>;
 }
 
 export const useTaskCodeStore = create<CodeState>((set, get) => ({
@@ -29,12 +30,42 @@ export const useTaskCodeStore = create<CodeState>((set, get) => ({
   // also create a variable and set to code template for the "view template tab"
   setTask: async (taskId) => set({ selectedTaskId: taskId }),
 
+  // must send id of current task as well
   executeCode: async () => {
     const { code, setOutput } = get();
 
     // must change from localhost to deployed server when server is online
     try {
       const response = await fetch('http://localhost:6001/execute', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ code }),
+      });
+
+      const result = await response.json();
+      console.log(result.output);
+
+      if (result.error) {
+        setOutput(`Error: ${result.error}`);
+        return;
+      }
+
+      if (result.output) {
+        setOutput(result.output);
+      }
+    } catch (error) {
+      console.error('Error executing code:', error);
+      setOutput('Error executing code');
+    }
+  },
+
+  // must send id of current task as well
+  codeHelp: async () => {
+    const { code, setOutput } = get();
+
+    // must change from localhost to deployed server when server is online
+    try {
+      const response = await fetch('http://localhost:6001/help', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ code }),

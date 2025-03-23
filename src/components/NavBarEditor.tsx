@@ -38,7 +38,7 @@ export default function NavBarEditor() {
   const { isTeacher, setTeacher } = useTeacherStore();
   const { isDarkmode, setDarkmode } = useDarkmodeStore();
   const { isDarkmodeEditor, setDarkmodeEditor } = useDarkmodeEditorStore();
-  const { executeCode } = useTaskCodeStore();
+  const { executeCode, codeHelp } = useTaskCodeStore();
 
   const [open, setOpen] = React.useState(false);
   const handleOpen = () => setOpen(true);
@@ -350,6 +350,7 @@ export default function NavBarEditor() {
                   </Box>
 
                   <Button
+                    onClick={codeHelp}
                     key={functions[1]}
                     sx={{
                       color: isDarkmodeEditor ? NAV_COLORS.editor_text_dark : NAV_COLORS.editor_text,
