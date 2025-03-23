@@ -261,23 +261,6 @@ export default function TeacherDashboard() {
                                 ))}
                               </Select>
                             </FormControl>
-                            {/**<FormControl sx={{ minWidth: 100 }} size="small">
-                              <InputLabel id="select-small-level">Nivå</InputLabel>
-                              <Select
-                                labelId="select-small-level"
-                                id="select-small"
-                                value={level}
-                                label="Level"
-                                onChange={handleChangeLevel}
-                              >
-                                <MenuItem value={8}>8</MenuItem>
-                                <MenuItem value={9}>9</MenuItem>
-                                <MenuItem value={10}>10</MenuItem>
-                                <MenuItem value={11}>VG1</MenuItem>
-                                <MenuItem value={12}>VG2</MenuItem>
-                                <MenuItem value={13}>VG3</MenuItem>
-                              </Select>
-                            </FormControl>**/}
                           </Stack>
                           <TextField
                             id="keep-mounted-modal-description"
