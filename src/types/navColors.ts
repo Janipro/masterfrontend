@@ -21,6 +21,18 @@ export const NAV_COLORS = {
   editor_icon_redo_undo_background_dark: '#A7A7A7',
   editor_menu_background_highlight: '#F5F5F5',
   editor_menu_background_highlight_dark: '#404040',
+  editor_icon_expand_background: '#9AB6D7',
+  editor_icon_expand_background_dark: '#828282',
+  editor_button_template_hover: '#E3EBEF',
+  editor_button_template_hover_dark: '#525252',
+  editor_button_template_selected_backgroundcolor: '#FFFFFF',
+  editor_button_template_selected_backgroundcolor_dark: '#262626',
+  editor_button_template_selected_color: '#5D7285',
+  editor_button_template_selected_color_dark: '#FFFFFF',
+  editor_button_template_unselected_backgroundcolor: '#ebeff2',
+  editor_button_template_unselected_backgroundcolor_dark: '#3d3d3d',
+  editor_button_template_unselected_color: '#93a7bc',
+  editor_button_template_unselected_color_dark: '#aaaaaa',
 };
 
 export const style = {

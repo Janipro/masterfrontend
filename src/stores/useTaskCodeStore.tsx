@@ -25,6 +25,8 @@ export const useTaskCodeStore = create<CodeState>((set, get) => ({
   },
 
   // must set task, fetch & set previous code belonging to new task
+  // also, if no previous code by user, set code to the tasks code template
+  // also create a variable and set to code template for the "view template tab"
   setTask: async (taskId) => set({ selectedTaskId: taskId }),
 
   executeCode: async () => {

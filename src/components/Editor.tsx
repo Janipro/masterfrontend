@@ -108,7 +108,11 @@ const darkTheme = EditorView.theme({
   },
 });
 
-export default function Editor() {
+type TerminalProps = {
+  showCode: boolean;
+};
+
+export default function Editor({ showCode }: TerminalProps) {
   const { code, setCode } = useTaskCodeStore();
   const { isDarkmodeEditor } = useDarkmodeEditorStore();
 
@@ -149,11 +153,17 @@ export default function Editor() {
       }}
     >
       <CodeMirror
-        value={code}
+        value={showCode ? code : 'Vis mal som tilhører kode, skal komme fra useTaskCodeStore'}
         height="100%"
         width="100%"
         basicSetup={{ lineNumbers: true }}
-        extensions={[python(), indentUnit.of('    '), EditorView.lineWrapping, highlightSelectionMatches()]}
+        extensions={[
+          python(),
+          indentUnit.of('    '),
+          EditorView.lineWrapping,
+          highlightSelectionMatches(),
+          EditorView.editable.of(showCode),
+        ]}
         onChange={onChange}
         theme={isDarkmodeEditor ? darkTheme : lightTheme}
         onCreateEditor={(view) => {
