@@ -5,8 +5,13 @@ import {
   Container,
   CssBaseline,
   Fade,
+  FormControl,
   Grid2,
+  InputLabel,
+  MenuItem,
   Modal,
+  Select,
+  SelectChangeEvent,
   Stack,
   TextField,
   Typography,
@@ -19,18 +24,23 @@ import { useState } from 'react';
 import PostAddIcon from '@mui/icons-material/PostAdd';
 import CreateIcon from '@mui/icons-material/Create';
 import { columns } from '../../types/userData';
-import { announcement, task, taskRequirement } from '../../types/tableProps';
+import { announcement, task, taskRequirement, course } from '../../types/tableProps';
 import { useMutation, useQuery } from '@apollo/client';
 import { GET_GIVEN_TASKS } from '../../../graphql/queries/getGivenTasks';
 import { GET_ALL_ANNOUNCEMENTS } from '../../../graphql/queries/getAllAnnouncements';
 import { CREATE_ANNOUNCEMENT } from '../../../graphql/mutations/createAnnouncement';
+import { UPDATE_STUDY_GROUP_BY_STUDY_GROUP_ID } from '../../../graphql/mutations/updateStudygroupByStudyGroupId';
 import { GET_STUDY_GROUP_BY_STUDY_GROUP_ID } from '../../../graphql/queries/getStudygroupByStudyGroupId';
 import { useParams } from 'react-router-dom';
+import { GET_ALL_COURSES } from '../../../graphql/queries/getAllCourses';
 
 export default function TeacherClass() {
-  const [open, setOpen] = useState(false);
-  const handleOpen = () => setOpen(true);
-  const handleClose = () => setOpen(false);
+  const [editOpen, setEditOpen] = useState(false);
+  const [announcementOpen, setAnnouncementOpen] = useState(false);
+  const handleEditOpen = () => setEditOpen(true);
+  const handleEditClose = () => setEditOpen(false);
+  const handleAnnouncementOpen = () => setAnnouncementOpen(true);
+  const handleAnnouncementClose = () => setAnnouncementOpen(false);
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
   const { id } = useParams();
@@ -42,11 +52,23 @@ export default function TeacherClass() {
   const { loading: studygroupLoading, data: studygroupData } = useQuery(GET_STUDY_GROUP_BY_STUDY_GROUP_ID, {
     variables: { studyGroupId: parseInt(id!) },
   });
+  const { loading: courseLoading, data: courseData } = useQuery(GET_ALL_COURSES);
   const [createAnnouncement] = useMutation(CREATE_ANNOUNCEMENT, {
     refetchQueries: [{ query: GET_ALL_ANNOUNCEMENTS, variables: { studyGroupId: parseInt(id!) } }],
   });
+  const [updateStudygroupByStudyGroupId] = useMutation(UPDATE_STUDY_GROUP_BY_STUDY_GROUP_ID, {
+    refetchQueries: [{ query: GET_STUDY_GROUP_BY_STUDY_GROUP_ID, variables: { studyGroupId: parseInt(id!) } }],
+  });
 
-  if (taskLoading || announcementLoading || studygroupLoading) {
+  const handleChangeCourse = (event: SelectChangeEvent) => {
+    setCourse(event.target.value);
+  };
+
+  const [studygroupName, setStudygroupName] = useState(studygroupData.studygroupByStudyGroupId.studyGroupName);
+  const [description, setDescription] = useState(studygroupData.studygroupByStudyGroupId.description);
+  const [course, setCourse] = useState(studygroupData.studygroupByStudyGroupId.courseByCourseId.courseId);
+
+  if (taskLoading || announcementLoading || studygroupLoading || courseLoading) {
     return (
       <Box mt="30vh">
         <p> Laster inn... </p>
@@ -57,6 +79,7 @@ export default function TeacherClass() {
   if (error) {
     console.log('could not load from db');
   }
+
   const getGivenTasks = (): task[] => {
     return taskData.allTasks.nodes.map((task: task) => ({
       id: task.taskId,
@@ -91,9 +114,25 @@ export default function TeacherClass() {
           studyGroupId: parseInt(id!),
         },
       });
-      handleClose();
+      handleAnnouncementClose();
     } catch (error) {
       console.log('Error creating announcement: ', error);
+    }
+  };
+
+  const handleUpdate = async () => {
+    try {
+      await updateStudygroupByStudyGroupId({
+        variables: {
+          studyGroupId: parseInt(id!),
+          description: description,
+          studyGroupName: studygroupName,
+          courseId: course,
+        },
+      });
+      handleEditClose();
+    } catch (error) {
+      console.log('Error updating studygroup: ', error);
     }
   };
 
@@ -117,9 +156,85 @@ export default function TeacherClass() {
                   mt: 'auto',
                 }}
                 size="small"
+                onClick={handleEditOpen}
               >
                 Rediger
               </Button>
+              <Modal
+                aria-labelledby="transition-modal-title"
+                aria-describedby="transition-modal-description"
+                open={editOpen}
+                onClose={handleEditClose}
+                closeAfterTransition
+                slots={{ backdrop: Backdrop }}
+                slotProps={{
+                  backdrop: {
+                    timeout: 500,
+                  },
+                }}
+              >
+                <Fade in={editOpen}>
+                  <Box sx={style}>
+                    <Grid2 container direction="column" spacing={2}>
+                      <Stack direction="row">
+                        <Typography id="keep-mounted-modal-title" variant="h5" fontWeight="medium">
+                          Rediger undervisningsgruppe
+                        </Typography>
+                      </Stack>
+                      <Stack direction="row" gap={1}>
+                        <TextField
+                          id="keep-mounted-modal-title"
+                          value={studygroupName}
+                          label="Gruppenavn"
+                          variant="outlined"
+                          sx={{ width: 200 }}
+                          size="small"
+                          onChange={(e) => {
+                            setStudygroupName(e.target.value);
+                          }}
+                        />
+                        <FormControl sx={{ minWidth: 100 }} size="small">
+                          <InputLabel id="select-small-course">Fag</InputLabel>
+                          <Select
+                            labelId="select-small-course"
+                            id="select-small"
+                            label="Course"
+                            value={course}
+                            onChange={handleChangeCourse}
+                          >
+                            {courseData.allCourses.nodes.map((course: course) => (
+                              <MenuItem value={course.courseId}>{course.courseName}</MenuItem>
+                            ))}
+                          </Select>
+                        </FormControl>
+                      </Stack>
+                      <TextField
+                        id="keep-mounted-modal-description"
+                        multiline
+                        rows={3}
+                        sx={{ width: 400 }}
+                        value={description}
+                        onChange={(e) => {
+                          setDescription(e.target.value);
+                        }}
+                      />
+                      <Stack direction="row"></Stack>
+                      <Button
+                        variant="contained"
+                        startIcon={<CreateIcon />}
+                        sx={{
+                          textTransform: 'none',
+                          ml: 'auto',
+                        }}
+                        onClick={handleUpdate}
+                        size="small"
+                      >
+                        Oppdater undervisningsgruppe
+                      </Button>
+                    </Grid2>
+                  </Box>
+                </Fade>
+              </Modal>
             </Stack>
             <Stack direction="row" spacing={8} color={NAV_COLORS.text}>
               <Typography>{`Fag: ${studygroupData.studygroupByStudyGroupId.courseByCourseId.courseName}`}</Typography>
@@ -140,7 +255,7 @@ export default function TeacherClass() {
                   textTransform: 'none',
                   ml: 'auto',
                 }}
-                onClick={handleOpen}
+                onClick={handleAnnouncementOpen}
                 size="small"
               >
                 Ny kunngjøring
@@ -148,8 +263,8 @@ export default function TeacherClass() {
               <Modal
                 aria-labelledby="transition-modal-title"
                 aria-describedby="transition-modal-description"
-                open={open}
-                onClose={handleClose}
+                open={announcementOpen}
+                onClose={handleAnnouncementClose}
                 closeAfterTransition
                 slots={{ backdrop: Backdrop }}
                 slotProps={{
@@ -158,7 +273,7 @@ export default function TeacherClass() {
                   },
                 }}
               >
-                <Fade in={open}>
+                <Fade in={announcementOpen}>
                   <Box sx={style}>
                     <Grid2 container direction="column" spacing={3}>
                       <Stack direction="row">

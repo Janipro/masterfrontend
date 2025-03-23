@@ -29,12 +29,15 @@ import { useState } from 'react';
 import { style } from '../../types/navColors';
 import { classTranslation, columns, columns3 } from '../../types/userData';
 import { useMutation, useQuery } from '@apollo/client';
+import { GET_ACTIVE_GIVEN_TASKS } from '../../../graphql/queries/getActiveGivenTasks';
 import { GET_GIVEN_TASKS } from '../../../graphql/queries/getGivenTasks';
 import { GET_ALL_COURSES } from '../../../graphql/queries/getAllCourses';
 import { GET_ALL_STUDENTS } from '../../../graphql/queries/getAllStudents';
 import { GET_ALL_STUDY_GROUPS } from '../../../graphql/queries/getAllStudygroups';
+import { GET_ALL_ACTIVE_STUDY_GROUPS } from '../../../graphql/queries/getAllActiveStudygroups';
 import { CREATE_STUDY_GROUP } from '../../../graphql/mutations/createStudygroup';
 import { CREATE_ENROLMENT } from '../../../graphql/mutations/createEnrolment';
+import { UPDATE_TASK_VISIBILITY } from '../../../graphql/mutations/updateTaskVisibility';
 import { course, student, studygroup, task, taskRequirement, user } from '../../types/tableProps';
 import useSelectedStore from '../../stores/useSelectedStore';
 import { useStore } from 'zustand';
@@ -44,19 +47,27 @@ export default function TeacherDashboard() {
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
   const [course, setCourse] = useState('');
+  const [inactiveTasks, setInactiveTasks] = useState(false);
+  const [inactiveStudygroups, setInactiveStudygroups] = useState(false);
   const [description, setDescription] = useState('');
   const [studygroupName, setStudygroupName] = useState('');
   const userId = parseInt(localStorage.getItem('id')!);
   const schoolId = parseInt(localStorage.getItem('school_id')!);
   const classId = parseInt(localStorage.getItem('class_id')!);
-  const { selectionModel } = useStore(useSelectedStore);
+  const { selectionModel, setSelectionModel } = useStore(useSelectedStore);
 
   const handleChangeCourse = (event: SelectChangeEvent) => {
     setCourse(event.target.value);
   };
 
   const { loading: taskLoading, error, data: taskData } = useQuery(GET_GIVEN_TASKS, { variables: { userId: userId } });
+  const { loading: activeTaskLoading, data: activeTaskData } = useQuery(GET_ACTIVE_GIVEN_TASKS, {
+    variables: { userId: userId },
+  });
   const { loading: courseLoading, data: courseData } = useQuery(GET_ALL_COURSES);
+  const { loading: activeStudygroupLoading, data: activeStudygroupData } = useQuery(GET_ALL_ACTIVE_STUDY_GROUPS, {
+    variables: { userId: userId },
+  });
   const { loading: studygroupLoading, data: studygroupData } = useQuery(GET_ALL_STUDY_GROUPS, {
     variables: { userId: userId },
   });
@@ -64,11 +75,24 @@ export default function TeacherDashboard() {
     variables: { classId: classId },
   });
   const [createStudygroup] = useMutation(CREATE_STUDY_GROUP, {
-    refetchQueries: [{ query: GET_ALL_STUDY_GROUPS, variables: { userId: userId } }],
+    refetchQueries: [{ query: GET_ALL_ACTIVE_STUDY_GROUPS, variables: { userId: userId } }],
   });
   const [createEnrolment] = useMutation(CREATE_ENROLMENT);
+  const [updateTaskVisibility] = useMutation(UPDATE_TASK_VISIBILITY, {
+    refetchQueries: [
+      { query: GET_GIVEN_TASKS, variables: { userId: userId } },
+      { query: GET_ACTIVE_GIVEN_TASKS, variables: { userId: userId } },
+    ],
+  });
 
-  if (taskLoading || courseLoading || studygroupLoading || studentsLoading) {
+  if (
+    taskLoading ||
+    courseLoading ||
+    activeStudygroupLoading ||
+    studentsLoading ||
+    studygroupLoading ||
+    activeTaskLoading
+  ) {
     return (
       <Box mt="30vh">
         <p> Laster inn... </p>
@@ -82,6 +106,22 @@ export default function TeacherDashboard() {
 
   const getGivenTasks = (): task[] => {
     return taskData.allTasks.nodes.map((task: task) => ({
+      id: task.taskId,
+      course: task.courseByCourseId?.courseName,
+      title: task.taskName,
+      owner: task.userByUserId?.email,
+      requirement: task.taskrequirementsByTaskId
+        ? task.taskrequirementsByTaskId.nodes.map(
+            (req: taskRequirement) => req.requirementByRequirementId.requirementName
+          )
+        : [],
+      level: task.level,
+      type: task.type,
+    }));
+  };
+
+  const getActiveGivenTasks = (): task[] => {
+    return activeTaskData.allTasks.nodes.map((task: task) => ({
       id: task.taskId,
       course: task.courseByCourseId?.courseName,
       title: task.taskName,
@@ -130,6 +170,22 @@ export default function TeacherDashboard() {
       class: student.classByClassId?.className,
       school: student.schoolBySchoolId?.schoolName,
     }));
+  };
+
+  const handleVisibility = async (isActive: boolean) => {
+    try {
+      for (const taskId in selectionModel) {
+        await updateTaskVisibility({
+          variables: {
+            isActive: isActive,
+            taskId: selectionModel[taskId],
+          },
+        });
+      }
+      setSelectionModel([]);
+    } catch (error) {
+      console.log('Could not update task', error);
+    }
   };
   return (
     <Fade in timeout={500}>
@@ -205,23 +261,6 @@ export default function TeacherDashboard() {
                                 ))}
                               </Select>
                             </FormControl>
-                            {/**<FormControl sx={{ minWidth: 100 }} size="small">
-                              <InputLabel id="select-small-level">Nivå</InputLabel>
-                              <Select
-                                labelId="select-small-level"
-                                id="select-small"
-                                value={level}
-                                label="Level"
-                                onChange={handleChangeLevel}
-                              >
-                                <MenuItem value={8}>8</MenuItem>
-                                <MenuItem value={9}>9</MenuItem>
-                                <MenuItem value={10}>10</MenuItem>
-                                <MenuItem value={11}>VG1</MenuItem>
-                                <MenuItem value={12}>VG2</MenuItem>
-                                <MenuItem value={13}>VG3</MenuItem>
-                              </Select>
-                            </FormControl>**/}
                           </Stack>
                           <TextField
                             id="keep-mounted-modal-description"
@@ -252,14 +291,27 @@ export default function TeacherDashboard() {
                     </Fade>
                   </Modal>
                   <FormGroup>
-                    <FormControlLabel control={<Checkbox size="small" />} label="Vis inaktive" />
+                    <FormControlLabel
+                      control={
+                        <Checkbox
+                          size="small"
+                          checked={inactiveStudygroups}
+                          onChange={() => setInactiveStudygroups(!inactiveStudygroups)}
+                        />
+                      }
+                      label="Vis inaktive"
+                    />
                   </FormGroup>
                 </Stack>
               </Grid2>
               <Grid2 container direction={'row'} spacing={4} sx={{ m: 2, p: 1, maxWidth: 970 }}>
-                {studygroupData.allStudygroups.nodes.map((studygroup: studygroup) => (
-                  <InfoCard title={studygroup.studyGroupName} id={studygroup.studyGroupId} />
-                ))}
+                {inactiveStudygroups
+                  ? studygroupData.allStudygroups.nodes.map((studygroup: studygroup) => (
+                      <InfoCard title={studygroup.studyGroupName} id={studygroup.studyGroupId} />
+                    ))
+                  : activeStudygroupData.allStudygroups.nodes.map((studygroup: studygroup) => (
+                      <InfoCard title={studygroup.studyGroupName} id={studygroup.studyGroupId} />
+                    ))}
               </Grid2>
             </Grid2>
           </Grid2>
@@ -281,6 +333,7 @@ export default function TeacherDashboard() {
                   sx={{ backgroundColor: '#EDEBEB', color: '#3F3F3F', textTransform: 'none' }}
                   disabled={selectionModel.length === 0}
                   size="small"
+                  onClick={() => handleVisibility(true)}
                 >
                   Aktiver
                 </Button>
@@ -290,6 +343,7 @@ export default function TeacherDashboard() {
                   sx={{ backgroundColor: '#EDEBEB', color: '#3F3F3F', textTransform: 'none' }}
                   disabled={selectionModel.length === 0}
                   size="small"
+                  onClick={() => handleVisibility(false)}
                 >
                   Deaktiver
                 </Button>
@@ -303,11 +357,25 @@ export default function TeacherDashboard() {
                   Slett
                 </Button>
                 <FormGroup>
-                  <FormControlLabel control={<Checkbox size="small" />} label="Vis inaktive" />
+                  <FormControlLabel
+                    control={
+                      <Checkbox
+                        size="small"
+                        checked={inactiveTasks}
+                        onChange={() => setInactiveTasks(!inactiveTasks)}
+                      />
+                    }
+                    label="Vis inaktive"
+                  />
                 </FormGroup>
               </Grid2>
             </Grid2>
-            <Table rows={getGivenTasks()} columns={columns} selectable />
+            <Table
+              rows={inactiveTasks ? getGivenTasks() : getActiveGivenTasks()}
+              columns={columns}
+              selectable
+              key={inactiveTasks ? 'inactive' : 'active'}
+            />
           </Grid2>
         </Container>
       </Box>

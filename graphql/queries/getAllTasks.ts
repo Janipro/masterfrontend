@@ -2,7 +2,7 @@ import { gql } from '@apollo/client';
 
 export const GET_ALL_TASKS = gql`
   query AllTasks {
-    allTasks {
+    allTasks(condition: { publicAccess: true }) {
       nodes {
         taskId
         difficulty
