@@ -56,12 +56,12 @@ export default function Terminal({ terminalCollapsed }: TerminalProps) {
     >
       {outputHistory.length > 0 ? (
         outputHistory.map((line, index) => (
-          <pre key={index} style={{ margin: 0 }}>
+          <pre key={index} style={{ margin: 0, textWrap: 'wrap' }}>
             {line}
           </pre>
         ))
       ) : (
-        <pre style={{ margin: 0 }}>Kjør koden for å se output...</pre>
+        <pre style={{ margin: 0, textWrap: 'wrap' }}>Kjør koden for å se output...</pre>
       )}
     </Box>
   );

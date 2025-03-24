@@ -16,7 +16,7 @@ import useDarkmodeEditorStore from '../stores/useDarkmodeEditorStore';
 export default function PlaygroundContent() {
   const theme = useTheme();
   const { isDarkmodeEditor } = useDarkmodeEditorStore();
-
+  const [showCode, setShowCode] = useState(true);
   const [terminalCollapsed, setTerminalCollapsed] = useState(() => {
     return localStorage.getItem('terminalCollapsed') === 'true';
   });
@@ -241,6 +241,14 @@ export default function PlaygroundContent() {
     });
   };
 
+  const handleShowCode = () => {
+    setShowCode(true);
+  };
+
+  const handleShowTemplate = () => {
+    setShowCode(false);
+  };
+
   return (
     <Box
       ref={containerRef}
@@ -346,7 +354,9 @@ export default function PlaygroundContent() {
                     sx={{
                       fontSize: '0.95em',
                       transform: taskCollapsed ? 'rotate(180deg)' : null,
-                      color: isDarkmodeEditor ? '#828282' : '#9AB6D7',
+                      color: isDarkmodeEditor
+                        ? NAV_COLORS.editor_icon_expand_background_dark
+                        : NAV_COLORS.editor_icon_expand_background,
                     }}
                   />
                 </IconButton>
@@ -398,7 +408,7 @@ export default function PlaygroundContent() {
                     }}
                   >
                     {programmingConstructs.map((item) => (
-                      <Requirement value={item} size="small" />
+                      <Requirement key={item} value={item} size="small" />
                     ))}
                   </Box>
                   <Box
@@ -522,8 +532,90 @@ export default function PlaygroundContent() {
                       Python Kode
                     </Typography>
                   </Box>
+                  <Box sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
+                    <Typography
+                      onClick={handleShowTemplate}
+                      sx={{
+                        textAlign: 'center',
+                        minWidth: '59.4px',
+                        fontWeight: 'medium',
+                        fontSize: '0.75em',
+                        margin: 0,
+                        paddingX: '3.6px',
+                        paddingY: '2.4px',
+                        cursor: showCode ? 'pointer' : null,
+                        userSelect: 'none',
+                        borderRadius: '2px 0 0 0',
+                        backgroundColor: isDarkmodeEditor
+                          ? showCode
+                            ? NAV_COLORS.editor_button_template_unselected_backgroundcolor_dark
+                            : NAV_COLORS.editor_button_template_selected_backgroundcolor_dark
+                          : showCode
+                            ? NAV_COLORS.editor_button_template_unselected_backgroundcolor
+                            : NAV_COLORS.editor_button_template_selected_backgroundcolor,
+                        color: isDarkmodeEditor
+                          ? showCode
+                            ? NAV_COLORS.editor_button_template_unselected_color_dark
+                            : NAV_COLORS.editor_button_template_selected_color_dark
+                          : showCode
+                            ? NAV_COLORS.editor_button_template_unselected_color
+                            : NAV_COLORS.editor_button_template_selected_color,
+                        '&:hover': {
+                          backgroundColor: isDarkmodeEditor
+                            ? showCode
+                              ? NAV_COLORS.editor_button_template_hover_dark
+                              : null
+                            : showCode
+                              ? NAV_COLORS.editor_button_template_hover
+                              : null,
+                        },
+                      }}
+                    >
+                      Kodemal
+                    </Typography>
+                    <Typography
+                      onClick={handleShowCode}
+                      sx={{
+                        textAlign: 'center',
+                        minWidth: '59.4px',
+                        fontWeight: 'medium',
+                        fontSize: '0.75em',
+                        margin: 0,
+                        paddingX: '3.6px',
+                        paddingY: '2.4px',
+                        cursor: showCode ? null : 'pointer',
+                        userSelect: 'none',
+                        borderRadius: 'o 5px 0 0',
+                        backgroundColor: isDarkmodeEditor
+                          ? showCode
+                            ? NAV_COLORS.editor_button_template_selected_backgroundcolor_dark
+                            : NAV_COLORS.editor_button_template_unselected_backgroundcolor_dark
+                          : showCode
+                            ? NAV_COLORS.editor_pane_background
+                            : NAV_COLORS.editor_button_template_unselected_backgroundcolor,
+                        color: isDarkmodeEditor
+                          ? showCode
+                            ? NAV_COLORS.editor_button_template_selected_color_dark
+                            : NAV_COLORS.editor_button_template_unselected_color_dark
+                          : showCode
+                            ? NAV_COLORS.editor_button_template_selected_color
+                            : NAV_COLORS.editor_button_template_unselected_color,
+                        '&:hover': {
+                          backgroundColor: isDarkmodeEditor
+                            ? showCode
+                              ? null
+                              : NAV_COLORS.editor_button_template_hover_dark
+                            : showCode
+                              ? null
+                              : NAV_COLORS.editor_button_template_hover,
+                        },
+                      }}
+                    >
+                      Editor
+                    </Typography>
+                  </Box>
                 </Grid2>
-                <Editor />
+                <Editor showCode={showCode} />
               </Box>
             </Grid2>
           </Container>
@@ -574,7 +666,7 @@ export default function PlaygroundContent() {
               ref={rightBottomPaneRef}
               sx={{
                 borderRadius: '5px',
-                height: terminalCollapsed ? '25px' : '100%',
+                height: terminalCollapsed ? '23px' : '100%',
                 flexShrink: 0,
                 textAlign: 'left',
                 bgcolor: isDarkmodeEditor ? NAV_COLORS.editor_pane_background_dark : NAV_COLORS.editor_pane_background,
@@ -641,7 +733,9 @@ export default function PlaygroundContent() {
                       sx={{
                         fontSize: '0.95em',
                         transform: terminalCollapsed ? 'rotate(180deg)' : null,
-                        color: isDarkmodeEditor ? '#828282' : '#9AB6D7',
+                        color: isDarkmodeEditor
+                          ? NAV_COLORS.editor_icon_expand_background_dark
+                          : NAV_COLORS.editor_icon_expand_background,
                       }}
                     />
                   </IconButton>

@@ -26,6 +26,8 @@ import { useNavigate } from 'react-router-dom';
 import useDarkmodeStore from '../stores/useDarkmodeStore';
 import useDarkmodeEditorStore from '../stores/useDarkmodeEditorStore';
 import { useTaskCodeStore } from '../stores/useTaskCodeStore';
+import useEditorViewStore from '../stores/useEditorViewStore';
+import { undo, redo } from '@codemirror/commands';
 
 const functions = ['Kjør', 'Hjelp', 'Lever', 'Innsendingshistorikk'];
 const settings = ['Profil', 'Logg ut'];
@@ -36,12 +38,21 @@ export default function NavBarEditor() {
   const { isTeacher, setTeacher } = useTeacherStore();
   const { isDarkmode, setDarkmode } = useDarkmodeStore();
   const { isDarkmodeEditor, setDarkmodeEditor } = useDarkmodeEditorStore();
-  const { executeCode } = useTaskCodeStore();
+  const { executeCode, codeHelp } = useTaskCodeStore();
 
   const [open, setOpen] = React.useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
   const navigate = useNavigate();
+  const editorView = useEditorViewStore((state) => state.editorView);
+
+  const handleUndo = () => {
+    if (editorView) undo(editorView);
+  };
+
+  const handleRedo = () => {
+    if (editorView) redo(editorView);
+  };
 
   const handleOpenUserMenu = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorElUser(event.currentTarget);
@@ -151,6 +162,7 @@ export default function NavBarEditor() {
                 >
                   <Button
                     key={'undoBtn'}
+                    onClick={handleUndo}
                     sx={{
                       color: isDarkmodeEditor ? NAV_COLORS.editor_text_dark : NAV_COLORS.editor_text,
                       display: 'flex',
@@ -207,6 +219,7 @@ export default function NavBarEditor() {
 
                   <Button
                     key={'redoBtn'}
+                    onClick={handleRedo}
                     sx={{
                       color: isDarkmodeEditor ? NAV_COLORS.editor_text_dark : NAV_COLORS.editor_text,
                       display: 'flex',
@@ -337,6 +350,7 @@ export default function NavBarEditor() {
                   </Box>
 
                   <Button
+                    onClick={codeHelp}
                     key={functions[1]}
                     sx={{
                       color: isDarkmodeEditor ? NAV_COLORS.editor_text_dark : NAV_COLORS.editor_text,
@@ -678,6 +692,29 @@ export default function NavBarEditor() {
                   },
                 },
               }}
+              slotProps={{
+                paper: {
+                  sx: {
+                    '&::-webkit-scrollbar': {
+                      width: '6px',
+                      borderRadius: '5px',
+                    },
+                    '&::-webkit-scrollbar-track': {
+                      backgroundColor: isDarkmodeEditor
+                        ? NAV_COLORS.editor_pane_background_dark
+                        : NAV_COLORS.editor_pane_background,
+                      borderRadius: '0 5px 5px 0',
+                    },
+                    '&::-webkit-scrollbar-thumb': {
+                      backgroundColor: '#B7B7B7',
+                      borderRadius: '5px',
+                    },
+                    '&::-webkit-scrollbar-thumb:hover': {
+                      backgroundColor: '#9E9E9E',
+                    },
+                  },
+                },
+              }}
               id="navbar-appbar"
               anchorEl={anchorElNavbar}
               anchorOrigin={{
@@ -759,6 +796,29 @@ export default function NavBarEditor() {
                   },
                 },
               }}
+              slotProps={{
+                paper: {
+                  sx: {
+                    '&::-webkit-scrollbar': {
+                      width: '6px',
+                      borderRadius: '5px',
+                    },
+                    '&::-webkit-scrollbar-track': {
+                      backgroundColor: isDarkmodeEditor
+                        ? NAV_COLORS.editor_pane_background_dark
+                        : NAV_COLORS.editor_pane_background,
+                      borderRadius: '0 5px 5px 0',
+                    },
+                    '&::-webkit-scrollbar-thumb': {
+                      backgroundColor: '#B7B7B7',
+                      borderRadius: '5px',
+                    },
+                    '&::-webkit-scrollbar-thumb:hover': {
+                      backgroundColor: '#9E9E9E',
+                    },
+                  },
+                },
+              }}
               id="menu-appbar"
               anchorEl={anchorElUser}
               anchorOrigin={{
@@ -794,7 +854,47 @@ export default function NavBarEditor() {
             </Menu>
 
             <Menu
-              sx={{ mt: '35px', display: { xs: 'none', sm: 'none', md: 'none', lg: 'block', xl: 'block' } }}
+              sx={{
+                mt: '35px',
+                display: { xs: 'none', sm: 'none', md: 'none', lg: 'block', xl: 'block' },
+                '& .MuiPaper-root': {
+                  backgroundColor: isDarkmodeEditor
+                    ? NAV_COLORS.editor_button_background_dark
+                    : NAV_COLORS.editor_button_background,
+                  color: isDarkmodeEditor ? NAV_COLORS.editor_icon_background_dark : NAV_COLORS.editor_icon_background,
+                },
+                '& .MuiMenuItem-root': {
+                  color: isDarkmodeEditor ? NAV_COLORS.editor_icon_background_dark : NAV_COLORS.editor_icon_background,
+                  '&:hover': {
+                    backgroundColor: isDarkmodeEditor
+                      ? NAV_COLORS.editor_menu_background_highlight_dark
+                      : NAV_COLORS.editor_menu_background_highlight,
+                  },
+                },
+              }}
+              slotProps={{
+                paper: {
+                  sx: {
+                    '&::-webkit-scrollbar': {
+                      width: '6px',
+                      borderRadius: '5px',
+                    },
+                    '&::-webkit-scrollbar-track': {
+                      backgroundColor: isDarkmodeEditor
+                        ? NAV_COLORS.editor_pane_background_dark
+                        : NAV_COLORS.editor_pane_background,
+                      borderRadius: '0 5px 5px 0',
+                    },
+                    '&::-webkit-scrollbar-thumb': {
+                      backgroundColor: '#B7B7B7',
+                      borderRadius: '5px',
+                    },
+                    '&::-webkit-scrollbar-thumb:hover': {
+                      backgroundColor: '#9E9E9E',
+                    },
+                  },
+                },
+              }}
               id="menu-appbar"
               anchorEl={anchorElUser}
               anchorOrigin={{

@@ -25,7 +25,7 @@ const darkTheme = createTheme({
       styleOverrides: {
         root: {
           '--Paper-overlay': 'none !important',
-          'padding-right': '0px',
+          paddingRight: '0px',
         },
       },
     },
@@ -58,7 +58,7 @@ const defaultTheme = createTheme({
     MuiPaper: {
       styleOverrides: {
         root: {
-          'padding-right': '0px',
+          paddingRight: '0px',
         },
       },
     },
