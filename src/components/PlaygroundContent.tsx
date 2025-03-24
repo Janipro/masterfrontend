@@ -408,7 +408,7 @@ export default function PlaygroundContent() {
                     }}
                   >
                     {programmingConstructs.map((item) => (
-                      <Requirement value={item} size="small" />
+                      <Requirement key={item} value={item} size="small" />
                     ))}
                   </Box>
                   <Box
