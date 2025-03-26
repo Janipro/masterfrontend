@@ -18,6 +18,7 @@ import NotificationsRoundedIcon from '@mui/icons-material/NotificationsRounded';
 import { useNavigate } from 'react-router-dom';
 import useDarkmodeStore from '../stores/useDarkmodeStore';
 import useDarkmodeEditorStore from '../stores/useDarkmodeEditorStore';
+import logo from '../assets/educode.png';
 
 const settings = ['Profil', 'Logg ut'];
 
@@ -55,7 +56,7 @@ export default function NavBar() {
       <Container maxWidth={'xl'}>
         <Toolbar disableGutters sx={{ minHeight: '50px !important' }}>
           <img
-            src="src/assets/educode.png"
+            src={logo}
             width="40"
             height="auto"
             alt="EduCode logo"
