@@ -38,7 +38,6 @@ import { GET_ALL_ACTIVE_STUDY_GROUPS } from '../../../graphql/queries/getAllActi
 import { CREATE_STUDY_GROUP } from '../../../graphql/mutations/createStudygroup';
 import { CREATE_ENROLMENT } from '../../../graphql/mutations/createEnrolment';
 import { UPDATE_TASK_VISIBILITY } from '../../../graphql/mutations/updateTaskVisibility';
-import { DELETE_TASK_BY_TASK_ID } from '../../../graphql/mutations/deleteTaskByTaskId';
 import { course, student, studygroup, task, taskRequirement, user } from '../../types/tableProps';
 import useSelectedStore from '../../stores/useSelectedStore';
 import { useStore } from 'zustand';
@@ -81,12 +80,6 @@ export default function TeacherDashboard() {
   });
   const [createEnrolment] = useMutation(CREATE_ENROLMENT);
   const [updateTaskVisibility] = useMutation(UPDATE_TASK_VISIBILITY, {
-    refetchQueries: [
-      { query: GET_GIVEN_TASKS, variables: { userId: userId } },
-      { query: GET_ACTIVE_GIVEN_TASKS, variables: { userId: userId } },
-    ],
-  });
-  const [deleteTaskByTaskId] = useMutation(DELETE_TASK_BY_TASK_ID, {
     refetchQueries: [
       { query: GET_GIVEN_TASKS, variables: { userId: userId } },
       { query: GET_ACTIVE_GIVEN_TASKS, variables: { userId: userId } },
@@ -198,18 +191,7 @@ export default function TeacherDashboard() {
   };
 
   const handleDelete = async () => {
-    try {
-      for (const taskId in recommendedSelectionModel) {
-        await deleteTaskByTaskId({
-          variables: {
-            taskId: recommendedSelectionModel[taskId],
-          },
-        });
-      }
-      setRecommendedSelectionModel([]);
-    } catch (error) {
-      console.log('Could not delete task: ', error);
-    }
+    return;
   };
   return (
     <Fade in timeout={500}>

@@ -26,8 +26,8 @@ import { classTranslation, columns, columns2, columns3, rows2 } from '../../type
 import { student, task, taskRequirement, user } from '../../types/tableProps';
 import { useMutation, useQuery } from '@apollo/client';
 import { GET_ALL_TASKS } from '../../../graphql/queries/getAllTasks';
-import { GET_ACTIVE_GIVEN_TASKS } from '../../../graphql/queries/getActiveGivenTasks';
-import { GET_GIVEN_TASKS } from '../../../graphql/queries/getGivenTasks';
+import { GET_ACTIVE_CREATED_TASKS } from '../../../graphql/queries/getActiveCreatedTasks';
+import { GET_CREATED_TASKS } from '../../../graphql/queries/getCreatedTasks';
 import { GET_ALL_STUDENTS } from '../../../graphql/queries/getAllStudents';
 import { CREATE_RECOMMENDED } from '../../../graphql/mutations/createRecommended';
 import { useStore } from 'zustand';
@@ -45,33 +45,34 @@ export default function TeacherTasks() {
   const userId = parseInt(localStorage.getItem('id')!);
   const classId = parseInt(localStorage.getItem('class_id')!);
   const { allTasksSelectionModel, setAllTasksSelectionModel } = useStore(useSelectedStore);
-  const { recommendedSelectionModel, setRecommendedSelectionModel } = useStore(useSelectedStore);
+  const {
+    recommendedSelectionModel: createdTasksSelectionModel,
+    setRecommendedSelectionModel: setCreatedTasksSelectionModel,
+  } = useStore(useSelectedStore);
   const { studentSelectionModel, setStudentSelectionModel } = useStore(useSelectedStore);
   const { loading: tasksLoading, error: tasksError, data: allTasks } = useQuery(GET_ALL_TASKS);
   const {
     loading: givenLoading,
     error: givenError,
     data: givenTasks,
-  } = useQuery(GET_GIVEN_TASKS, { variables: { userId: userId } });
-  const { loading: activeTaskLoading, data: activeGivenTasks } = useQuery(GET_ACTIVE_GIVEN_TASKS, {
+  } = useQuery(GET_CREATED_TASKS, { variables: { userId: userId } });
+  const { loading: activeTaskLoading, data: activeGivenTasks } = useQuery(GET_ACTIVE_CREATED_TASKS, {
     variables: { userId: userId },
   });
   const { loading: studentsLoading, data: studentsData } = useQuery(GET_ALL_STUDENTS, {
     variables: { classId: classId },
   });
-  const [createRecommended] = useMutation(CREATE_RECOMMENDED, {
-    refetchQueries: [{ query: GET_ACTIVE_GIVEN_TASKS, variables: { userId: userId } }],
-  });
+  const [createRecommended] = useMutation(CREATE_RECOMMENDED);
   const [updateTaskVisibility] = useMutation(UPDATE_TASK_VISIBILITY, {
     refetchQueries: [
-      { query: GET_GIVEN_TASKS, variables: { userId: userId } },
-      { query: GET_ACTIVE_GIVEN_TASKS, variables: { userId: userId } },
+      { query: GET_CREATED_TASKS, variables: { userId: userId } },
+      { query: GET_ACTIVE_CREATED_TASKS, variables: { userId: userId } },
     ],
   });
   const [deleteTaskByTaskId] = useMutation(DELETE_TASK_BY_TASK_ID, {
     refetchQueries: [
-      { query: GET_GIVEN_TASKS, variables: { userId: userId } },
-      { query: GET_ACTIVE_GIVEN_TASKS, variables: { userId: userId } },
+      { query: GET_CREATED_TASKS, variables: { userId: userId } },
+      { query: GET_ACTIVE_CREATED_TASKS, variables: { userId: userId } },
     ],
   });
   if (tasksLoading || givenLoading || studentsLoading || activeTaskLoading) {
@@ -172,15 +173,15 @@ export default function TeacherTasks() {
 
   const handleVisibility = async (isActive: boolean) => {
     try {
-      for (const taskId in recommendedSelectionModel) {
+      for (const taskId in createdTasksSelectionModel) {
         await updateTaskVisibility({
           variables: {
             isActive: isActive,
-            taskId: recommendedSelectionModel[taskId],
+            taskId: createdTasksSelectionModel[taskId],
           },
         });
       }
-      setRecommendedSelectionModel([]);
+      setCreatedTasksSelectionModel([]);
     } catch (error) {
       console.log('Could not update task: ', error);
     }
@@ -188,14 +189,14 @@ export default function TeacherTasks() {
 
   const handleDelete = async () => {
     try {
-      for (const taskId in recommendedSelectionModel) {
+      for (const taskId in createdTasksSelectionModel) {
         await deleteTaskByTaskId({
           variables: {
-            taskId: recommendedSelectionModel[taskId],
+            taskId: createdTasksSelectionModel[taskId],
           },
         });
       }
-      setRecommendedSelectionModel([]);
+      setCreatedTasksSelectionModel([]);
     } catch (error) {
       console.log('Could not delete task: ', error);
     }
@@ -208,7 +209,7 @@ export default function TeacherTasks() {
         <Container component={'main'} sx={{ bgcolor: 'background.default' }}>
           <Grid2 direction="column" container spacing={2} mt={10}>
             <Grid2 direction="row" container>
-              <Typography typography="h5">Utdelte oppgaver</Typography>
+              <Typography typography="h5">Mine oppgaver</Typography>
               <Grid2 container direction={'row'} spacing={1} sx={{ flexGrow: 0 }} ml={'auto'} mt={'auto'}>
                 <Button
                   variant="contained"
@@ -218,7 +219,7 @@ export default function TeacherTasks() {
                     color: NAV_COLORS.text,
                     textTransform: 'none',
                   }}
-                  disabled={recommendedSelectionModel.length === 0}
+                  disabled={createdTasksSelectionModel.length === 0}
                   size="small"
                   onClick={() => handleVisibility(true)}
                 >
@@ -232,7 +233,7 @@ export default function TeacherTasks() {
                     color: NAV_COLORS.text,
                     textTransform: 'none',
                   }}
-                  disabled={recommendedSelectionModel.length === 0}
+                  disabled={createdTasksSelectionModel.length === 0}
                   size="small"
                   onClick={() => handleVisibility(false)}
                 >
@@ -246,7 +247,7 @@ export default function TeacherTasks() {
                     color: NAV_COLORS.text,
                     textTransform: 'none',
                   }}
-                  disabled={recommendedSelectionModel.length === 0}
+                  disabled={createdTasksSelectionModel.length === 0}
                   size="small"
                   onClick={handleDelete}
                 >
@@ -267,8 +268,8 @@ export default function TeacherTasks() {
               columns={columns}
               selectable
               key={inactiveTasks ? 'inactive' : 'active'}
-              selectionModel={recommendedSelectionModel}
-              setSelectionModel={setRecommendedSelectionModel}
+              selectionModel={createdTasksSelectionModel}
+              setSelectionModel={setCreatedTasksSelectionModel}
             />
 
             <Grid2 spacing={2} container direction="column">
