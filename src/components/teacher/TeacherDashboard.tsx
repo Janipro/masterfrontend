@@ -38,6 +38,7 @@ import { GET_ALL_ACTIVE_STUDY_GROUPS } from '../../../graphql/queries/getAllActi
 import { CREATE_STUDY_GROUP } from '../../../graphql/mutations/createStudygroup';
 import { CREATE_ENROLMENT } from '../../../graphql/mutations/createEnrolment';
 import { UPDATE_TASK_VISIBILITY } from '../../../graphql/mutations/updateTaskVisibility';
+import { DELETE_TASK_BY_TASK_ID } from '../../../graphql/mutations/deleteTaskByTaskId';
 import { course, student, studygroup, task, taskRequirement, user } from '../../types/tableProps';
 import useSelectedStore from '../../stores/useSelectedStore';
 import { useStore } from 'zustand';
@@ -54,7 +55,8 @@ export default function TeacherDashboard() {
   const userId = parseInt(localStorage.getItem('id')!);
   const schoolId = parseInt(localStorage.getItem('school_id')!);
   const classId = parseInt(localStorage.getItem('class_id')!);
-  const { selectionModel, setSelectionModel } = useStore(useSelectedStore);
+  const { studentSelectionModel, setStudentSelectionModel } = useStore(useSelectedStore);
+  const { recommendedSelectionModel, setRecommendedSelectionModel } = useStore(useSelectedStore);
 
   const handleChangeCourse = (event: SelectChangeEvent) => {
     setCourse(event.target.value);
@@ -79,6 +81,12 @@ export default function TeacherDashboard() {
   });
   const [createEnrolment] = useMutation(CREATE_ENROLMENT);
   const [updateTaskVisibility] = useMutation(UPDATE_TASK_VISIBILITY, {
+    refetchQueries: [
+      { query: GET_GIVEN_TASKS, variables: { userId: userId } },
+      { query: GET_ACTIVE_GIVEN_TASKS, variables: { userId: userId } },
+    ],
+  });
+  const [deleteTaskByTaskId] = useMutation(DELETE_TASK_BY_TASK_ID, {
     refetchQueries: [
       { query: GET_GIVEN_TASKS, variables: { userId: userId } },
       { query: GET_ACTIVE_GIVEN_TASKS, variables: { userId: userId } },
@@ -148,14 +156,15 @@ export default function TeacherDashboard() {
         },
       });
       const studyGroupId = response.data.createStudygroup.studygroup.studyGroupId;
-      for (const selectedStudent in selectionModel) {
+      for (const studentId in studentSelectionModel) {
         await createEnrolment({
           variables: {
             studyGroupId: studyGroupId,
-            userId: selectionModel[selectedStudent],
+            userId: studentSelectionModel[studentId],
           },
         });
       }
+      setStudentSelectionModel([]);
       handleClose();
     } catch (error) {
       console.log('Error creating studygroup: ', error);
@@ -174,17 +183,32 @@ export default function TeacherDashboard() {
 
   const handleVisibility = async (isActive: boolean) => {
     try {
-      for (const taskId in selectionModel) {
+      for (const taskId in recommendedSelectionModel) {
         await updateTaskVisibility({
           variables: {
             isActive: isActive,
-            taskId: selectionModel[taskId],
+            taskId: recommendedSelectionModel[taskId],
           },
         });
       }
-      setSelectionModel([]);
+      setRecommendedSelectionModel([]);
     } catch (error) {
-      console.log('Could not update task', error);
+      console.log('Could not update task: ', error);
+    }
+  };
+
+  const handleDelete = async () => {
+    try {
+      for (const taskId in recommendedSelectionModel) {
+        await deleteTaskByTaskId({
+          variables: {
+            taskId: recommendedSelectionModel[taskId],
+          },
+        });
+      }
+      setRecommendedSelectionModel([]);
+    } catch (error) {
+      console.log('Could not delete task: ', error);
     }
   };
   return (
@@ -331,7 +355,7 @@ export default function TeacherDashboard() {
                   variant="contained"
                   startIcon={<VisibilityIcon />}
                   sx={{ backgroundColor: '#EDEBEB', color: '#3F3F3F', textTransform: 'none' }}
-                  disabled={selectionModel.length === 0}
+                  disabled={recommendedSelectionModel.length === 0}
                   size="small"
                   onClick={() => handleVisibility(true)}
                 >
@@ -341,7 +365,7 @@ export default function TeacherDashboard() {
                   variant="contained"
                   startIcon={<VisibilityOffIcon />}
                   sx={{ backgroundColor: '#EDEBEB', color: '#3F3F3F', textTransform: 'none' }}
-                  disabled={selectionModel.length === 0}
+                  disabled={recommendedSelectionModel.length === 0}
                   size="small"
                   onClick={() => handleVisibility(false)}
                 >
@@ -351,8 +375,9 @@ export default function TeacherDashboard() {
                   variant="contained"
                   startIcon={<DeleteIcon />}
                   sx={{ backgroundColor: '#EDEBEB', color: '#3F3F3F', textTransform: 'none' }}
-                  disabled={selectionModel.length === 0}
+                  disabled={recommendedSelectionModel.length === 0}
                   size="small"
+                  onClick={handleDelete}
                 >
                   Slett
                 </Button>
@@ -375,6 +400,8 @@ export default function TeacherDashboard() {
               columns={columns}
               selectable
               key={inactiveTasks ? 'inactive' : 'active'}
+              selectionModel={recommendedSelectionModel}
+              setSelectionModel={setRecommendedSelectionModel}
             />
           </Grid2>
         </Container>

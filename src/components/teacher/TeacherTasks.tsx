@@ -32,20 +32,21 @@ import { GET_ALL_STUDENTS } from '../../../graphql/queries/getAllStudents';
 import { CREATE_RECOMMENDED } from '../../../graphql/mutations/createRecommended';
 import { useStore } from 'zustand';
 import useSelectedStore from '../../stores/useSelectedStore';
+import { UPDATE_TASK_VISIBILITY } from '../../../graphql/mutations/updateTaskVisibility';
+import { DELETE_TASK_BY_TASK_ID } from '../../../graphql/mutations/deleteTaskByTaskId';
 
 export default function TeacherTasks() {
   const [open, setOpen] = useState(false);
-  const [selectedIds, setSelectedIds] = useState([]);
   const handleOpen = () => {
     setOpen(true);
-    setSelectedIds(Object.values(selectionModel));
-    setSelectionModel([]);
   };
   const handleClose = () => setOpen(false);
   const [inactiveTasks, setInactiveTasks] = useState(false);
   const userId = parseInt(localStorage.getItem('id')!);
   const classId = parseInt(localStorage.getItem('class_id')!);
-  const { selectionModel, setSelectionModel } = useStore(useSelectedStore);
+  const { allTasksSelectionModel, setAllTasksSelectionModel } = useStore(useSelectedStore);
+  const { recommendedSelectionModel, setRecommendedSelectionModel } = useStore(useSelectedStore);
+  const { studentSelectionModel, setStudentSelectionModel } = useStore(useSelectedStore);
   const { loading: tasksLoading, error: tasksError, data: allTasks } = useQuery(GET_ALL_TASKS);
   const {
     loading: givenLoading,
@@ -60,6 +61,18 @@ export default function TeacherTasks() {
   });
   const [createRecommended] = useMutation(CREATE_RECOMMENDED, {
     refetchQueries: [{ query: GET_ACTIVE_GIVEN_TASKS, variables: { userId: userId } }],
+  });
+  const [updateTaskVisibility] = useMutation(UPDATE_TASK_VISIBILITY, {
+    refetchQueries: [
+      { query: GET_GIVEN_TASKS, variables: { userId: userId } },
+      { query: GET_ACTIVE_GIVEN_TASKS, variables: { userId: userId } },
+    ],
+  });
+  const [deleteTaskByTaskId] = useMutation(DELETE_TASK_BY_TASK_ID, {
+    refetchQueries: [
+      { query: GET_GIVEN_TASKS, variables: { userId: userId } },
+      { query: GET_ACTIVE_GIVEN_TASKS, variables: { userId: userId } },
+    ],
   });
   if (tasksLoading || givenLoading || studentsLoading || activeTaskLoading) {
     return (
@@ -133,26 +146,58 @@ export default function TeacherTasks() {
 
   const handleShare = async () => {
     try {
-      for (const taskId in selectedIds) {
+      for (const taskId in allTasksSelectionModel) {
         await createRecommended({
           variables: {
             userId: userId,
-            taskId: selectedIds[taskId],
+            taskId: allTasksSelectionModel[taskId],
           },
         });
-        for (const userId in selectionModel) {
+        for (const studentId in studentSelectionModel) {
           await createRecommended({
             variables: {
-              userId: selectionModel[userId],
-              taskId: selectedIds[taskId],
+              userId: studentSelectionModel[studentId],
+              taskId: taskId,
             },
           });
         }
       }
-      setSelectionModel([]);
+      setAllTasksSelectionModel([]);
+      setStudentSelectionModel([]);
       handleClose();
     } catch (error) {
-      console.log('Could not share task', error);
+      console.log('Could not share task: ', error);
+    }
+  };
+
+  const handleVisibility = async (isActive: boolean) => {
+    try {
+      for (const taskId in recommendedSelectionModel) {
+        await updateTaskVisibility({
+          variables: {
+            isActive: isActive,
+            taskId: recommendedSelectionModel[taskId],
+          },
+        });
+      }
+      setRecommendedSelectionModel([]);
+    } catch (error) {
+      console.log('Could not update task: ', error);
+    }
+  };
+
+  const handleDelete = async () => {
+    try {
+      for (const taskId in recommendedSelectionModel) {
+        await deleteTaskByTaskId({
+          variables: {
+            taskId: recommendedSelectionModel[taskId],
+          },
+        });
+      }
+      setRecommendedSelectionModel([]);
+    } catch (error) {
+      console.log('Could not delete task: ', error);
     }
   };
 
@@ -173,8 +218,9 @@ export default function TeacherTasks() {
                     color: NAV_COLORS.text,
                     textTransform: 'none',
                   }}
-                  disabled={selectionModel.length === 0}
+                  disabled={recommendedSelectionModel.length === 0}
                   size="small"
+                  onClick={() => handleVisibility(true)}
                 >
                   Aktiver
                 </Button>
@@ -186,8 +232,9 @@ export default function TeacherTasks() {
                     color: NAV_COLORS.text,
                     textTransform: 'none',
                   }}
-                  disabled={selectionModel.length === 0}
+                  disabled={recommendedSelectionModel.length === 0}
                   size="small"
+                  onClick={() => handleVisibility(false)}
                 >
                   Deaktiver
                 </Button>
@@ -199,8 +246,9 @@ export default function TeacherTasks() {
                     color: NAV_COLORS.text,
                     textTransform: 'none',
                   }}
-                  disabled={selectionModel.length === 0}
+                  disabled={recommendedSelectionModel.length === 0}
                   size="small"
+                  onClick={handleDelete}
                 >
                   Slett
                 </Button>
@@ -219,6 +267,8 @@ export default function TeacherTasks() {
               columns={columns}
               selectable
               key={inactiveTasks ? 'inactive' : 'active'}
+              selectionModel={recommendedSelectionModel}
+              setSelectionModel={setRecommendedSelectionModel}
             />
 
             <Grid2 spacing={2} container direction="column">
@@ -249,7 +299,7 @@ export default function TeacherTasks() {
                     }}
                     onClick={handleOpen}
                     size="small"
-                    disabled={selectionModel.length === 0}
+                    disabled={allTasksSelectionModel.length === 0}
                   >
                     Del oppgave
                   </Button>
@@ -279,7 +329,13 @@ export default function TeacherTasks() {
                           </Typography>
                           {/*<SearchBar options={rows3} prompt="Søk etter elever" />
                           TODO: ADD SEARCH FUNCTIONALITY */}
-                          <Table rows={createClass()} columns={columns3} selectable />
+                          <Table
+                            rows={createClass()}
+                            columns={columns3}
+                            selectable
+                            selectionModel={studentSelectionModel}
+                            setSelectionModel={setStudentSelectionModel}
+                          />
                           <Button
                             variant="contained"
                             startIcon={<ShareIcon />}
@@ -299,7 +355,13 @@ export default function TeacherTasks() {
                 </Grid2>
               </Grid2>
             </Grid2>
-            <Table rows={getAllTasks()} columns={columns2} selectable />
+            <Table
+              rows={getAllTasks()}
+              columns={columns2}
+              selectable
+              selectionModel={allTasksSelectionModel}
+              setSelectionModel={setAllTasksSelectionModel}
+            />
           </Grid2>
         </Container>
       </Box>
