@@ -37,7 +37,12 @@ import { GET_ALL_COURSES } from '../../../graphql/queries/getAllCourses';
 export default function TeacherClass() {
   const [editOpen, setEditOpen] = useState(false);
   const [announcementOpen, setAnnouncementOpen] = useState(false);
-  const handleEditOpen = () => setEditOpen(true);
+  const handleEditOpen = () => {
+    setStudygroupName(studygroupData.studygroupByStudyGroupId.studyGroupName);
+    setDescription(studygroupData.studygroupByStudyGroupId.description);
+    setCourse(studygroupData.studygroupByStudyGroupId.courseByCourseId.courseId);
+    setEditOpen(true);
+  };
   const handleEditClose = () => setEditOpen(false);
   const handleAnnouncementOpen = () => setAnnouncementOpen(true);
   const handleAnnouncementClose = () => setAnnouncementOpen(false);
@@ -64,9 +69,9 @@ export default function TeacherClass() {
     setCourse(event.target.value);
   };
 
-  const [studygroupName, setStudygroupName] = useState(studygroupData.studygroupByStudyGroupId.studyGroupName);
-  const [description, setDescription] = useState(studygroupData.studygroupByStudyGroupId.description);
-  const [course, setCourse] = useState(studygroupData.studygroupByStudyGroupId.courseByCourseId.courseId);
+  const [studygroupName, setStudygroupName] = useState('');
+  const [description, setDescription] = useState('');
+  const [course, setCourse] = useState('');
 
   if (taskLoading || announcementLoading || studygroupLoading || courseLoading) {
     return (
