@@ -1,11 +1,9 @@
 import { Box, Paper } from '@mui/material';
-import { DataGrid, GridColDef } from '@mui/x-data-grid';
+import { DataGrid, GridColDef, GridRowSelectionModel } from '@mui/x-data-grid';
 import { nbNO } from '@mui/x-data-grid/locales/nbNO';
 import { useMemo, useState } from 'react';
 import { task, student, recommended } from '../types/tableProps';
 import useTeacherStore from '../stores/useTeacherStore';
-import useSelectedStore from '../stores/useSelectedStore';
-import { useStore } from 'zustand';
 
 const paginationModel = { page: 0, pageSize: 5 };
 
@@ -13,10 +11,14 @@ export default function Table({
   rows,
   selectable,
   columns,
+  selectionModel,
+  setSelectionModel,
 }: {
   rows: task[] | student[] | recommended[];
   selectable: boolean;
   columns: GridColDef[];
+  selectionModel?: GridRowSelectionModel;
+  setSelectionModel?: (updateSelectedState: GridRowSelectionModel) => void;
 }) {
   type Row = (typeof rows)[number];
   const [initialRows /*, setRows*/] = useState<Row[]>(rows);
@@ -30,8 +32,6 @@ export default function Table({
     []
   );*/
   }
-
-  const { selectionModel, setSelectionModel } = useStore(useSelectedStore);
 
   const columnVisibilityModel = useMemo(() => {
     if (isTeacher) {
