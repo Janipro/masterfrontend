@@ -30,6 +30,7 @@ import { GET_ACTIVE_CREATED_TASKS } from '../../../graphql/queries/getActiveCrea
 import { GET_CREATED_TASKS } from '../../../graphql/queries/getCreatedTasks';
 import { GET_ALL_STUDENTS } from '../../../graphql/queries/getAllStudents';
 import { CREATE_RECOMMENDED } from '../../../graphql/mutations/createRecommended';
+import { CREATE_RECOMMENDED_STUDENT } from '../../../graphql/mutations/createRecommendedStudent';
 import { useStore } from 'zustand';
 import useSelectedStore from '../../stores/useSelectedStore';
 import { UPDATE_TASK_VISIBILITY } from '../../../graphql/mutations/updateTaskVisibility';
@@ -52,17 +53,18 @@ export default function TeacherTasks() {
   const { studentSelectionModel, setStudentSelectionModel } = useStore(useSelectedStore);
   const { loading: tasksLoading, error: tasksError, data: allTasks } = useQuery(GET_ALL_TASKS);
   const {
-    loading: givenLoading,
-    error: givenError,
-    data: givenTasks,
+    loading: createdLoading,
+    error: createdError,
+    data: createdTasks,
   } = useQuery(GET_CREATED_TASKS, { variables: { userId: userId } });
-  const { loading: activeTaskLoading, data: activeGivenTasks } = useQuery(GET_ACTIVE_CREATED_TASKS, {
+  const { loading: activeCreatedLoading, data: activeCreatedTasks } = useQuery(GET_ACTIVE_CREATED_TASKS, {
     variables: { userId: userId },
   });
   const { loading: studentsLoading, data: studentsData } = useQuery(GET_ALL_STUDENTS, {
     variables: { classId: classId },
   });
   const [createRecommended] = useMutation(CREATE_RECOMMENDED);
+  const [createRecommendedStudent] = useMutation(CREATE_RECOMMENDED_STUDENT);
   const [updateTaskVisibility] = useMutation(UPDATE_TASK_VISIBILITY, {
     refetchQueries: [
       { query: GET_CREATED_TASKS, variables: { userId: userId } },
@@ -75,7 +77,7 @@ export default function TeacherTasks() {
       { query: GET_ACTIVE_CREATED_TASKS, variables: { userId: userId } },
     ],
   });
-  if (tasksLoading || givenLoading || studentsLoading || activeTaskLoading) {
+  if (tasksLoading || createdLoading || studentsLoading || activeCreatedLoading) {
     return (
       <Box mt="30vh">
         <p> Laster inn... </p>
@@ -83,7 +85,7 @@ export default function TeacherTasks() {
     );
   }
 
-  if (tasksError || givenError) {
+  if (tasksError || createdError) {
     console.log('could not load from db');
   }
 
@@ -103,8 +105,8 @@ export default function TeacherTasks() {
     }));
   };
 
-  const getGivenTasks = (): task[] => {
-    return givenTasks.allTasks.nodes.map((task: task) => ({
+  const getCreatedTasks = (): task[] => {
+    return createdTasks.allTasks.nodes.map((task: task) => ({
       id: task.taskId,
       course: task.courseByCourseId?.courseName,
       title: task.taskName,
@@ -119,8 +121,8 @@ export default function TeacherTasks() {
     }));
   };
 
-  const getActiveGivenTasks = (): task[] => {
-    return activeGivenTasks.allTasks.nodes.map((task: task) => ({
+  const getActiveCreatedTasks = (): task[] => {
+    return activeCreatedTasks.allTasks.nodes.map((task: task) => ({
       id: task.taskId,
       course: task.courseByCourseId?.courseName,
       title: task.taskName,
@@ -148,17 +150,19 @@ export default function TeacherTasks() {
   const handleShare = async () => {
     try {
       for (const taskId in allTasksSelectionModel) {
-        await createRecommended({
+        const response = await createRecommended({
           variables: {
             userId: userId,
             taskId: allTasksSelectionModel[taskId],
+            studyGroupId: 1,
           },
         });
+        const recommendedId = response.data.nodes[0].recommendedId;
         for (const studentId in studentSelectionModel) {
-          await createRecommended({
+          await createRecommendedStudent({
             variables: {
               userId: studentSelectionModel[studentId],
-              taskId: taskId,
+              recommendedId: recommendedId,
             },
           });
         }
@@ -264,7 +268,7 @@ export default function TeacherTasks() {
               </Grid2>
             </Grid2>
             <Table
-              rows={inactiveTasks ? getGivenTasks() : getActiveGivenTasks()}
+              rows={inactiveTasks ? getCreatedTasks() : getActiveCreatedTasks()}
               columns={columns}
               selectable
               key={inactiveTasks ? 'inactive' : 'active'}

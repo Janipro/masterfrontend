@@ -5,7 +5,7 @@ import Calendar from '../Calendar';
 import Requirement from '../Requirement';
 import { useQuery } from '@apollo/client';
 import { recommended, taskRequirement, enrolment } from '../../types/tableProps';
-import { GET_RECOMMENDED_TASKS } from '../../../graphql/queries/getRecommendeds';
+import { GET_RECOMMENDED_STUDENTS } from '../../../graphql/queries/getRecommendedStudents';
 import { GET_ALL_ENROLMENTS } from '../../../graphql/queries/getAllEnrolments';
 import { columns } from '../../types/userData';
 
@@ -15,7 +15,7 @@ export default function StudentDashboard() {
     loading: taskLoading,
     error,
     data: taskData,
-  } = useQuery(GET_RECOMMENDED_TASKS, { variables: { userId: userId } });
+  } = useQuery(GET_RECOMMENDED_STUDENTS, { variables: { userId: userId } });
   const { loading: studygroupLoading, data: studygroupData } = useQuery(GET_ALL_ENROLMENTS, {
     variables: { userId: userId },
   });
@@ -32,8 +32,8 @@ export default function StudentDashboard() {
     console.log('could not load from db: ', error);
   }
   const getRecommendedTasks = (): recommended[] => {
-    return taskData.allRecommendeds.nodes.map((recommended: recommended) => ({
-      id: recommended.taskByTaskId.taskId,
+    return taskData.allRecommendedstudents.nodes.map((recommended: recommended) => ({
+      id: recommended.recommendedId,
       course: recommended.taskByTaskId.courseByCourseId?.courseName,
       title: recommended.taskByTaskId.taskName,
       owner: recommended.taskByTaskId.userByUserId?.email,
@@ -43,7 +43,7 @@ export default function StudentDashboard() {
           )
         : [],
       level: recommended.taskByTaskId.level,
-      type: recommended.taskByTaskId.type,
+      type: recommended.type,
     }));
   };
   return (
