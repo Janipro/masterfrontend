@@ -32,6 +32,10 @@ export type user = {
 
 export type recommended = {
   recommendedId: number;
+  studyGroupId: number;
+  isActive: boolean;
+  deadline: Date;
+  type: 'obligatory' | 'exercise';
   taskByTaskId: task;
 };
 

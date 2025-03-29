@@ -5,7 +5,7 @@ import Calendar from '../Calendar';
 import Requirement from '../Requirement';
 import { useQuery } from '@apollo/client';
 import { recommended, taskRequirement, enrolment } from '../../types/tableProps';
-import { GET_RECOMMENDED_TASKS } from '../../../graphql/queries/getRecommendedTasks';
+import { GET_RECOMMENDED_TASKS } from '../../../graphql/queries/getRecommendeds';
 import { GET_ALL_ENROLMENTS } from '../../../graphql/queries/getAllEnrolments';
 import { columns } from '../../types/userData';
 
@@ -29,7 +29,7 @@ export default function StudentDashboard() {
 
   if (error) {
     console.log(localStorage.getItem('id'));
-    console.log('could not load from db');
+    console.log('could not load from db: ', error);
   }
   const getRecommendedTasks = (): recommended[] => {
     return taskData.allRecommendeds.nodes.map((recommended: recommended) => ({

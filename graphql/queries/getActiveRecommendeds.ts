@@ -1,9 +1,14 @@
 import { gql } from '@apollo/client';
 
-export const GET_RECOMMENDED_TASKS = gql`
+export const GET_ACTIVE_RECOMMENDEDS = gql`
   query GetRecommendeds($userId: Int!) {
-    allRecommendeds(condition: { userId: $userId }) {
+    allRecommendeds(condition: { userId: $userId, isActive: true }) {
       nodes {
+        recommendedId
+        deadline
+        studyGroupId
+        isActive
+        type
         taskByTaskId {
           taskId
           difficulty

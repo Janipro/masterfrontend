@@ -4,7 +4,7 @@ import SearchBar from '../SearchBar';
 import { columns, columns2 } from '../../types/userData';
 import { useQuery } from '@apollo/client';
 import { GET_ALL_TASKS } from '../../../graphql/queries/getAllTasks';
-import { GET_RECOMMENDED_TASKS } from '../../../graphql/queries/getRecommendedTasks';
+import { GET_RECOMMENDED_TASKS } from '../../../graphql/queries/getRecommendeds';
 import { recommended, task, taskRequirement } from '../../types/tableProps';
 
 export default function StudentTasks() {

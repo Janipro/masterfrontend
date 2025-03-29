@@ -4,7 +4,7 @@ import { NAV_COLORS } from '../../types/navColors';
 import Announcements from '../Announcements';
 import { announcement, recommended, taskRequirement } from '../../types/tableProps';
 import { useQuery } from '@apollo/client';
-import { GET_RECOMMENDED_TASKS } from '../../../graphql/queries/getRecommendedTasks';
+import { GET_RECOMMENDED_TASKS } from '../../../graphql/queries/getRecommendeds';
 import { columns } from '../../types/userData';
 import { GET_ALL_ANNOUNCEMENTS } from '../../../graphql/queries/getAllAnnouncements';
 import { GET_STUDY_GROUP_BY_STUDY_GROUP_ID } from '../../../graphql/queries/getStudygroupByStudyGroupId';
