@@ -30,8 +30,17 @@ export type user = {
   schoolBySchoolId: school;
 };
 
+export type recommendedStudent = {
+  recommendedStudentId: number;
+  recommendedByRecommendedId: recommended;
+};
+
 export type recommended = {
   recommendedId: number;
+  studyGroupId: number;
+  isActive: boolean;
+  deadline: Date;
+  type: 'obligatory' | 'exercise';
   taskByTaskId: task;
 };
 

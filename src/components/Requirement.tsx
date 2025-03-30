@@ -1,5 +1,6 @@
 import { Typography } from '@mui/material';
-import { borderColorMapping, colorMapping, translation } from '../types/requirementData';
+import { borderColorMapping, colorMapping } from '../types/requirementData';
+import { requirementTranslations } from '../types/translations';
 
 export default function Requirement(text: { value: string; size: string }) {
   return (
@@ -19,7 +20,7 @@ export default function Requirement(text: { value: string; size: string }) {
         textAlign: 'center',
       }}
     >
-      {text.value in translation ? translation[text.value] : text.value}
+      {text.value in requirementTranslations ? requirementTranslations[text.value] : text.value}
     </Typography>
   );
 }

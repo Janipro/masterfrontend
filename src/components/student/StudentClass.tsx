@@ -2,22 +2,23 @@ import { Box, Container, CssBaseline, Fade, Grid2, Stack, Typography } from '@mu
 import Table from '../Table';
 import { NAV_COLORS } from '../../types/navColors';
 import Announcements from '../Announcements';
-import { announcement, recommended, taskRequirement } from '../../types/tableProps';
+import { announcement, recommendedStudent, taskRequirement } from '../../types/tableProps';
 import { useQuery } from '@apollo/client';
-import { GET_RECOMMENDED_TASKS } from '../../../graphql/queries/getRecommendedTasks';
+import { GET_RECOMMENDED_STUDENTS } from '../../../graphql/queries/getRecommendedStudents';
 import { columns } from '../../types/userData';
 import { GET_ALL_ANNOUNCEMENTS } from '../../../graphql/queries/getAllAnnouncements';
 import { GET_STUDY_GROUP_BY_STUDY_GROUP_ID } from '../../../graphql/queries/getStudygroupByStudyGroupId';
 import { useParams } from 'react-router-dom';
+import { typeTranslations } from '../../types/translations';
 
 export default function StudentClass() {
   const { id } = useParams();
   const userId = parseInt(localStorage.getItem('id')!);
   const {
-    loading: taskLoading,
-    error,
-    data: taskData,
-  } = useQuery(GET_RECOMMENDED_TASKS, { variables: { userId: userId } });
+    loading: recommendedsLoading,
+    error: recommendedsError,
+    data: recommendedTasks,
+  } = useQuery(GET_RECOMMENDED_STUDENTS, { variables: { userId: userId } });
   const { loading: announcementLoading, data: announcementData } = useQuery(GET_ALL_ANNOUNCEMENTS, {
     variables: { studyGroupId: parseInt(id!) },
   });
@@ -25,7 +26,7 @@ export default function StudentClass() {
     variables: { studyGroupId: parseInt(id!) },
   });
 
-  if (taskLoading || announcementLoading || studygroupLoading) {
+  if (recommendedsLoading || announcementLoading || studygroupLoading) {
     return (
       <Box mt="30vh">
         <p> Laster inn... </p>
@@ -33,21 +34,25 @@ export default function StudentClass() {
     );
   }
 
-  if (error) {
-    console.log('could not load from db');
+  if (recommendedsError) {
+    console.log('could not load from db: ', recommendedsError);
   }
-  const getRecommendedTasks = (): recommended[] => {
-    return taskData.allRecommendeds.nodes.map((recommended: recommended) => ({
-      id: recommended.taskByTaskId.taskId,
-      course: recommended.taskByTaskId.courseByCourseId?.courseName,
-      title: recommended.taskByTaskId.taskName,
-      owner: recommended.taskByTaskId.userByUserId?.email,
-      requirement: recommended.taskByTaskId.taskrequirementsByTaskId
-        ? recommended.taskByTaskId.taskrequirementsByTaskId.nodes.map(
+  const getRecommendedTasks = (): recommendedStudent[] => {
+    return recommendedTasks.allRecommendedstudents.nodes.map((recommendedStudent: recommendedStudent) => ({
+      id: recommendedStudent.recommendedStudentId,
+      course: recommendedStudent.recommendedByRecommendedId?.taskByTaskId.courseByCourseId?.courseName,
+      title: recommendedStudent.recommendedByRecommendedId?.taskByTaskId.taskName,
+      owner: recommendedStudent.recommendedByRecommendedId?.taskByTaskId.userByUserId?.email,
+      requirement: recommendedStudent.recommendedByRecommendedId?.taskByTaskId.taskrequirementsByTaskId
+        ? recommendedStudent.recommendedByRecommendedId?.taskByTaskId.taskrequirementsByTaskId.nodes.map(
             (req: taskRequirement) => req.requirementByRequirementId.requirementName
           )
         : [],
-      level: recommended.taskByTaskId.level,
+      level: recommendedStudent.recommendedByRecommendedId?.taskByTaskId.level,
+      type:
+        recommendedStudent.recommendedByRecommendedId?.type === 'exercise'
+          ? typeTranslations.exercise
+          : typeTranslations.obligatory,
     }));
   };
 

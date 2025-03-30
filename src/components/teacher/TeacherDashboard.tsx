@@ -27,20 +27,22 @@ import Table from '../Table';
 import InfoCard from '../InfoCard';
 import { useState } from 'react';
 import { style } from '../../types/navColors';
-import { classTranslation, columns, columns3 } from '../../types/userData';
+import { columns, columns3 } from '../../types/userData';
 import { useMutation, useQuery } from '@apollo/client';
-import { GET_ACTIVE_GIVEN_TASKS } from '../../../graphql/queries/getActiveGivenTasks';
-import { GET_GIVEN_TASKS } from '../../../graphql/queries/getGivenTasks';
 import { GET_ALL_COURSES } from '../../../graphql/queries/getAllCourses';
 import { GET_ALL_STUDENTS } from '../../../graphql/queries/getAllStudents';
 import { GET_ALL_STUDY_GROUPS } from '../../../graphql/queries/getAllStudygroups';
 import { GET_ALL_ACTIVE_STUDY_GROUPS } from '../../../graphql/queries/getAllActiveStudygroups';
 import { CREATE_STUDY_GROUP } from '../../../graphql/mutations/createStudygroup';
 import { CREATE_ENROLMENT } from '../../../graphql/mutations/createEnrolment';
-import { UPDATE_TASK_VISIBILITY } from '../../../graphql/mutations/updateTaskVisibility';
-import { course, student, studygroup, task, taskRequirement, user } from '../../types/tableProps';
+import { UPDATE_RECOMMENDED_VISIBILITY } from '../../../graphql/mutations/updateRecommendedVisibility';
+import { DELETE_RECOMMENDED_BY_RECOMMENDED_ID } from '../../../graphql/mutations/deleteRecommendedByRecommendedId';
+import { course, recommended, student, studygroup, taskRequirement, user } from '../../types/tableProps';
 import useSelectedStore from '../../stores/useSelectedStore';
 import { useStore } from 'zustand';
+import { GET_RECOMMENDEDS } from '../../../graphql/queries/getRecommendeds';
+import { GET_ACTIVE_RECOMMENDEDS } from '../../../graphql/queries/getActiveRecommendeds';
+import { classTranslations, typeTranslations } from '../../types/translations';
 
 export default function TeacherDashboard() {
   const [open, setOpen] = useState(false);
@@ -61,8 +63,12 @@ export default function TeacherDashboard() {
     setCourse(event.target.value);
   };
 
-  const { loading: taskLoading, error, data: taskData } = useQuery(GET_GIVEN_TASKS, { variables: { userId: userId } });
-  const { loading: activeTaskLoading, data: activeTaskData } = useQuery(GET_ACTIVE_GIVEN_TASKS, {
+  const {
+    loading: recommendedLoading,
+    error,
+    data: recommendedData,
+  } = useQuery(GET_RECOMMENDEDS, { variables: { userId: userId } });
+  const { loading: activeRecommendedLoading, data: activeRecommendedData } = useQuery(GET_ACTIVE_RECOMMENDEDS, {
     variables: { userId: userId },
   });
   const { loading: courseLoading, data: courseData } = useQuery(GET_ALL_COURSES);
@@ -79,20 +85,26 @@ export default function TeacherDashboard() {
     refetchQueries: [{ query: GET_ALL_ACTIVE_STUDY_GROUPS, variables: { userId: userId } }],
   });
   const [createEnrolment] = useMutation(CREATE_ENROLMENT);
-  const [updateTaskVisibility] = useMutation(UPDATE_TASK_VISIBILITY, {
+  const [updateRecommendedVisibility] = useMutation(UPDATE_RECOMMENDED_VISIBILITY, {
     refetchQueries: [
-      { query: GET_GIVEN_TASKS, variables: { userId: userId } },
-      { query: GET_ACTIVE_GIVEN_TASKS, variables: { userId: userId } },
+      { query: GET_RECOMMENDEDS, variables: { userId: userId } },
+      { query: GET_ACTIVE_RECOMMENDEDS, variables: { userId: userId } },
+    ],
+  });
+  const [deleteRecommendedByRecommendedId] = useMutation(DELETE_RECOMMENDED_BY_RECOMMENDED_ID, {
+    refetchQueries: [
+      { query: GET_RECOMMENDEDS, variables: { userId: userId } },
+      { query: GET_ACTIVE_RECOMMENDEDS, variables: { userId: userId } },
     ],
   });
 
   if (
-    taskLoading ||
+    recommendedLoading ||
     courseLoading ||
     activeStudygroupLoading ||
     studentsLoading ||
     studygroupLoading ||
-    activeTaskLoading
+    activeRecommendedLoading
   ) {
     return (
       <Box mt="30vh">
@@ -102,38 +114,38 @@ export default function TeacherDashboard() {
   }
 
   if (error) {
-    console.log('could not load from db');
+    console.log('could not load from db: ', error);
   }
 
-  const getGivenTasks = (): task[] => {
-    return taskData.allTasks.nodes.map((task: task) => ({
-      id: task.taskId,
-      course: task.courseByCourseId?.courseName,
-      title: task.taskName,
-      owner: task.userByUserId?.email,
-      requirement: task.taskrequirementsByTaskId
-        ? task.taskrequirementsByTaskId.nodes.map(
+  const getGivenRecommendeds = (): recommended[] => {
+    return recommendedData.allRecommendeds.nodes.map((recommended: recommended) => ({
+      id: recommended.recommendedId,
+      course: recommended.taskByTaskId?.courseByCourseId?.courseName,
+      title: recommended.taskByTaskId?.taskName,
+      owner: recommended.taskByTaskId?.userByUserId?.email,
+      requirement: recommended.taskByTaskId?.taskrequirementsByTaskId
+        ? recommended.taskByTaskId?.taskrequirementsByTaskId.nodes.map(
             (req: taskRequirement) => req.requirementByRequirementId.requirementName
           )
         : [],
-      level: task.level,
-      type: task.type,
+      level: recommended.taskByTaskId?.level,
+      type: recommended.type === 'exercise' ? typeTranslations.exercise : typeTranslations.obligatory,
     }));
   };
 
-  const getActiveGivenTasks = (): task[] => {
-    return activeTaskData.allTasks.nodes.map((task: task) => ({
-      id: task.taskId,
-      course: task.courseByCourseId?.courseName,
-      title: task.taskName,
-      owner: task.userByUserId?.email,
-      requirement: task.taskrequirementsByTaskId
-        ? task.taskrequirementsByTaskId.nodes.map(
+  const getActiveGivenRecommendeds = (): recommended[] => {
+    return activeRecommendedData.allRecommendeds.nodes.map((recommended: recommended) => ({
+      id: recommended.recommendedId,
+      course: recommended.taskByTaskId?.courseByCourseId?.courseName,
+      title: recommended.taskByTaskId?.taskName,
+      owner: recommended.taskByTaskId?.userByUserId?.email,
+      requirement: recommended.taskByTaskId?.taskrequirementsByTaskId
+        ? recommended.taskByTaskId?.taskrequirementsByTaskId.nodes.map(
             (req: taskRequirement) => req.requirementByRequirementId.requirementName
           )
         : [],
-      level: task.level,
-      type: task.type,
+      level: recommended.taskByTaskId?.level,
+      type: recommended.type === 'exercise' ? typeTranslations.exercise : typeTranslations.obligatory,
     }));
   };
 
@@ -164,11 +176,11 @@ export default function TeacherDashboard() {
     }
   };
 
-  const createClass = (): student[] => {
+  const getClass = (): student[] => {
     return studentsData.allUsers.nodes.map((student: user) => ({
       id: student.userId,
       title: `${student.firstname} ${student.lastname}`,
-      level: student.classByClassId?.grade in classTranslation ? classTranslation[student.classByClassId?.grade] : 0,
+      level: student.classByClassId?.grade in classTranslations ? classTranslations[student.classByClassId?.grade] : 0,
       class: student.classByClassId?.className,
       school: student.schoolBySchoolId?.schoolName,
     }));
@@ -176,23 +188,35 @@ export default function TeacherDashboard() {
 
   const handleVisibility = async (isActive: boolean) => {
     try {
-      for (const taskId in recommendedSelectionModel) {
-        await updateTaskVisibility({
+      for (const recommendedId in recommendedSelectionModel) {
+        await updateRecommendedVisibility({
           variables: {
             isActive: isActive,
-            taskId: recommendedSelectionModel[taskId],
+            taskId: recommendedSelectionModel[recommendedId],
           },
         });
       }
       setRecommendedSelectionModel([]);
     } catch (error) {
-      console.log('Could not update task: ', error);
+      console.log('Could not update recommendation: ', error);
     }
   };
 
   const handleDelete = async () => {
-    return;
+    try {
+      for (const recommendedId in recommendedSelectionModel) {
+        await deleteRecommendedByRecommendedId({
+          variables: {
+            recommendedId: recommendedSelectionModel[recommendedId],
+          },
+        });
+      }
+      setRecommendedSelectionModel([]);
+    } catch (error) {
+      console.log('Could not delete recommendation: ', error);
+    }
   };
+
   return (
     <Fade in timeout={500}>
       <Box component={'main'} sx={{ bgcolor: 'background.default' }}>
@@ -279,7 +303,7 @@ export default function TeacherDashboard() {
                             }}
                           />
                           <Stack direction="row"></Stack>
-                          <Table rows={createClass()} columns={columns3} selectable />
+                          <Table rows={getClass()} columns={columns3} selectable />
                           <Button
                             variant="contained"
                             startIcon={<CreateIcon />}
@@ -378,7 +402,7 @@ export default function TeacherDashboard() {
               </Grid2>
             </Grid2>
             <Table
-              rows={inactiveTasks ? getGivenTasks() : getActiveGivenTasks()}
+              rows={inactiveTasks ? getGivenRecommendeds() : getActiveGivenRecommendeds()}
               columns={columns}
               selectable
               key={inactiveTasks ? 'inactive' : 'active'}

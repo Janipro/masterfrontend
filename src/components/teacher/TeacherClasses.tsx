@@ -1,5 +1,4 @@
 import { Box, Container, Fade, Grid2, Typography } from '@mui/material';
-import NavBar from '../../components/NavBar';
 import { useQuery } from '@apollo/client';
 import InfoCard from '../../components/InfoCard';
 import { studygroup } from '../../types/tableProps';
@@ -24,7 +23,6 @@ export default function TeacherClasses() {
   return (
     <Fade in timeout={500}>
       <Box>
-        <NavBar isEditor={false} />
         <Container component={'main'} sx={{ bgcolor: 'background.default' }}>
           <Grid2 sx={{ display: 'flex' }}>
             <Grid2
