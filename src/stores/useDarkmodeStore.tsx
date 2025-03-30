@@ -9,8 +9,11 @@ type DarkmodeAction = {
 };
 
 const useDarkmodeStore = create<DarkmodeState & DarkmodeAction>()((set) => ({
-  isDarkmode: false,
-  setDarkmode: (updateDarkmodeState) => set(() => ({ isDarkmode: updateDarkmodeState })),
+  isDarkmode: localStorage.getItem('isDarkmode') === 'true',
+  setDarkmode: (updateDarkmodeState) => {
+    localStorage.setItem('isDarkmode', updateDarkmodeState.toString());
+    set(() => ({ isDarkmode: updateDarkmodeState }));
+  },
 }));
 
 export default useDarkmodeStore;
