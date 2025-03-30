@@ -5,7 +5,7 @@ import { columns, columns2 } from '../../types/userData';
 import { useQuery } from '@apollo/client';
 import { GET_ALL_TASKS } from '../../../graphql/queries/getAllTasks';
 import { GET_RECOMMENDED_STUDENTS } from '../../../graphql/queries/getRecommendedStudents';
-import { recommended, recommendedStudent, task, taskRequirement } from '../../types/tableProps';
+import { recommendedStudent, task, taskRequirement } from '../../types/tableProps';
 
 export default function StudentTasks() {
   const userId = parseInt(localStorage.getItem('id')!);
@@ -45,7 +45,7 @@ export default function StudentTasks() {
     }));
   };
 
-  const getRecommendedTasks = (): recommended[] => {
+  const getRecommendedTasks = (): recommendedStudent[] => {
     return recommendedTasks.allRecommendedstudents.nodes.map((recommendedStudent: recommendedStudent) => ({
       id: recommendedStudent.recommendedStudentId,
       course: recommendedStudent.recommendedByRecommendedId?.taskByTaskId.courseByCourseId?.courseName,

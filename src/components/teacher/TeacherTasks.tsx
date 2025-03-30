@@ -137,7 +137,7 @@ export default function TeacherTasks() {
     }));
   };
 
-  const createClass = (): student[] => {
+  const getClass = (): student[] => {
     return studentsData.allUsers.nodes.map((student: user) => ({
       id: student.userId,
       title: `${student.firstname} ${student.lastname}`,
@@ -154,10 +154,10 @@ export default function TeacherTasks() {
           variables: {
             userId: userId,
             taskId: allTasksSelectionModel[taskId],
-            studyGroupId: 1,
+            studyGroupId: 1, // Temp value (need to edit when figma implemented)
           },
         });
-        const recommendedId = response.data.nodes[0].recommendedId;
+        const recommendedId = response.data.createRecommended.recommended.recommendedId;
         for (const studentId in studentSelectionModel) {
           await createRecommendedStudent({
             variables: {
@@ -335,7 +335,7 @@ export default function TeacherTasks() {
                           {/*<SearchBar options={rows3} prompt="Søk etter elever" />
                           TODO: ADD SEARCH FUNCTIONALITY */}
                           <Table
-                            rows={createClass()}
+                            rows={getClass()}
                             columns={columns3}
                             selectable
                             selectionModel={studentSelectionModel}

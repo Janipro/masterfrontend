@@ -24,15 +24,15 @@ import { useState } from 'react';
 import PostAddIcon from '@mui/icons-material/PostAdd';
 import CreateIcon from '@mui/icons-material/Create';
 import { columns } from '../../types/userData';
-import { announcement, task, taskRequirement, course } from '../../types/tableProps';
+import { announcement, taskRequirement, course, recommended } from '../../types/tableProps';
 import { useMutation, useQuery } from '@apollo/client';
-import { GET_GIVEN_TASKS } from '../../../graphql/queries/getGivenTasks';
 import { GET_ALL_ANNOUNCEMENTS } from '../../../graphql/queries/getAllAnnouncements';
 import { CREATE_ANNOUNCEMENT } from '../../../graphql/mutations/createAnnouncement';
 import { UPDATE_STUDY_GROUP_BY_STUDY_GROUP_ID } from '../../../graphql/mutations/updateStudygroupByStudyGroupId';
 import { GET_STUDY_GROUP_BY_STUDY_GROUP_ID } from '../../../graphql/queries/getStudygroupByStudyGroupId';
 import { useParams } from 'react-router-dom';
 import { GET_ALL_COURSES } from '../../../graphql/queries/getAllCourses';
+import { GET_RECOMMENDEDS } from '../../../graphql/queries/getRecommendeds';
 
 export default function TeacherClass() {
   const [editOpen, setEditOpen] = useState(false);
@@ -50,7 +50,11 @@ export default function TeacherClass() {
   const [content, setContent] = useState('');
   const { id } = useParams();
   const userId = parseInt(localStorage.getItem('id')!);
-  const { loading: taskLoading, error, data: taskData } = useQuery(GET_GIVEN_TASKS, { variables: { userId: userId } });
+  const {
+    loading: recommendedLoading,
+    error,
+    data: recommendedData,
+  } = useQuery(GET_RECOMMENDEDS, { variables: { userId: userId } });
   const { loading: announcementLoading, data: announcementData } = useQuery(GET_ALL_ANNOUNCEMENTS, {
     variables: { studyGroupId: parseInt(id!) },
   });
@@ -73,7 +77,7 @@ export default function TeacherClass() {
   const [description, setDescription] = useState('');
   const [course, setCourse] = useState('');
 
-  if (taskLoading || announcementLoading || studygroupLoading || courseLoading) {
+  if (recommendedLoading || announcementLoading || studygroupLoading || courseLoading) {
     return (
       <Box mt="30vh">
         <p> Laster inn... </p>
@@ -82,21 +86,22 @@ export default function TeacherClass() {
   }
 
   if (error) {
-    console.log('could not load from db');
+    console.log('could not load from db: ', error);
   }
 
-  const getGivenTasks = (): task[] => {
-    return taskData.allTasks.nodes.map((task: task) => ({
-      id: task.taskId,
-      course: task.courseByCourseId?.courseName,
-      title: task.taskName,
-      owner: task.userByUserId?.email,
-      requirement: task.taskrequirementsByTaskId
-        ? task.taskrequirementsByTaskId.nodes.map(
+  const getGivenRecommendeds = (): recommended[] => {
+    return recommendedData.allRecommendeds.nodes.map((recommended: recommended) => ({
+      id: recommended.recommendedId,
+      course: recommended.taskByTaskId?.courseByCourseId?.courseName,
+      title: recommended.taskByTaskId?.taskName,
+      owner: recommended.taskByTaskId?.userByUserId?.email,
+      requirement: recommended.taskByTaskId?.taskrequirementsByTaskId
+        ? recommended.taskByTaskId?.taskrequirementsByTaskId.nodes.map(
             (req: taskRequirement) => req.requirementByRequirementId.requirementName
           )
         : [],
-      level: task.level,
+      level: recommended.taskByTaskId?.level,
+      type: recommended.type,
     }));
   };
 
@@ -331,7 +336,7 @@ export default function TeacherClass() {
                 Utdelte oppgaver
               </Typography>
             </Grid2>
-            <Table rows={getGivenTasks()} columns={columns} selectable />
+            <Table rows={getGivenRecommendeds()} columns={columns} selectable />
           </Grid2>
         </Container>
       </Box>

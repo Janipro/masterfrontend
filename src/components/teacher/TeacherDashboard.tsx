@@ -37,7 +37,7 @@ import { CREATE_STUDY_GROUP } from '../../../graphql/mutations/createStudygroup'
 import { CREATE_ENROLMENT } from '../../../graphql/mutations/createEnrolment';
 import { UPDATE_RECOMMENDED_VISIBILITY } from '../../../graphql/mutations/updateRecommendedVisibility';
 import { DELETE_RECOMMENDED_BY_RECOMMENDED_ID } from '../../../graphql/mutations/deleteRecommendedByRecommendedId';
-import { course, recommended, student, studygroup, task, taskRequirement, user } from '../../types/tableProps';
+import { course, recommended, student, studygroup, taskRequirement, user } from '../../types/tableProps';
 import useSelectedStore from '../../stores/useSelectedStore';
 import { useStore } from 'zustand';
 import { GET_RECOMMENDEDS } from '../../../graphql/queries/getRecommendeds';
@@ -113,10 +113,10 @@ export default function TeacherDashboard() {
   }
 
   if (error) {
-    console.log('could not load from db');
+    console.log('could not load from db: ', error);
   }
 
-  const getGivenTasks = (): task[] => {
+  const getGivenRecommendeds = (): recommended[] => {
     return recommendedData.allRecommendeds.nodes.map((recommended: recommended) => ({
       id: recommended.recommendedId,
       course: recommended.taskByTaskId?.courseByCourseId?.courseName,
@@ -132,19 +132,19 @@ export default function TeacherDashboard() {
     }));
   };
 
-  const getActiveGivenTasks = (): task[] => {
-    return activeRecommendedData.allRecommendeds.nodes.map((task: task) => ({
-      id: task.taskId,
-      course: task.courseByCourseId?.courseName,
-      title: task.taskName,
-      owner: task.userByUserId?.email,
-      requirement: task.taskrequirementsByTaskId
-        ? task.taskrequirementsByTaskId.nodes.map(
+  const getActiveGivenRecommendeds = (): recommended[] => {
+    return activeRecommendedData.allRecommendeds.nodes.map((recommended: recommended) => ({
+      id: recommended.recommendedId,
+      course: recommended.taskByTaskId?.courseByCourseId?.courseName,
+      title: recommended.taskByTaskId?.taskName,
+      owner: recommended.taskByTaskId?.userByUserId?.email,
+      requirement: recommended.taskByTaskId?.taskrequirementsByTaskId
+        ? recommended.taskByTaskId?.taskrequirementsByTaskId.nodes.map(
             (req: taskRequirement) => req.requirementByRequirementId.requirementName
           )
         : [],
-      level: task.level,
-      type: task.type,
+      level: recommended.taskByTaskId?.level,
+      type: recommended.type,
     }));
   };
 
@@ -175,7 +175,7 @@ export default function TeacherDashboard() {
     }
   };
 
-  const createClass = (): student[] => {
+  const getClass = (): student[] => {
     return studentsData.allUsers.nodes.map((student: user) => ({
       id: student.userId,
       title: `${student.firstname} ${student.lastname}`,
@@ -302,7 +302,7 @@ export default function TeacherDashboard() {
                             }}
                           />
                           <Stack direction="row"></Stack>
-                          <Table rows={createClass()} columns={columns3} selectable />
+                          <Table rows={getClass()} columns={columns3} selectable />
                           <Button
                             variant="contained"
                             startIcon={<CreateIcon />}
@@ -401,7 +401,7 @@ export default function TeacherDashboard() {
               </Grid2>
             </Grid2>
             <Table
-              rows={inactiveTasks ? getGivenTasks() : getActiveGivenTasks()}
+              rows={inactiveTasks ? getGivenRecommendeds() : getActiveGivenRecommendeds()}
               columns={columns}
               selectable
               key={inactiveTasks ? 'inactive' : 'active'}

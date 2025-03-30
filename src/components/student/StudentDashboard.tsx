@@ -4,7 +4,7 @@ import InfoCard from '../InfoCard';
 import Calendar from '../Calendar';
 import Requirement from '../Requirement';
 import { useQuery } from '@apollo/client';
-import { recommended, taskRequirement, enrolment } from '../../types/tableProps';
+import { taskRequirement, enrolment, recommendedStudent } from '../../types/tableProps';
 import { GET_RECOMMENDED_STUDENTS } from '../../../graphql/queries/getRecommendedStudents';
 import { GET_ALL_ENROLMENTS } from '../../../graphql/queries/getAllEnrolments';
 import { columns } from '../../types/userData';
@@ -12,14 +12,14 @@ import { columns } from '../../types/userData';
 export default function StudentDashboard() {
   const userId = parseInt(localStorage.getItem('id')!);
   const {
-    loading: taskLoading,
-    error,
-    data: taskData,
+    loading: recommendedsLoading,
+    error: recommendedsError,
+    data: recommendedTasks,
   } = useQuery(GET_RECOMMENDED_STUDENTS, { variables: { userId: userId } });
   const { loading: studygroupLoading, data: studygroupData } = useQuery(GET_ALL_ENROLMENTS, {
     variables: { userId: userId },
   });
-  if (taskLoading || studygroupLoading) {
+  if (recommendedsLoading || studygroupLoading) {
     return (
       <Box mt="30vh">
         <p> Laster inn... </p>
@@ -27,23 +27,23 @@ export default function StudentDashboard() {
     );
   }
 
-  if (error) {
+  if (recommendedsError) {
     console.log(localStorage.getItem('id'));
-    console.log('could not load from db: ', error);
+    console.log('could not load from db: ', recommendedsError);
   }
-  const getRecommendedTasks = (): recommended[] => {
-    return taskData.allRecommendedstudents.nodes.map((recommended: recommended) => ({
-      id: recommended.recommendedId,
-      course: recommended.taskByTaskId.courseByCourseId?.courseName,
-      title: recommended.taskByTaskId.taskName,
-      owner: recommended.taskByTaskId.userByUserId?.email,
-      requirement: recommended.taskByTaskId.taskrequirementsByTaskId
-        ? recommended.taskByTaskId.taskrequirementsByTaskId.nodes.map(
+  const getRecommendedTasks = (): recommendedStudent[] => {
+    return recommendedTasks.allRecommendedstudents.nodes.map((recommendedStudent: recommendedStudent) => ({
+      id: recommendedStudent.recommendedStudentId,
+      course: recommendedStudent.recommendedByRecommendedId?.taskByTaskId.courseByCourseId?.courseName,
+      title: recommendedStudent.recommendedByRecommendedId?.taskByTaskId.taskName,
+      owner: recommendedStudent.recommendedByRecommendedId?.taskByTaskId.userByUserId?.email,
+      requirement: recommendedStudent.recommendedByRecommendedId?.taskByTaskId.taskrequirementsByTaskId
+        ? recommendedStudent.recommendedByRecommendedId?.taskByTaskId.taskrequirementsByTaskId.nodes.map(
             (req: taskRequirement) => req.requirementByRequirementId.requirementName
           )
         : [],
-      level: recommended.taskByTaskId.level,
-      type: recommended.type,
+      level: recommendedStudent.recommendedByRecommendedId?.taskByTaskId.level,
+      type: recommendedStudent.recommendedByRecommendedId?.type,
     }));
   };
   return (
