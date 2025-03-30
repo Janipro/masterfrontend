@@ -22,7 +22,7 @@ import { useState } from 'react';
 import Backdrop from '@mui/material/Backdrop';
 import { NAV_COLORS, style } from '../../types/navColors';
 import CreateIcon from '@mui/icons-material/Create';
-import { classTranslation, columns, columns2, columns3, rows2 } from '../../types/userData';
+import { columns, columns2, columns3, rows2 } from '../../types/userData';
 import { student, task, taskRequirement, user } from '../../types/tableProps';
 import { useMutation, useQuery } from '@apollo/client';
 import { GET_ALL_TASKS } from '../../../graphql/queries/getAllTasks';
@@ -35,6 +35,7 @@ import { useStore } from 'zustand';
 import useSelectedStore from '../../stores/useSelectedStore';
 import { UPDATE_TASK_VISIBILITY } from '../../../graphql/mutations/updateTaskVisibility';
 import { DELETE_TASK_BY_TASK_ID } from '../../../graphql/mutations/deleteTaskByTaskId';
+import { classTranslations, typeTranslations } from '../../types/translations';
 
 export default function TeacherTasks() {
   const [open, setOpen] = useState(false);
@@ -101,7 +102,7 @@ export default function TeacherTasks() {
           )
         : [],
       level: task.level,
-      type: task.type,
+      type: task.type === 'exercise' ? typeTranslations.exercise : typeTranslations.obligatory,
     }));
   };
 
@@ -117,7 +118,7 @@ export default function TeacherTasks() {
           )
         : [],
       level: task.level,
-      type: task.type,
+      type: task.type === 'exercise' ? typeTranslations.exercise : typeTranslations.obligatory,
     }));
   };
 
@@ -133,7 +134,7 @@ export default function TeacherTasks() {
           )
         : [],
       level: task.level,
-      type: task.type,
+      type: task.type === 'exercise' ? typeTranslations.exercise : typeTranslations.obligatory,
     }));
   };
 
@@ -141,7 +142,7 @@ export default function TeacherTasks() {
     return studentsData.allUsers.nodes.map((student: user) => ({
       id: student.userId,
       title: `${student.firstname} ${student.lastname}`,
-      level: student.classByClassId?.grade in classTranslation ? classTranslation[student.classByClassId?.grade] : 0,
+      level: student.classByClassId?.grade in classTranslations ? classTranslations[student.classByClassId?.grade] : 0,
       class: student.classByClassId?.className,
       school: student.schoolBySchoolId?.schoolName,
     }));

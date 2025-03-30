@@ -27,7 +27,7 @@ import Table from '../Table';
 import InfoCard from '../InfoCard';
 import { useState } from 'react';
 import { style } from '../../types/navColors';
-import { classTranslation, columns, columns3 } from '../../types/userData';
+import { columns, columns3 } from '../../types/userData';
 import { useMutation, useQuery } from '@apollo/client';
 import { GET_ALL_COURSES } from '../../../graphql/queries/getAllCourses';
 import { GET_ALL_STUDENTS } from '../../../graphql/queries/getAllStudents';
@@ -42,6 +42,7 @@ import useSelectedStore from '../../stores/useSelectedStore';
 import { useStore } from 'zustand';
 import { GET_RECOMMENDEDS } from '../../../graphql/queries/getRecommendeds';
 import { GET_ACTIVE_RECOMMENDEDS } from '../../../graphql/queries/getActiveRecommendeds';
+import { classTranslations, typeTranslations } from '../../types/translations';
 
 export default function TeacherDashboard() {
   const [open, setOpen] = useState(false);
@@ -128,7 +129,7 @@ export default function TeacherDashboard() {
           )
         : [],
       level: recommended.taskByTaskId?.level,
-      type: recommended.type,
+      type: recommended.type === 'exercise' ? typeTranslations.exercise : typeTranslations.obligatory,
     }));
   };
 
@@ -144,7 +145,7 @@ export default function TeacherDashboard() {
           )
         : [],
       level: recommended.taskByTaskId?.level,
-      type: recommended.type,
+      type: recommended.type === 'exercise' ? typeTranslations.exercise : typeTranslations.obligatory,
     }));
   };
 
@@ -179,7 +180,7 @@ export default function TeacherDashboard() {
     return studentsData.allUsers.nodes.map((student: user) => ({
       id: student.userId,
       title: `${student.firstname} ${student.lastname}`,
-      level: student.classByClassId?.grade in classTranslation ? classTranslation[student.classByClassId?.grade] : 0,
+      level: student.classByClassId?.grade in classTranslations ? classTranslations[student.classByClassId?.grade] : 0,
       class: student.classByClassId?.className,
       school: student.schoolBySchoolId?.schoolName,
     }));

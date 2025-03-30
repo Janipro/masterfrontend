@@ -8,6 +8,7 @@ import { taskRequirement, enrolment, recommendedStudent } from '../../types/tabl
 import { GET_RECOMMENDED_STUDENTS } from '../../../graphql/queries/getRecommendedStudents';
 import { GET_ALL_ENROLMENTS } from '../../../graphql/queries/getAllEnrolments';
 import { columns } from '../../types/userData';
+import { typeTranslations } from '../../types/translations';
 
 export default function StudentDashboard() {
   const userId = parseInt(localStorage.getItem('id')!);
@@ -43,7 +44,10 @@ export default function StudentDashboard() {
           )
         : [],
       level: recommendedStudent.recommendedByRecommendedId?.taskByTaskId.level,
-      type: recommendedStudent.recommendedByRecommendedId?.type,
+      type:
+        recommendedStudent.recommendedByRecommendedId?.type === 'exercise'
+          ? typeTranslations.exercise
+          : typeTranslations.obligatory,
     }));
   };
   return (

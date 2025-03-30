@@ -1,22 +1,6 @@
 import { GridColDef } from '@mui/x-data-grid';
 import { renderRequirement } from '../components/renderRequirement';
 
-export const classTranslation: { [grade: number]: string } = {
-  1: '1. klasse',
-  2: '2. klasse',
-  3: '3. klasse',
-  4: '4. klasse',
-  5: '5. klasse',
-  6: '6. klasse',
-  7: '7. klasse',
-  8: '8. klasse',
-  9: '9. klasse',
-  10: '10. klasse',
-  11: 'VG1',
-  12: 'VG2',
-  13: 'VG3',
-};
-
 export const rows = [
   {
     id: 1,

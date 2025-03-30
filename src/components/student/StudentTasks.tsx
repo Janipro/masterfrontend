@@ -6,6 +6,7 @@ import { useQuery } from '@apollo/client';
 import { GET_ALL_TASKS } from '../../../graphql/queries/getAllTasks';
 import { GET_RECOMMENDED_STUDENTS } from '../../../graphql/queries/getRecommendedStudents';
 import { recommendedStudent, task, taskRequirement } from '../../types/tableProps';
+import { typeTranslations } from '../../types/translations';
 
 export default function StudentTasks() {
   const userId = parseInt(localStorage.getItem('id')!);
@@ -41,7 +42,7 @@ export default function StudentTasks() {
           )
         : [],
       level: task.level,
-      type: task.type,
+      type: task.type === 'exercise' ? typeTranslations.exercise : typeTranslations.obligatory,
     }));
   };
 
@@ -57,7 +58,10 @@ export default function StudentTasks() {
           )
         : [],
       level: recommendedStudent.recommendedByRecommendedId?.taskByTaskId.level,
-      type: recommendedStudent.recommendedByRecommendedId?.type,
+      type:
+        recommendedStudent.recommendedByRecommendedId?.type === 'exercise'
+          ? typeTranslations.exercise
+          : typeTranslations.obligatory,
     }));
   };
 

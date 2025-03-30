@@ -33,6 +33,7 @@ import { GET_STUDY_GROUP_BY_STUDY_GROUP_ID } from '../../../graphql/queries/getS
 import { useParams } from 'react-router-dom';
 import { GET_ALL_COURSES } from '../../../graphql/queries/getAllCourses';
 import { GET_RECOMMENDEDS } from '../../../graphql/queries/getRecommendeds';
+import { typeTranslations } from '../../types/translations';
 
 export default function TeacherClass() {
   const [editOpen, setEditOpen] = useState(false);
@@ -101,7 +102,7 @@ export default function TeacherClass() {
           )
         : [],
       level: recommended.taskByTaskId?.level,
-      type: recommended.type,
+      type: recommended.type === 'exercise' ? typeTranslations.exercise : typeTranslations.obligatory,
     }));
   };
 

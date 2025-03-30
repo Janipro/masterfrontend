@@ -9,6 +9,7 @@ import { columns } from '../../types/userData';
 import { GET_ALL_ANNOUNCEMENTS } from '../../../graphql/queries/getAllAnnouncements';
 import { GET_STUDY_GROUP_BY_STUDY_GROUP_ID } from '../../../graphql/queries/getStudygroupByStudyGroupId';
 import { useParams } from 'react-router-dom';
+import { typeTranslations } from '../../types/translations';
 
 export default function StudentClass() {
   const { id } = useParams();
@@ -48,7 +49,10 @@ export default function StudentClass() {
           )
         : [],
       level: recommendedStudent.recommendedByRecommendedId?.taskByTaskId.level,
-      type: recommendedStudent.recommendedByRecommendedId?.type,
+      type:
+        recommendedStudent.recommendedByRecommendedId?.type === 'exercise'
+          ? typeTranslations.exercise
+          : typeTranslations.obligatory,
     }));
   };
 
