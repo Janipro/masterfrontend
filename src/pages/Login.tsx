@@ -73,6 +73,7 @@ export default function Login() {
       localStorage.setItem('id', result[0].user_id);
       localStorage.setItem('school_id', result[0].school_id);
       localStorage.setItem('class_id', result[0].class_id);
+      localStorage.setItem('is_admin', result[0].is_admin);
     } catch (error) {
       console.log('Could not login', error);
     }

@@ -12,7 +12,6 @@ import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import SettingsIcon from '@mui/icons-material/Settings';
 import { Link } from 'react-router-dom';
 import { CssBaseline, FormControlLabel, FormGroup, Modal, Stack, Switch } from '@mui/material';
-import useTeacherStore from '../stores/useTeacherStore';
 import { NAV_COLORS } from '../types/navColors';
 import NotificationsRoundedIcon from '@mui/icons-material/NotificationsRounded';
 import { useNavigate } from 'react-router-dom';
@@ -24,7 +23,6 @@ const settings = ['Profil', 'Logg ut'];
 
 export default function NavBar() {
   const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(null);
-  const { isTeacher, setTeacher } = useTeacherStore();
   const { isDarkmode, setDarkmode } = useDarkmodeStore();
   const { isDarkmodeEditor, setDarkmodeEditor } = useDarkmodeEditorStore();
 
@@ -78,13 +76,6 @@ export default function NavBar() {
             <PopUpMenu isEditor={false} />
           </Box>
           <Stack direction="row" sx={{ flexGrow: 0, ml: 'auto', alignItems: 'center' }}>
-            <FormGroup>
-              <FormControlLabel
-                control={<Switch defaultChecked={isTeacher} onChange={() => setTeacher(!isTeacher)} />}
-                label="Lærermodus"
-              />
-            </FormGroup>
-
             <IconButton>
               <NotificationsRoundedIcon sx={{ color: isDarkmode ? NAV_COLORS.text_dark : NAV_COLORS.text }} />
             </IconButton>
@@ -166,6 +157,7 @@ export default function NavBar() {
                         localStorage.removeItem('id');
                         localStorage.removeItem('school_id');
                         localStorage.removeItem('class_id');
+                        localStorage.removeItem('admin');
                         navigate(0);
                       }}
                     >
