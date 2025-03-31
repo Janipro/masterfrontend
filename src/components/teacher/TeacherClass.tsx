@@ -32,7 +32,7 @@ import { UPDATE_STUDY_GROUP_BY_STUDY_GROUP_ID } from '../../../graphql/mutations
 import { GET_STUDY_GROUP_BY_STUDY_GROUP_ID } from '../../../graphql/queries/getStudygroupByStudyGroupId';
 import { useParams } from 'react-router-dom';
 import { GET_ALL_COURSES } from '../../../graphql/queries/getAllCourses';
-import { GET_RECOMMENDEDS } from '../../../graphql/queries/getRecommendeds';
+import { GET_RECOMMENDEDS_BY_STUDY_GROUP_ID } from '../../../graphql/queries/getRecommendedsByStudyGroupId';
 import { typeTranslations } from '../../types/translations';
 
 export default function TeacherClass() {
@@ -55,7 +55,7 @@ export default function TeacherClass() {
     loading: recommendedLoading,
     error,
     data: recommendedData,
-  } = useQuery(GET_RECOMMENDEDS, { variables: { userId: userId } });
+  } = useQuery(GET_RECOMMENDEDS_BY_STUDY_GROUP_ID, { variables: { userId: userId, studyGroupId: parseInt(id!) } });
   const { loading: announcementLoading, data: announcementData } = useQuery(GET_ALL_ANNOUNCEMENTS, {
     variables: { studyGroupId: parseInt(id!) },
   });
@@ -86,6 +86,7 @@ export default function TeacherClass() {
     );
   }
 
+  console.log(recommendedData);
   if (error) {
     console.log('could not load from db: ', error);
   }
