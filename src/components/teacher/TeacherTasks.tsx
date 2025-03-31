@@ -46,6 +46,7 @@ export default function TeacherTasks() {
   const [inactiveTasks, setInactiveTasks] = useState(false);
   const userId = parseInt(localStorage.getItem('id')!);
   const classId = parseInt(localStorage.getItem('class_id')!);
+  const schoolId = parseInt(localStorage.getItem('school_id')!);
   const { allTasksSelectionModel, setAllTasksSelectionModel } = useStore(useSelectedStore);
   const {
     recommendedSelectionModel: createdTasksSelectionModel,
@@ -62,7 +63,7 @@ export default function TeacherTasks() {
     variables: { userId: userId },
   });
   const { loading: studentsLoading, data: studentsData } = useQuery(GET_ALL_STUDENTS, {
-    variables: { classId: classId },
+    variables: { classId: classId, schoolId: schoolId },
   });
   const [createRecommended] = useMutation(CREATE_RECOMMENDED);
   const [createRecommendedStudent] = useMutation(CREATE_RECOMMENDED_STUDENT);

@@ -79,7 +79,7 @@ export default function TeacherDashboard() {
     variables: { userId: userId },
   });
   const { loading: studentsLoading, data: studentsData } = useQuery(GET_ALL_STUDENTS, {
-    variables: { classId: classId },
+    variables: { classId: classId, schoolId: schoolId },
   });
   const [createStudygroup] = useMutation(CREATE_STUDY_GROUP, {
     refetchQueries: [{ query: GET_ALL_ACTIVE_STUDY_GROUPS, variables: { userId: userId } }],
