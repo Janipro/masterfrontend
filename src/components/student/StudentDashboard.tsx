@@ -45,7 +45,7 @@ export default function StudentDashboard() {
         : [],
       level: recommendedStudent.recommendedByRecommendedId?.taskByTaskId.level,
       type:
-        recommendedStudent.recommendedByRecommendedId?.type === 'exercise'
+        recommendedStudent.recommendedByRecommendedId?.type.toLowerCase() === 'exercise'
           ? typeTranslations.exercise
           : typeTranslations.obligatory,
     }));

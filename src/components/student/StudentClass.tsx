@@ -50,7 +50,7 @@ export default function StudentClass() {
         : [],
       level: recommendedStudent.recommendedByRecommendedId?.taskByTaskId.level,
       type:
-        recommendedStudent.recommendedByRecommendedId?.type === 'exercise'
+        recommendedStudent.recommendedByRecommendedId?.type.toLowerCase() === 'exercise'
           ? typeTranslations.exercise
           : typeTranslations.obligatory,
     }));

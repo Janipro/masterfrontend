@@ -42,7 +42,7 @@ export default function StudentTasks() {
           )
         : [],
       level: task.level,
-      type: task.type === 'exercise' ? typeTranslations.exercise : typeTranslations.obligatory,
+      type: task.type.toLowerCase() === 'exercise' ? typeTranslations.exercise : typeTranslations.obligatory,
     }));
   };
 
@@ -59,7 +59,7 @@ export default function StudentTasks() {
         : [],
       level: recommendedStudent.recommendedByRecommendedId?.taskByTaskId.level,
       type:
-        recommendedStudent.recommendedByRecommendedId?.type === 'exercise'
+        recommendedStudent.recommendedByRecommendedId?.type.toLowerCase() === 'exercise'
           ? typeTranslations.exercise
           : typeTranslations.obligatory,
     }));

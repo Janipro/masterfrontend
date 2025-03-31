@@ -129,7 +129,7 @@ export default function TeacherDashboard() {
           )
         : [],
       level: recommended.taskByTaskId?.level,
-      type: recommended.type === 'exercise' ? typeTranslations.exercise : typeTranslations.obligatory,
+      type: recommended.type.toLowerCase() == 'exercise' ? typeTranslations.exercise : typeTranslations.obligatory,
     }));
   };
 
@@ -145,7 +145,7 @@ export default function TeacherDashboard() {
           )
         : [],
       level: recommended.taskByTaskId?.level,
-      type: recommended.type === 'exercise' ? typeTranslations.exercise : typeTranslations.obligatory,
+      type: recommended.type.toLowerCase() == 'exercise' ? typeTranslations.exercise : typeTranslations.obligatory,
     }));
   };
 

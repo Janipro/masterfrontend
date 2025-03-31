@@ -103,7 +103,7 @@ export default function TeacherTasks() {
           )
         : [],
       level: task.level,
-      type: task.type === 'exercise' ? typeTranslations.exercise : typeTranslations.obligatory,
+      type: task.type.toLowerCase() === 'exercise' ? typeTranslations.exercise : typeTranslations.obligatory,
     }));
   };
 
@@ -119,7 +119,7 @@ export default function TeacherTasks() {
           )
         : [],
       level: task.level,
-      type: task.type === 'exercise' ? typeTranslations.exercise : typeTranslations.obligatory,
+      type: task.type.toLowerCase() === 'exercise' ? typeTranslations.exercise : typeTranslations.obligatory,
     }));
   };
 
@@ -135,7 +135,7 @@ export default function TeacherTasks() {
           )
         : [],
       level: task.level,
-      type: task.type === 'exercise' ? typeTranslations.exercise : typeTranslations.obligatory,
+      type: task.type.toLowerCase() === 'exercise' ? typeTranslations.exercise : typeTranslations.obligatory,
     }));
   };
 
