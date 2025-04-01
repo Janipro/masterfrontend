@@ -14,6 +14,20 @@ export const classTranslations: { [grade: number]: string } = {
   13: 'VG3',
 };
 
+export const courseTranslations: { [course: string]: number } = {
+  '1T': 11,
+  '1P': 11,
+  R1: 12,
+  S1: 12,
+  R2: 13,
+  S2: 13,
+  F1: 12,
+  F2: 13,
+  IT1: 12,
+  IT2: 13,
+  '2P': 12,
+};
+
 type Enum<T> = T[keyof T];
 
 export const typeTranslations = {

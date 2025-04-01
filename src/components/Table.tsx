@@ -2,7 +2,7 @@ import { Box, Paper } from '@mui/material';
 import { DataGrid, GridColDef, GridRowSelectionModel } from '@mui/x-data-grid';
 import { nbNO } from '@mui/x-data-grid/locales/nbNO';
 import { useMemo, useState } from 'react';
-import { task, student, recommended, recommendedStudent } from '../types/tableProps';
+import { task, student, recommended, recommendedStudent, studygroup } from '../types/tableProps';
 import useTeacherStore from '../stores/useTeacherStore';
 
 const paginationModel = { page: 0, pageSize: 5 };
@@ -14,7 +14,7 @@ export default function Table({
   selectionModel,
   setSelectionModel,
 }: {
-  rows: task[] | student[] | recommended[] | recommendedStudent[];
+  rows: task[] | student[] | recommended[] | recommendedStudent[] | studygroup[];
   selectable: boolean;
   columns: GridColDef[];
   selectionModel?: GridRowSelectionModel;

@@ -90,7 +90,6 @@ export default function TeacherClass() {
     console.log('could not load from db: ', error);
   }
 
-  console.log(recommendedData.allRecommendeds.nodes[0].type);
   const getGivenRecommendeds = (): recommended[] => {
     return recommendedData.allRecommendeds.nodes.map((recommended: recommended) => ({
       id: recommended.recommendedId,

@@ -56,8 +56,8 @@ export default function TeacherDashboard() {
   const userId = parseInt(localStorage.getItem('id')!);
   const schoolId = parseInt(localStorage.getItem('school_id')!);
   const classId = parseInt(localStorage.getItem('class_id')!);
-  const { studentSelectionModel, setStudentSelectionModel } = useStore(useSelectedStore);
-  const { recommendedSelectionModel, setRecommendedSelectionModel } = useStore(useSelectedStore);
+  const { studentSelectionModel, recommendedSelectionModel, setStudentSelectionModel, setRecommendedSelectionModel } =
+    useStore(useSelectedStore);
 
   const handleChangeCourse = (event: SelectChangeEvent) => {
     setCourse(event.target.value);
@@ -164,8 +164,8 @@ export default function TeacherDashboard() {
       for (const studentId in studentSelectionModel) {
         await createEnrolment({
           variables: {
-            studyGroupId: studyGroupId,
             userId: studentSelectionModel[studentId],
+            studyGroupId: studyGroupId,
           },
         });
       }
@@ -303,7 +303,13 @@ export default function TeacherDashboard() {
                             }}
                           />
                           <Stack direction="row"></Stack>
-                          <Table rows={getClass()} columns={columns3} selectable />
+                          <Table
+                            rows={getClass()}
+                            columns={columns3}
+                            selectable
+                            selectionModel={studentSelectionModel}
+                            setSelectionModel={setStudentSelectionModel}
+                          />
                           <Button
                             variant="contained"
                             startIcon={<CreateIcon />}

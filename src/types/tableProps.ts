@@ -72,6 +72,8 @@ export type studygroup = {
   studyGroupName: string;
   description: string;
   isActive: boolean;
+  courseByCourseId: course;
+  schoolBySchoolId: school;
 };
 
 export type enrolment = {

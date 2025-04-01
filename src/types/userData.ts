@@ -240,3 +240,10 @@ export const columns3: GridColDef[] = [
   { field: 'class', headerName: 'Klasse', width: 60 },
   { field: 'school', headerName: 'Skole', width: 200 },
 ];
+
+export const columns4: GridColDef[] = [
+  { field: 'title', headerName: 'Undervisningsgruppe', width: 240 },
+  { field: 'level', headerName: 'Trinn', width: 60 },
+  { field: 'class', headerName: 'Fag', width: 60 },
+  { field: 'school', headerName: 'Skole', width: 200 },
+];
