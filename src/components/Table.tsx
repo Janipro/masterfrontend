@@ -5,7 +5,7 @@ import { useMemo, useState } from 'react';
 import { task, student, recommended, recommendedStudent, studygroup } from '../types/tableProps';
 import useTeacherStore from '../stores/useTeacherStore';
 
-const paginationModel = { page: 0, pageSize: 5 };
+const paginationModel = { page: 0, pageSize: 10 };
 
 export default function Table({
   rows,
@@ -51,7 +51,7 @@ export default function Table({
           rows={initialRows}
           columns={columns}
           initialState={{ pagination: { paginationModel } }}
-          pageSizeOptions={[5, 10]}
+          pageSizeOptions={[5, 10, 20]}
           sx={{ border: 0 }}
           localeText={nbNO.components.MuiDataGrid.defaultProps.localeText}
           checkboxSelection={selectable}
