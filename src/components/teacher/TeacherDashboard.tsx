@@ -27,7 +27,7 @@ import Table from '../Table';
 import InfoCard from '../InfoCard';
 import { useState } from 'react';
 import { style } from '../../types/navColors';
-import { columns, columns3 } from '../../types/userData';
+import { columns3, columns5 } from '../../types/userData';
 import { useMutation, useQuery } from '@apollo/client';
 import { GET_ALL_COURSES } from '../../../graphql/queries/getAllCourses';
 import { GET_ALL_STUDENTS } from '../../../graphql/queries/getAllStudents';
@@ -130,6 +130,8 @@ export default function TeacherDashboard() {
         : [],
       level: recommended.taskByTaskId?.level,
       type: recommended.type.toLowerCase() == 'exercise' ? typeTranslations.exercise : typeTranslations.obligatory,
+      difficulty: recommended.taskByTaskId?.difficulty,
+      due: recommended.taskByTaskId?.due == null ? 'Ingen frist' : '',
     }));
   };
 
@@ -146,6 +148,8 @@ export default function TeacherDashboard() {
         : [],
       level: recommended.taskByTaskId?.level,
       type: recommended.type.toLowerCase() == 'exercise' ? typeTranslations.exercise : typeTranslations.obligatory,
+      difficulty: recommended.taskByTaskId?.difficulty,
+      due: recommended.taskByTaskId?.due == null ? 'Ingen frist' : '',
     }));
   };
 
@@ -409,7 +413,7 @@ export default function TeacherDashboard() {
             </Grid2>
             <Table
               rows={inactiveTasks ? getGivenRecommendeds() : getActiveGivenRecommendeds()}
-              columns={columns}
+              columns={columns5}
               selectable
               key={inactiveTasks ? 'inactive' : 'active'}
               selectionModel={recommendedSelectionModel}

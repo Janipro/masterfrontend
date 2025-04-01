@@ -1,7 +1,7 @@
 import { Box, Container, CssBaseline, Fade, Grid2, Typography } from '@mui/material';
 import Table from '../Table';
 import SearchBar from '../SearchBar';
-import { columns, columns2 } from '../../types/userData';
+import { columns2, columns5 } from '../../types/userData';
 import { useQuery } from '@apollo/client';
 import { GET_ALL_TASKS } from '../../../graphql/queries/getAllTasks';
 import { GET_RECOMMENDED_STUDENTS } from '../../../graphql/queries/getRecommendedStudents';
@@ -43,6 +43,7 @@ export default function StudentTasks() {
         : [],
       level: task.level,
       type: task.type.toLowerCase() === 'exercise' ? typeTranslations.exercise : typeTranslations.obligatory,
+      difficulty: task.difficulty,
     }));
   };
 
@@ -62,6 +63,8 @@ export default function StudentTasks() {
         recommendedStudent.recommendedByRecommendedId?.type.toLowerCase() === 'exercise'
           ? typeTranslations.exercise
           : typeTranslations.obligatory,
+      difficulty: recommendedStudent.recommendedByRecommendedId?.taskByTaskId.difficulty,
+      due: recommendedStudent.recommendedByRecommendedId?.taskByTaskId.due == null ? 'Ingen frist' : '',
     }));
   };
 
@@ -74,7 +77,7 @@ export default function StudentTasks() {
             <Typography variant="h5" noWrap component="div" sx={{ textAlign: 'left' }}>
               Anbefalte oppgaver
             </Typography>
-            <Table rows={getRecommendedTasks()} columns={columns} selectable={false} />
+            <Table rows={getRecommendedTasks()} columns={columns5} selectable={false} />
 
             <Grid2 container spacing={2} direction="column">
               <Typography variant="h5" noWrap component="div" sx={{ textAlign: 'left' }}>

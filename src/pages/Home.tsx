@@ -5,8 +5,6 @@ import TeacherDashboard from '../components/teacher/TeacherDashboard';
 
 export default function Home() {
   const isTeacher = localStorage.getItem('is_admin') == 'true';
-  console.log(JSON.parse(localStorage.getItem('is_admin')));
-  console.log(isTeacher);
   return (
     <Box>
       <NavBar />

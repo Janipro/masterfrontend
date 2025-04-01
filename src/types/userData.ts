@@ -213,6 +213,7 @@ export const columns: GridColDef[] = [
     width: 280,
   } as GridColDef<{ requirement: string[]; title: string }>,
   { field: 'level', headerName: 'Nivå', width: 60 },
+  { field: 'difficulty', headerName: 'Vanskelighetsgrad', width: 100 },
   { field: 'type', headerName: 'Type', width: 100 },
   /*{ field: 'due', headerName: 'Frist', width: 160 },*/
 ];
@@ -231,7 +232,8 @@ export const columns2: GridColDef[] = [
     width: 300,
   } as GridColDef<{ requirement: string[]; title: string }>,
   { field: 'level', headerName: 'Nivå', width: 80 },
-  { field: 'owner', headerName: 'Laget av', width: 300 },
+  { field: 'difficulty', headerName: 'Vanskelighetsgrad', width: 100 },
+  { field: 'owner', headerName: 'Laget av', width: 200 },
 ];
 
 export const columns3: GridColDef[] = [
@@ -246,4 +248,24 @@ export const columns4: GridColDef[] = [
   { field: 'level', headerName: 'Trinn', width: 60 },
   { field: 'class', headerName: 'Fag', width: 60 },
   { field: 'school', headerName: 'Skole', width: 200 },
+];
+
+export const columns5: GridColDef[] = [
+  { field: 'assigned', headerName: 'Tildelt', width: 100 },
+  { field: 'course', headerName: 'Fag', width: 100 },
+  { field: 'title', headerName: 'Tittel', width: 280 },
+  {
+    field: 'requirement',
+    display: 'flex',
+    renderCell: renderRequirement,
+    valueGetter: (value, row) =>
+      row.title == null || row.requirement == null ? null : { title: row.title, requirement: row.requirement },
+    filterable: false,
+    headerName: 'Krav',
+    width: 280,
+  } as GridColDef<{ requirement: string[]; title: string }>,
+  { field: 'level', headerName: 'Nivå', width: 60 },
+  { field: 'difficulty', headerName: 'Vanskelighetsgrad', width: 100 },
+  { field: 'type', headerName: 'Type', width: 100 },
+  { field: 'due', headerName: 'Frist', width: 160 },
 ];

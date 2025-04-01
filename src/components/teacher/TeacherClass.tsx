@@ -23,7 +23,7 @@ import AnnouncementIcon from '@mui/icons-material/Announcement';
 import { useState } from 'react';
 import PostAddIcon from '@mui/icons-material/PostAdd';
 import CreateIcon from '@mui/icons-material/Create';
-import { columns } from '../../types/userData';
+import { columns5 } from '../../types/userData';
 import { announcement, taskRequirement, course, recommended } from '../../types/tableProps';
 import { useMutation, useQuery } from '@apollo/client';
 import { GET_ALL_ANNOUNCEMENTS } from '../../../graphql/queries/getAllAnnouncements';
@@ -103,6 +103,8 @@ export default function TeacherClass() {
         : [],
       level: recommended.taskByTaskId?.level,
       type: recommended.type.toLowerCase() == 'exercise' ? typeTranslations.exercise : typeTranslations.obligatory,
+      difficulty: recommended.taskByTaskId?.difficulty,
+      due: recommended.taskByTaskId?.due == null ? 'Ingen frist' : '',
     }));
   };
 
@@ -337,7 +339,7 @@ export default function TeacherClass() {
                 Utdelte oppgaver
               </Typography>
             </Grid2>
-            <Table rows={getGivenRecommendeds()} columns={columns} selectable />
+            <Table rows={getGivenRecommendeds()} columns={columns5} selectable />
           </Grid2>
         </Container>
       </Box>
