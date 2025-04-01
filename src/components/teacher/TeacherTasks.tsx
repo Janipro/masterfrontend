@@ -13,7 +13,6 @@ import {
   Typography,
 } from '@mui/material';
 import Table from '../Table';
-import SearchBar from '../SearchBar';
 import DeleteIcon from '@mui/icons-material/Delete';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
@@ -22,7 +21,7 @@ import { useState } from 'react';
 import Backdrop from '@mui/material/Backdrop';
 import { NAV_COLORS, style } from '../../types/navColors';
 import CreateIcon from '@mui/icons-material/Create';
-import { columns, columns2, columns4, rows2 } from '../../types/userData';
+import { columns, columns2, columns4 } from '../../types/userData';
 import { studygroup, task, taskRequirement } from '../../types/tableProps';
 import { useApolloClient, useMutation, useQuery } from '@apollo/client';
 import { GET_ALL_TASKS } from '../../../graphql/queries/getAllTasks';
@@ -294,12 +293,12 @@ export default function TeacherTasks() {
               setSelectionModel={setCreatedTasksSelectionModel}
             />
 
-            <Grid2 spacing={2} container direction="column">
-              <Typography variant="h5" noWrap component="div" sx={{ textAlign: 'left' }}>
-                Alle oppgaver
-              </Typography>
+            <Grid2 spacing={2} container direction="column" mt={2}>
               <Grid2 container direction="row">
-                <SearchBar options={rows2} prompt="Søk etter oppgaver" />
+                <Typography variant="h5" noWrap component="div" sx={{ textAlign: 'left' }}>
+                  Alle oppgaver
+                </Typography>
+                {/*<SearchBar options={rows2} prompt="Søk etter oppgaver" />*/}
                 <Grid2 container sx={{ flexGrow: 0, ml: 'auto' }} spacing={1}>
                   <Button
                     variant="contained"

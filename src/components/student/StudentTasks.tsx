@@ -1,6 +1,5 @@
 import { Box, Container, CssBaseline, Fade, Grid2, Typography } from '@mui/material';
 import Table from '../Table';
-import SearchBar from '../SearchBar';
 import { columns2, columns5 } from '../../types/userData';
 import { useQuery } from '@apollo/client';
 import { GET_ALL_TASKS } from '../../../graphql/queries/getAllTasks';
@@ -79,11 +78,11 @@ export default function StudentTasks() {
             </Typography>
             <Table rows={getRecommendedTasks()} columns={columns5} selectable={false} />
 
-            <Grid2 container spacing={2} direction="column">
+            <Grid2 container spacing={2} direction="column" mt={2}>
               <Typography variant="h5" noWrap component="div" sx={{ textAlign: 'left' }}>
                 Alle oppgaver
               </Typography>
-              <SearchBar options={getAllTasks()} prompt="Søk etter oppgaver" />
+              {/*<SearchBar options={getAllTasks()} prompt="Søk etter oppgaver" />*/}
             </Grid2>
             <Table rows={getAllTasks()} columns={columns2} selectable={false} />
           </Grid2>

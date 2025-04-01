@@ -362,7 +362,7 @@ export default function TeacherDashboard() {
               textAlign: 'left',
             }}
           >
-            <Grid2 container direction="row" sx={{ mb: 0.5 }}>
+            <Grid2 container direction="row" sx={{ mb: 2 }}>
               <Typography variant="h5" noWrap component="div">
                 Utdelte oppgaver
               </Typography>

@@ -111,7 +111,7 @@ export default function StudentDashboard() {
               mt: -4,
             }}
           >
-            <Typography variant="h5" noWrap component="div" sx={{ mb: 0.5 }}>
+            <Typography variant="h5" noWrap component="div" sx={{ mb: 2 }}>
               Anbefalte oppgaver
             </Typography>
             <Table rows={getRecommendedTasks()} columns={columns5} selectable={false} />

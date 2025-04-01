@@ -158,6 +158,7 @@ export default function NavBar() {
                         localStorage.removeItem('school_id');
                         localStorage.removeItem('class_id');
                         localStorage.removeItem('admin');
+                        navigate('/');
                         navigate(0);
                       }}
                     >
