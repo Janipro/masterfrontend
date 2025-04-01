@@ -2,9 +2,19 @@ import { create } from 'zustand';
 
 interface CodeState {
   code: string;
+  setCode: (newCode: string) => void;
+}
+
+// code and setCode lagged when writing fast in editor, tried const code = useTaskCodeStore((state) => state.code);
+// but it did not fix it. A new store fixed the lag
+export const useCodeStore = create<CodeState>((set) => ({
+  code: '',
+  setCode: (newCode) => set({ code: newCode }),
+}));
+
+interface execState {
   outputHistory: string[];
   selectedTaskId: number | null;
-  setCode: (newCode: string) => void;
   setOutput: (newOutput: string) => void;
   setAIOutput: (newAIOutput: string) => void;
   setTask: (taskId: number) => Promise<void>;
@@ -12,12 +22,9 @@ interface CodeState {
   codeHelp: () => Promise<void>;
 }
 
-export const useTaskCodeStore = create<CodeState>((set, get) => ({
-  code: '',
+export const useTaskCodeStore = create<execState>((set, get) => ({
   outputHistory: [],
   selectedTaskId: null,
-
-  setCode: (newCode) => set({ code: newCode }),
 
   setOutput: (newOutput: string) => {
     const timestamp = new Date().toLocaleTimeString();
@@ -43,7 +50,9 @@ export const useTaskCodeStore = create<CodeState>((set, get) => ({
 
   // must send id of current task as well
   executeCode: async () => {
-    const { code, setOutput } = get();
+    const code = useCodeStore.getState().code;
+
+    const { setOutput } = get();
 
     // must change from localhost to deployed server when server is online
     try {
@@ -76,7 +85,8 @@ export const useTaskCodeStore = create<CodeState>((set, get) => ({
 
   // must send id of current task as well
   codeHelp: async () => {
-    const { code, setAIOutput } = get();
+    const code = useCodeStore.getState().code;
+    const { setAIOutput } = get();
 
     // must change from localhost to deployed server when server is online
     try {
@@ -102,4 +112,18 @@ export const useTaskCodeStore = create<CodeState>((set, get) => ({
       setAIOutput('Error analyzing code');
     }
   },
+}));
+
+interface newTaskState {
+  title: string;
+  description: string;
+  setTitle: (newCode: string) => void;
+  setDescription: (newOutput: string) => void;
+}
+
+export const useNewTaskStore = create<newTaskState>((set) => ({
+  title: '',
+  description: '',
+  setTitle: (newTitle: string) => set({ title: newTitle }),
+  setDescription: (newDescription: string) => set({ description: newDescription }),
 }));

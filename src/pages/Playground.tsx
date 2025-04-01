@@ -3,7 +3,7 @@ import { Box } from '@mui/material';
 import PlaygroundContent from '../components/PlaygroundContent';
 import NavBarEditor from '../components/NavBarEditor';
 import useTeacherStore from '../stores/useTeacherStore';
-import TeacherPlayGroundContent from '../components/teacher/TeacherPlayGroundContent';
+import TeacherPlaygroundContent from '../components/teacher/TeacherPlayGroundContent';
 
 export default function EditorPage() {
   const { isTeacher } = useTeacherStore();
@@ -20,7 +20,7 @@ export default function EditorPage() {
   return (
     <Box>
       <NavBarEditor />
-      {isTeacher ? <TeacherPlayGroundContent /> : <PlaygroundContent />}
+      {isTeacher ? <TeacherPlaygroundContent /> : <PlaygroundContent />}
     </Box>
   );
 }

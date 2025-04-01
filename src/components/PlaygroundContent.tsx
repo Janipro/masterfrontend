@@ -364,7 +364,7 @@ export default function PlaygroundContent() {
               {taskCollapsed ? null : (
                 <Box
                   sx={{
-                    padding: '20px',
+                    padding: '20px 14px 20px 22px',
                     gap: '15px',
                     display: 'flex',
                     flexDirection: 'column',

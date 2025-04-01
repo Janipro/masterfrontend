@@ -33,6 +33,12 @@ export const NAV_COLORS = {
   editor_button_template_unselected_backgroundcolor_dark: '#3d3d3d',
   editor_button_template_unselected_color: '#93a7bc',
   editor_button_template_unselected_color_dark: '#aaaaaa',
+  editor_textfield_border: '',
+  editor_textfield_border_dark: '#585858',
+  editor_textfield_border_hover: '',
+  editor_textfield_border_hover_dark: '#909090',
+  editor_textfield_border_selected: '',
+  editor_textfield_border_selected_dark: '#C0C0C0',
 };
 
 export const style = {

@@ -5,7 +5,7 @@ import { indentUnit } from '@codemirror/language';
 import { EditorView } from '@codemirror/view';
 import { highlightSelectionMatches } from '@codemirror/search';
 import Box from '@mui/material/Box';
-import { useTaskCodeStore } from '../stores/useTaskCodeStore';
+import { useCodeStore } from '../stores/useTaskCodeStore';
 import useDarkmodeEditorStore from '../stores/useDarkmodeEditorStore';
 import { NAV_COLORS } from '../types/navColors';
 import useEditorViewStore from '../stores/useEditorViewStore';
@@ -113,7 +113,7 @@ type TerminalProps = {
 };
 
 export default function Editor({ showCode }: TerminalProps) {
-  const { code, setCode } = useTaskCodeStore();
+  const { code, setCode } = useCodeStore();
   const { isDarkmodeEditor } = useDarkmodeEditorStore();
 
   const onChange = useCallback(

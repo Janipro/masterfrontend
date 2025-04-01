@@ -1,5 +1,6 @@
 import { useState, useRef, useCallback, useEffect } from 'react';
 import Box from '@mui/material/Box';
+import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
 import CodeIcon from '../../assets/code.svg?react';
 import TerminalIcon from '../../assets/terminal.svg?react';
@@ -12,8 +13,8 @@ import { NAV_COLORS } from '../../types/navColors';
 import Requirement from '../Requirement';
 import Terminal from '../Terminal';
 import useDarkmodeEditorStore from '../../stores/useDarkmodeEditorStore';
-
-export default function TeacherPlayGroundContent() {
+import TeacherPlaygroundTitleField from './TeacherPlaygroundTitleField';
+export default function TeacherPlaygroundContent() {
   const theme = useTheme();
   const { isDarkmodeEditor } = useDarkmodeEditorStore();
   const [showCode, setShowCode] = useState(true);
@@ -364,7 +365,7 @@ export default function TeacherPlayGroundContent() {
               {taskCollapsed ? null : (
                 <Box
                   sx={{
-                    padding: '20px',
+                    padding: '20px 14px 20px 22px',
                     gap: '15px',
                     display: 'flex',
                     flexDirection: 'column',
@@ -391,9 +392,20 @@ export default function TeacherPlayGroundContent() {
                     '&::-webkit-scrollbar-thumb:hover': {
                       backgroundColor: '#9E9E9E',
                     },
+                    '& .MuiOutlinedInput-root': {
+                      '& fieldset': {
+                        border: `1px solid ${NAV_COLORS.editor_textfield_border_dark}`,
+                      },
+                      '&:hover fieldset': {
+                        border: `1px solid ${NAV_COLORS.editor_textfield_border_hover_dark}`,
+                      },
+                      '&.Mui-focused fieldset': {
+                        border: `1px solid ${NAV_COLORS.editor_textfield_border_selected_dark}`,
+                      },
+                    },
                   }}
                 >
-                  <Box sx={{ typography: 'h3', fontWeight: 'medium', fontSize: '2em' }}>Oppgave X</Box>
+                  <TeacherPlaygroundTitleField />
                   <Box
                     sx={{
                       typography: 'body2',
@@ -431,10 +443,100 @@ export default function TeacherPlayGroundContent() {
                       Lærer:&nbsp;<Box sx={{ fontWeight: 'medium' }}>{taskDescription[2]}</Box>
                     </Box>
                   </Box>
-                  <Box sx={{ typography: 'body2' }}>
-                    LÆRERMODUS: Lag en funksjon, enterWords, som har ingen innparametre, og returnerer ei liste,
-                    wordList, med ord som brukeren selv har skrevet inn. Brukeren kan avslutte innskriving av ord ved å
-                    trykke enter ...
+                  <TextField
+                    multiline
+                    fullWidth
+                    size="small"
+                    margin="none"
+                    variant="outlined"
+                    sx={{
+                      display: 'flex',
+                      flex: 1,
+                      maxHeight: '100%',
+                      minHeight: '107px',
+                      overflow: 'hidden',
+                      '& .MuiInputBase-root': {
+                        maxHeight: '100%',
+                        paddingRight: '3px',
+                        paddingY: '1px',
+                        userSelect: 'none',
+                      },
+                      '& .MuiInputBase-input': {
+                        overflowY: 'scroll !important',
+                        maxHeight: '100%',
+                        paddingRight: '8px',
+                        paddingY: '7px',
+                        boxSizing: 'border-box',
+                        '&::-webkit-scrollbar': {
+                          width: '6px',
+                          borderRadius: '5px',
+                        },
+                        '&::-webkit-scrollbar-track': {
+                          backgroundColor: isDarkmodeEditor
+                            ? NAV_COLORS.editor_pane_background_dark
+                            : NAV_COLORS.editor_pane_background,
+                          borderRadius: '0 0 3px 0',
+                          marginTop: '1.5px',
+                          marginBottom: '1.5px',
+                        },
+                        '&::-webkit-scrollbar-thumb': {
+                          backgroundColor: '#B7B7B7',
+                          borderRadius: '5px',
+                        },
+                        '&::-webkit-scrollbar-thumb:hover': {
+                          backgroundColor: '#9E9E9E',
+                          cursor: 'default',
+                        },
+                      },
+                      '& .MuiOutlinedInput-root': {
+                        '& fieldset': {
+                          border: `1px solid ${NAV_COLORS.editor_textfield_border_dark}`,
+                        },
+                        '&:hover fieldset': {
+                          border: `1px solid ${NAV_COLORS.editor_textfield_border_hover_dark}`,
+                        },
+                        '&.Mui-focused fieldset': {
+                          border: `1px solid ${NAV_COLORS.editor_textfield_border_selected_dark}`,
+                        },
+                      },
+                    }}
+                    slotProps={{
+                      input: {
+                        sx: {
+                          fontWeight: 'normal',
+                          fontSize: '1em',
+                          display: 'flex',
+                          flex: 1,
+                          alignItems: 'flex-start',
+                        },
+                      },
+                    }}
+                  />
+                  <Box
+                    sx={{
+                      typography: 'body2',
+                      fontWeight: '600',
+                      display: 'flex',
+                      width: '100%',
+                      flexWrap: 'wrap',
+                      columnGap: '20px',
+                      rowGap: '2px',
+                      overflowWrap: 'anywhere',
+                    }}
+                  >
+                    <Box sx={{ display: 'flex', flexDirection: 'row' }}>Tilgangsnivå:</Box>
+                    <Box
+                      sx={{ display: 'flex', flexDirection: 'row', flexWrap: 'wrap', columnGap: '20px', rowGap: '5px' }}
+                    >
+                      <Box sx={{ display: 'flex', flexDirection: 'row' }}>
+                        <Box sx={{ fontWeight: 'medium' }}>Nivåaaaassssssssffddddddddddddddf</Box>{' '}
+                        <Box>wtfffffffff</Box>
+                      </Box>
+                      <Box sx={{ display: 'flex', flexDirection: 'row' }}>
+                        <Box sx={{ fontWeight: 'medium' }}>Nivåaaaassssssssffddddddddddddddf</Box>{' '}
+                        <Box>wtfffffffff</Box>
+                      </Box>
+                    </Box>
                   </Box>
                 </Box>
               )}
