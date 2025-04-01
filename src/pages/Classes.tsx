@@ -4,7 +4,7 @@ import StudentClasses from '../components/student/StudentClasses';
 import TeacherClasses from '../components/teacher/TeacherClasses';
 
 export default function Classes() {
-  const isTeacher = localStorage.getItem('is_admin');
+  const isTeacher = localStorage.getItem('is_admin') == 'true';
   return (
     <Box>
       <NavBar />
