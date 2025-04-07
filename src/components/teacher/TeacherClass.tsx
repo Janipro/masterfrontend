@@ -7,6 +7,7 @@ import {
   Fade,
   FormControl,
   Grid2,
+  IconButton,
   InputLabel,
   MenuItem,
   Modal,
@@ -34,6 +35,8 @@ import { useParams } from 'react-router-dom';
 import { GET_ALL_COURSES } from '../../../graphql/queries/getAllCourses';
 import { GET_RECOMMENDEDS } from '../../../graphql/queries/getRecommendeds';
 import { typeTranslations } from '../../types/translations';
+import CloseRoundedIcon from '@mui/icons-material/CloseRounded';
+import useDarkmodeStore from '../../stores/useDarkmodeStore';
 
 export default function TeacherClass() {
   const [editOpen, setEditOpen] = useState(false);
@@ -77,6 +80,7 @@ export default function TeacherClass() {
   const [studygroupName, setStudygroupName] = useState('');
   const [description, setDescription] = useState('');
   const [course, setCourse] = useState('');
+  const { isDarkmode } = useDarkmodeStore();
 
   if (recommendedLoading || announcementLoading || studygroupLoading || courseLoading) {
     return (
@@ -103,6 +107,7 @@ export default function TeacherClass() {
         : [],
       level: recommended.taskByTaskId?.level,
       type: recommended.type === 'exercise' ? typeTranslations.exercise : typeTranslations.obligatory,
+      taskId: recommended.taskByTaskId?.taskId,
     }));
   };
 
@@ -185,7 +190,21 @@ export default function TeacherClass() {
                 }}
               >
                 <Fade in={editOpen}>
-                  <Box sx={style}>
+                  <Box sx={style(isDarkmode)}>
+                    <IconButton
+                      onClick={() => {
+                        handleEditClose();
+                      }}
+                      size="small"
+                      sx={{ position: 'absolute', top: '5px', right: '5px' }}
+                    >
+                      <CloseRoundedIcon
+                        sx={{
+                          color: isDarkmode ? NAV_COLORS.editor_modal_color_dark : NAV_COLORS.editor_modal_color,
+                          fontSize: 'medium',
+                        }}
+                      />
+                    </IconButton>
                     <Grid2 container direction="column" spacing={2}>
                       <Stack direction="row">
                         <Typography id="keep-mounted-modal-title" variant="h5" fontWeight="medium">
@@ -285,7 +304,21 @@ export default function TeacherClass() {
                 }}
               >
                 <Fade in={announcementOpen}>
-                  <Box sx={style}>
+                  <Box sx={style(isDarkmode)}>
+                    <IconButton
+                      onClick={() => {
+                        handleAnnouncementClose();
+                      }}
+                      size="small"
+                      sx={{ position: 'absolute', top: '5px', right: '5px' }}
+                    >
+                      <CloseRoundedIcon
+                        sx={{
+                          color: isDarkmode ? NAV_COLORS.editor_modal_color_dark : NAV_COLORS.editor_modal_color,
+                          fontSize: 'medium',
+                        }}
+                      />
+                    </IconButton>
                     <Grid2 container direction="column" spacing={3}>
                       <Stack direction="row">
                         <Typography id="keep-mounted-modal-title" variant="h5" fontWeight="medium">

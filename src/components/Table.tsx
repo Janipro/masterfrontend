@@ -1,9 +1,11 @@
 import { Box, Paper } from '@mui/material';
-import { DataGrid, GridColDef, GridRowSelectionModel } from '@mui/x-data-grid';
+import { DataGrid, GridCellParams, GridColDef, GridRowSelectionModel } from '@mui/x-data-grid';
 import { nbNO } from '@mui/x-data-grid/locales/nbNO';
 import { useMemo, useState } from 'react';
 import { task, student, recommended, recommendedStudent } from '../types/tableProps';
 import useTeacherStore from '../stores/useTeacherStore';
+import { useTaskCodeStore } from '../stores/useTaskCodeStore';
+import { useNavigate } from 'react-router-dom';
 
 const paginationModel = { page: 0, pageSize: 5 };
 
@@ -22,7 +24,10 @@ export default function Table({
 }) {
   type Row = (typeof rows)[number];
   const [initialRows /*, setRows*/] = useState<Row[]>(rows);
-  const { isTeacher } = useTeacherStore();
+  const { isTeacher, setIsOwner } = useTeacherStore();
+  const { setTaskId } = useTaskCodeStore();
+  const navigate = useNavigate();
+
   {
     /*const toggleStatus = useCallback(
     (id: GridRowId, status: string) => () => {
@@ -61,6 +66,21 @@ export default function Table({
             setSelectionModel(newSelectionModel);
           }}
           rowSelectionModel={selectionModel}
+          onCellClick={(params: GridCellParams) => {
+            const hasTaskId = (rows: unknown[]): boolean => {
+              const first = rows[0];
+              return typeof first === 'object' && first !== null && 'taskId' in first;
+            };
+
+            if (hasTaskId(initialRows)) {
+              if (params.field === 'title') {
+                setTaskId(params.row.taskId);
+                const email = localStorage.getItem('email') || '';
+                setIsOwner(params.row.owner.toLowerCase() === email.toLowerCase()); //should probably compare user ids instead, but all the tables only has owner (email) atm
+                navigate('/playground');
+              }
+            }
+          }}
         />
       </Paper>
     </Box>

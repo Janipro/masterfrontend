@@ -1,4 +1,5 @@
 import { create } from 'zustand';
+import { requirement } from '../types/tableProps';
 
 interface CodeState {
   code: string;
@@ -8,8 +9,11 @@ interface CodeState {
 // code and setCode lagged when writing fast in editor, tried const code = useTaskCodeStore((state) => state.code);
 // but it did not fix it. A new store fixed the lag
 export const useCodeStore = create<CodeState>((set) => ({
-  code: '',
-  setCode: (newCode) => set({ code: newCode }),
+  code: localStorage.getItem('currentCode') || '',
+  setCode: (newCode) => {
+    set({ code: newCode });
+    localStorage.setItem('currentCode', newCode);
+  },
 }));
 
 interface execState {
@@ -17,20 +21,21 @@ interface execState {
   selectedTaskId: number | null;
   setOutput: (newOutput: string) => void;
   setAIOutput: (newAIOutput: string) => void;
-  setTask: (taskId: number) => Promise<void>;
+  setTaskId: (taskId: number | null) => Promise<void>;
   executeCode: () => Promise<void>;
   codeHelp: () => Promise<void>;
 }
 
 export const useTaskCodeStore = create<execState>((set, get) => ({
-  outputHistory: [],
-  selectedTaskId: null,
+  outputHistory: JSON.parse(localStorage.getItem('outputHistory') || '[]'),
+  selectedTaskId: localStorage.getItem('currentTaskId') ? parseInt(localStorage.getItem('currentTaskId')!) : null,
 
   setOutput: (newOutput: string) => {
     const timestamp = new Date().toLocaleTimeString();
     set((state) => ({
       outputHistory: [...state.outputHistory, `(${timestamp})\n${newOutput.trim()}\n--------------------------`],
     }));
+    localStorage.setItem('outputHistory', JSON.stringify(get().outputHistory));
   },
 
   setAIOutput: (newAIOutput: string) => {
@@ -41,12 +46,24 @@ export const useTaskCodeStore = create<execState>((set, get) => ({
         `(${timestamp})\nAI-assistent: ${newAIOutput.trim()}\n--------------------------`,
       ],
     }));
+    localStorage.setItem('outputHistory', JSON.stringify(get().outputHistory));
   },
 
-  // must set task, fetch & set previous code belonging to new task
-  // also, if no previous code by user, set code to the tasks code template
-  // also create a variable and set to code template for the "view template tab"
-  setTask: async (taskId) => set({ selectedTaskId: taskId }),
+  setTaskId: async (taskId) => {
+    const selectedTaskId = useTaskCodeStore.getState().selectedTaskId;
+    const setCode = useCodeStore.getState().setCode;
+
+    if (taskId !== selectedTaskId) {
+      set({ selectedTaskId: taskId });
+      if (taskId) {
+        localStorage.setItem('currentTaskId', taskId.toString());
+      } else {
+        localStorage.removeItem('currentTaskId');
+      }
+      setCode('');
+      set({ outputHistory: [] });
+    }
+  },
 
   // must send id of current task as well
   executeCode: async () => {
@@ -86,6 +103,7 @@ export const useTaskCodeStore = create<execState>((set, get) => ({
   // must send id of current task as well
   codeHelp: async () => {
     const code = useCodeStore.getState().code;
+    const selectedTaskId = useTaskCodeStore.getState().selectedTaskId;
     const { setAIOutput } = get();
 
     // must change from localhost to deployed server when server is online
@@ -93,7 +111,7 @@ export const useTaskCodeStore = create<execState>((set, get) => ({
       const response = await fetch('http://localhost:6001/help', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ code }),
+        body: JSON.stringify({ code, taskId: selectedTaskId }),
       });
 
       const result = await response.json();
@@ -115,15 +133,88 @@ export const useTaskCodeStore = create<execState>((set, get) => ({
 }));
 
 interface newTaskState {
+  taskId: number | null;
   title: string;
   description: string;
+  codeTemplate: string;
+  expectedOutput: string;
+  expectedCode: string;
+  requirements: requirement[];
+  level: string;
+  imageUrl: string;
+  publicAccess: boolean;
+  isActive: boolean;
+  courseId: number;
+  userId: number;
+  setTaskId: (taskId: number | null) => void;
   setTitle: (newCode: string) => void;
   setDescription: (newOutput: string) => void;
+  setCodeTemplate: (newCodeTemplate: string) => void;
+  setExpectedOutput: (newExpectedOutput: string) => void;
+  setExpectedCode: (newExpectedCode: string) => void;
+  setRequirements: (newRequirements: requirement[]) => void;
+  setLevel: (newLevel: string) => void;
+  setImageUrl: (newImageUrl: string) => void;
+  setPublicAccess: (newPublicAccess: boolean) => void;
+  setIsActive: (newIsActive: boolean) => void;
+  setCourseId: (newCourseId: number) => void;
+  setUserId: (newUserId: number) => void;
+  postTask: () => Promise<void>;
 }
 
 export const useNewTaskStore = create<newTaskState>((set) => ({
+  taskId: null,
   title: '',
   description: '',
+  codeTemplate: '',
+  expectedOutput: '',
+  expectedCode: '',
+  requirements: [],
+  level: '',
+  imageUrl: '',
+  publicAccess: false,
+  isActive: false,
+  courseId: 0,
+  userId: 0,
+  setTaskId: (newTaskId: number | null) => set({ taskId: newTaskId }),
   setTitle: (newTitle: string) => set({ title: newTitle }),
   setDescription: (newDescription: string) => set({ description: newDescription }),
+  setCodeTemplate: (newCodeTemplate: string) => set({ codeTemplate: newCodeTemplate }),
+  setExpectedOutput: (newExpectedOutput: string) => set({ expectedOutput: newExpectedOutput }),
+  setRequirements: (newRequirements: requirement[]) => set({ requirements: newRequirements }),
+  setExpectedCode: (newExpectedCode: string) => set({ expectedCode: newExpectedCode }),
+  setLevel: (newLevel: string) => set({ level: newLevel }),
+  setImageUrl: (newImageUrl: string) => set({ imageUrl: newImageUrl }),
+  setPublicAccess: (newPublicAccess: boolean) => set({ publicAccess: newPublicAccess }),
+  setIsActive: (newIsActive: boolean) => set({ isActive: newIsActive }),
+  setCourseId: (newCourseId: number) => set({ courseId: newCourseId }),
+  setUserId: (newUserId: number) => set({ userId: newUserId }),
+
+  postTask: async () => {
+    const code = useCodeStore.getState().code;
+    const selectedTaskId = useTaskCodeStore.getState().selectedTaskId;
+
+    // must change from localhost to deployed server when server is online
+    try {
+      const response = await fetch('http://localhost:6001/help', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ code, taskId: selectedTaskId }),
+      });
+
+      const result = await response.json();
+      console.log(result.message);
+      /*
+      if (result.error) {
+        setAIOutput(`Error: ${result.error}`);
+        return;
+      }
+
+      if (result.message) {
+        setAIOutput(result.message);
+      }*/
+    } catch (error) {
+      console.error('Error analyzing code:', error);
+    }
+  },
 }));

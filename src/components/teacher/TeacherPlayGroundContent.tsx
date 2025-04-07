@@ -14,10 +14,51 @@ import Requirement from '../Requirement';
 import Terminal from '../Terminal';
 import useDarkmodeEditorStore from '../../stores/useDarkmodeEditorStore';
 import TeacherPlaygroundTitleField from './TeacherPlaygroundTitleField';
+import { useCodeStore, useNewTaskStore, useTaskCodeStore } from '../../stores/useTaskCodeStore';
+import { useQuery } from '@apollo/client';
+import { GET_ALL_REQUIREMENTS } from '../../../graphql/queries/getAllRequirements';
+import { requirement, task } from '../../types/tableProps';
+import React from 'react';
+import TeacherPlaygroundRequirementsModal from './TeacherPlaygroundRequirementsModal';
+import { GET_TASK } from '../../../graphql/queries/getTask';
+
 export default function TeacherPlaygroundContent() {
   const theme = useTheme();
   const { isDarkmodeEditor } = useDarkmodeEditorStore();
   const [showCode, setShowCode] = useState(true);
+  const { setCode } = useCodeStore();
+  const [currentTask, setCurrentTask] = useState<task>();
+  const {
+    setTaskId,
+    //title,
+    setTitle,
+    description,
+    setDescription,
+    //codeTemplate,
+    setCodeTemplate,
+    //expectedOutput,
+    setExpectedOutput,
+    //expectedCode,
+    //setExpectedCode,
+    //requirements,
+    //setRequirements,
+    //level,
+    //setLevel,
+    //imageUrl,
+    //setImageUrl,
+    //publicAccess,
+    setPublicAccess,
+    //isActive,
+    //setIsActive,
+    //courseId,
+    //setCourseId,
+    //userId,
+    //setUserId,
+  } = useNewTaskStore();
+  const [openModal, setOpenModal] = React.useState(false);
+  const [newRequirements, setNewRequirements] = useState<requirement[]>([]);
+  const [allRequirements, setAllRequirements] = useState<requirement[]>([]);
+  const { selectedTaskId } = useTaskCodeStore();
   const [terminalCollapsed, setTerminalCollapsed] = useState(() => {
     return localStorage.getItem('terminalCollapsed') === 'true';
   });
@@ -37,8 +78,15 @@ export default function TeacherPlaygroundContent() {
   const isResizingVertical = useRef(false);
   const isResizingHorizontal = useRef(false);
 
-  const taskDescription: string[] = ['VG1', 'Matematikk', 'Giga Elise'];
-  const programmingConstructs = [
+  const { loading: requirementsLoading, data: requirementsData } = useQuery(GET_ALL_REQUIREMENTS);
+
+  const { loading: taskLoading, data: taskData } = useQuery(GET_TASK, {
+    variables: { taskId: selectedTaskId },
+    skip: selectedTaskId === null,
+  });
+
+  //const taskDescription: string[] = ['VG1', 'Matematikk', 'Giga Elise'];
+  /*const programmingConstructs = [
     'if-statement',
     'for-loop',
     'while-loop',
@@ -63,7 +111,7 @@ export default function TeacherPlaygroundContent() {
     'bitwise-operation',
     'thread',
     'enum',
-  ];
+  ];*/
 
   const disableInteractions = useCallback(() => {
     if (leftPaneRef.current) {
@@ -140,6 +188,26 @@ export default function TeacherPlaygroundContent() {
       localStorage.setItem('rightTopHeight', rightTopHeight.toString());
     }
   }, [enableInteractions, handleMouseMoveVertical, handleMouseMoveHorizontal]);
+
+  useEffect(() => {
+    if (!taskLoading && taskData && selectedTaskId !== null) {
+      const task = taskData?.allTasks?.nodes?.[0];
+      setTaskId(task?.taskId);
+      setCurrentTask(task);
+      setTitle(task?.taskName);
+      setDescription(task?.taskDescription);
+      setExpectedOutput(task?.expectedOutput);
+      setCode(task?.expectedCode);
+      setPublicAccess(task?.publicAccess);
+      setCodeTemplate(task?.codeTemplate);
+    }
+  }, [taskData, taskLoading, selectedTaskId]);
+
+  useEffect(() => {
+    if (!requirementsLoading && requirementsData) {
+      setAllRequirements(requirementsData.allRequirements.nodes);
+    }
+  }, [requirementsLoading, requirementsData]);
 
   useEffect(() => {
     if (isDarkmodeEditor) {
@@ -249,6 +317,9 @@ export default function TeacherPlaygroundContent() {
   const handleShowTemplate = () => {
     setShowCode(false);
   };
+
+  const handleOpenModal = () => setOpenModal(true);
+  const handleCloseModal = () => setOpenModal(false);
 
   return (
     <Box
@@ -394,13 +465,13 @@ export default function TeacherPlaygroundContent() {
                     },
                     '& .MuiOutlinedInput-root': {
                       '& fieldset': {
-                        border: `1px solid ${NAV_COLORS.editor_textfield_border_dark}`,
+                        border: `1px solid ${isDarkmodeEditor ? NAV_COLORS.editor_textfield_border_dark : NAV_COLORS.editor_textfield_border}`,
                       },
                       '&:hover fieldset': {
-                        border: `1px solid ${NAV_COLORS.editor_textfield_border_hover_dark}`,
+                        border: `1px solid ${isDarkmodeEditor ? NAV_COLORS.editor_textfield_border_hover_dark : NAV_COLORS.editor_textfield_border_hover}`,
                       },
                       '&.Mui-focused fieldset': {
-                        border: `1px solid ${NAV_COLORS.editor_textfield_border_selected_dark}`,
+                        border: `1px solid ${isDarkmodeEditor ? NAV_COLORS.editor_textfield_border_selected_dark : NAV_COLORS.editor_textfield_border_selected}`,
                       },
                     },
                   }}
@@ -419,9 +490,44 @@ export default function TeacherPlaygroundContent() {
                       color: 'black',
                     }}
                   >
-                    {programmingConstructs.map((item) => (
-                      <Requirement key={item} value={item} size="small" />
+                    {selectedTaskId === null ? (
+                      <Box sx={{ typography: 'body2', fontWeight: '600', color: isDarkmodeEditor ? 'white' : 'black' }}>
+                        Krav:
+                      </Box>
+                    ) : null}
+                    {currentTask?.taskrequirementsByTaskId?.nodes.map((req) => (
+                      <Requirement
+                        key={req.requirementByRequirementId.requirementId}
+                        value={req.requirementByRequirementId.requirementName}
+                        size="small"
+                      />
                     ))}
+                    {selectedTaskId === null ? (
+                      <Typography
+                        onClick={handleOpenModal}
+                        noWrap
+                        component="div"
+                        fontSize={'small'}
+                        sx={{
+                          boxSizing: 'border-box',
+                          paddingX: '6.5px',
+                          paddingY: '0.5px',
+                          borderRadius: '20px',
+                          fontWeight: 'medium',
+                          boxShadow: 3,
+                          textAlign: 'center',
+                          backgroundColor: isDarkmodeEditor ? '#9d9d9d' : '#dcedff',
+                          border: isDarkmodeEditor ? '#989898 3px solid' : '#dbedff 3px solid',
+                          '&:hover': {
+                            backgroundColor: isDarkmodeEditor ? '#888888' : '#cee0f4',
+                            border: isDarkmodeEditor ? '#868686 3px solid' : '#cee0f4 3px solid',
+                            cursor: 'pointer',
+                          },
+                        }}
+                      >
+                        +
+                      </Typography>
+                    ) : null}
                   </Box>
                   <Box
                     sx={{
@@ -434,13 +540,16 @@ export default function TeacherPlaygroundContent() {
                     }}
                   >
                     <Box sx={{ display: 'flex', flexDirection: 'row' }}>
-                      Nivå:&nbsp;<Box sx={{ fontWeight: 'medium' }}>{taskDescription[0]}</Box>
+                      Nivå:&nbsp;<Box sx={{ fontWeight: 'medium' }}>{currentTask?.level}</Box>
                     </Box>
                     <Box sx={{ display: 'flex', flexDirection: 'row' }}>
-                      Fag:&nbsp;<Box sx={{ fontWeight: 'medium' }}>{taskDescription[1]}</Box>
+                      Fag:&nbsp;<Box sx={{ fontWeight: 'medium' }}>{currentTask?.courseByCourseId?.courseName}</Box>
                     </Box>
                     <Box sx={{ display: 'flex', flexDirection: 'row' }}>
-                      Lærer:&nbsp;<Box sx={{ fontWeight: 'medium' }}>{taskDescription[2]}</Box>
+                      Lærer:&nbsp;
+                      <Box sx={{ fontWeight: 'medium' }}>
+                        {currentTask?.userByUserId?.firstname} {currentTask?.userByUserId?.lastname}
+                      </Box>
                     </Box>
                   </Box>
                   <TextField
@@ -449,6 +558,8 @@ export default function TeacherPlaygroundContent() {
                     size="small"
                     margin="none"
                     variant="outlined"
+                    value={description}
+                    onChange={(e) => setDescription(e.target.value)}
                     sx={{
                       display: 'flex',
                       flex: 1,
@@ -490,14 +601,17 @@ export default function TeacherPlaygroundContent() {
                       },
                       '& .MuiOutlinedInput-root': {
                         '& fieldset': {
-                          border: `1px solid ${NAV_COLORS.editor_textfield_border_dark}`,
+                          border: `1px solid ${isDarkmodeEditor ? NAV_COLORS.editor_textfield_border_dark : NAV_COLORS.editor_textfield_border}`,
                         },
                         '&:hover fieldset': {
-                          border: `1px solid ${NAV_COLORS.editor_textfield_border_hover_dark}`,
+                          border: `1px solid ${isDarkmodeEditor ? NAV_COLORS.editor_textfield_border_hover_dark : NAV_COLORS.editor_textfield_border_hover}`,
                         },
                         '&.Mui-focused fieldset': {
-                          border: `1px solid ${NAV_COLORS.editor_textfield_border_selected_dark}`,
+                          border: `1px solid ${isDarkmodeEditor ? NAV_COLORS.editor_textfield_border_selected_dark : NAV_COLORS.editor_textfield_border_selected}`,
                         },
+                      },
+                      ' .MuiOutlinedInput-input': {
+                        color: isDarkmodeEditor ? NAV_COLORS.editor_text_dark : NAV_COLORS.editor_text,
                       },
                     }}
                     slotProps={{
@@ -718,7 +832,7 @@ export default function TeacherPlaygroundContent() {
                     </Typography>
                   </Box>
                 </Grid2>
-                <Editor showCode={showCode} />
+                <Editor showCode={showCode} currentCodeTemplate={''} />
               </Box>
             </Grid2>
           </Container>
@@ -849,6 +963,13 @@ export default function TeacherPlaygroundContent() {
           </Container>
         </Box>
       </Box>
+      <TeacherPlaygroundRequirementsModal
+        openModal={openModal}
+        closeModal={handleCloseModal}
+        allRequirements={allRequirements}
+        requirements={newRequirements}
+        setRequirements={setNewRequirements}
+      />
     </Box>
   );
 }

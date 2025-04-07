@@ -11,7 +11,7 @@ import PopUpMenu from './PopUpMenu';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import SettingsIcon from '@mui/icons-material/Settings';
 import { Link } from 'react-router-dom';
-import { CssBaseline, FormControlLabel, FormGroup, Modal, Stack, Switch } from '@mui/material';
+import { CssBaseline, Fade, FormControlLabel, FormGroup, Modal, Stack, Switch } from '@mui/material';
 import useTeacherStore from '../stores/useTeacherStore';
 import { NAV_COLORS } from '../types/navColors';
 import NotificationsRoundedIcon from '@mui/icons-material/NotificationsRounded';
@@ -19,6 +19,7 @@ import { useNavigate } from 'react-router-dom';
 import useDarkmodeStore from '../stores/useDarkmodeStore';
 import useDarkmodeEditorStore from '../stores/useDarkmodeEditorStore';
 import logo from '../assets/educode.png';
+import CloseRoundedIcon from '@mui/icons-material/CloseRounded';
 
 const settings = ['Profil', 'Logg ut'];
 
@@ -80,7 +81,7 @@ export default function NavBar() {
           <Stack direction="row" sx={{ flexGrow: 0, ml: 'auto', alignItems: 'center' }}>
             <FormGroup>
               <FormControlLabel
-                control={<Switch defaultChecked={isTeacher} onChange={() => setTeacher(!isTeacher)} />}
+                control={<Switch checked={isTeacher} onChange={(e) => setTeacher(e.target.checked)} />}
                 label="Lærermodus"
               />
             </FormGroup>
@@ -92,47 +93,57 @@ export default function NavBar() {
               <SettingsIcon sx={{ color: isDarkmode ? NAV_COLORS.text_dark : NAV_COLORS.text }} />
             </IconButton>
             <Modal open={open} onClose={handleClose} aria-labelledby="settings-modal-title">
-              <Box
-                sx={{
-                  position: 'absolute',
-                  top: '50%',
-                  left: '50%',
-                  transform: 'translate(-50%, -50%)',
-                  width: 300,
-                  heigth: 'auto',
-                  bgcolor: isDarkmode ? NAV_COLORS.editor_button_background_dark : NAV_COLORS.editor_button_background,
-                  color: isDarkmode
-                    ? NAV_COLORS.editor_icon_redo_undo_background_dark
-                    : NAV_COLORS.editor_icon_background,
-                  boxShadow: 5,
-                  borderRadius: '5px',
-                  p: 4,
-                  textAlign: 'center',
-                }}
-              >
-                <Typography id="settings-modal-title" variant="h5" component="h2" fontWeight="500">
-                  Innstillinger
-                </Typography>
-                <Stack direction="column" alignItems="left" mt={4} gap={1}>
-                  <FormGroup>
-                    <FormControlLabel
-                      control={<Switch defaultChecked={isDarkmode} onChange={() => setDarkmode(!isDarkmode)} />}
-                      label="Nettside mørk modus"
+              <Fade in={open}>
+                <Box
+                  sx={{
+                    position: 'absolute',
+                    top: '50%',
+                    left: '50%',
+                    transform: 'translate(-50%, -50%)',
+                    width: 300,
+                    heigth: 'auto',
+                    bgcolor: isDarkmode ? NAV_COLORS.editor_modal_background_dark : NAV_COLORS.editor_modal_background,
+                    boxShadow: 5,
+                    borderRadius: '5px',
+                    p: 4,
+                    textAlign: 'center',
+                  }}
+                >
+                  <IconButton
+                    onClick={() => {
+                      handleClose();
+                    }}
+                    size="small"
+                    sx={{ position: 'absolute', top: '5px', right: '5px' }}
+                  >
+                    <CloseRoundedIcon
+                      sx={{
+                        color: isDarkmode ? NAV_COLORS.editor_modal_color_dark : NAV_COLORS.editor_modal_color,
+                        fontSize: 'medium',
+                      }}
                     />
-                  </FormGroup>
-                  <FormGroup>
-                    <FormControlLabel
-                      control={
-                        <Switch
-                          defaultChecked={isDarkmodeEditor}
-                          onChange={() => setDarkmodeEditor(!isDarkmodeEditor)}
-                        />
-                      }
-                      label="Editor mørk modus"
-                    />
-                  </FormGroup>
-                </Stack>
-              </Box>
+                  </IconButton>
+                  <Typography id="settings-modal-title" variant="h5" component="h2" fontWeight="500">
+                    Innstillinger
+                  </Typography>
+                  <Stack direction="column" alignItems="left" mt={4} gap={1}>
+                    <FormGroup>
+                      <FormControlLabel
+                        control={<Switch checked={isDarkmode} onChange={(e) => setDarkmode(e.target.checked)} />}
+                        label="Nettside mørk modus"
+                      />
+                    </FormGroup>
+                    <FormGroup>
+                      <FormControlLabel
+                        control={
+                          <Switch checked={isDarkmodeEditor} onChange={(e) => setDarkmodeEditor(e.target.checked)} />
+                        }
+                        label="Editor mørk modus"
+                      />
+                    </FormGroup>
+                  </Stack>
+                </Box>
+              </Fade>
             </Modal>
             <IconButton
               onClick={handleOpenUserMenu}

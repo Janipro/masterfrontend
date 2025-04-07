@@ -7,16 +7,24 @@ import DescriptionIcon from '../assets/description.svg?react';
 import WbIncandescentRoundedIcon from '@mui/icons-material/WbIncandescentRounded';
 import ExpandLessRoundedIcon from '@mui/icons-material/ExpandLessRounded';
 import Editor from './Editor';
-import { Container, CssBaseline, Grid2, IconButton, useTheme } from '@mui/material';
+import { Container, CssBaseline, Grid2, IconButton, TextField, useTheme } from '@mui/material';
 import { NAV_COLORS } from '../types/navColors';
 import Requirement from './Requirement';
 import Terminal from './Terminal';
 import useDarkmodeEditorStore from '../stores/useDarkmodeEditorStore';
+import { GET_TASK } from '../../graphql/queries/getTask';
+import { useQuery } from '@apollo/client';
+import { task } from '../types/tableProps';
+import { useTaskCodeStore } from '../stores/useTaskCodeStore';
+import { useNavigate } from 'react-router-dom';
 
 export default function PlaygroundContent() {
   const theme = useTheme();
   const { isDarkmodeEditor } = useDarkmodeEditorStore();
+  const { selectedTaskId } = useTaskCodeStore();
+  const navigate = useNavigate();
   const [showCode, setShowCode] = useState(true);
+  const [currentTask, setCurrentTask] = useState<task>();
   const [terminalCollapsed, setTerminalCollapsed] = useState(() => {
     return localStorage.getItem('terminalCollapsed') === 'true';
   });
@@ -36,7 +44,7 @@ export default function PlaygroundContent() {
   const isResizingVertical = useRef(false);
   const isResizingHorizontal = useRef(false);
 
-  const taskDescription: string[] = ['VG1', 'Matematikk', 'Giga Elise'];
+  /*const taskDescription: string[] = ['VG1', 'Matematikk', 'Giga Elise'];
   const programmingConstructs = [
     'if-statement',
     'for-loop',
@@ -62,7 +70,12 @@ export default function PlaygroundContent() {
     'bitwise-operation',
     'thread',
     'enum',
-  ];
+  ];*/
+
+  const { loading: taskLoading, data: taskData } = useQuery(GET_TASK, {
+    variables: { taskId: selectedTaskId },
+    skip: selectedTaskId === null,
+  });
 
   const disableInteractions = useCallback(() => {
     if (leftPaneRef.current) {
@@ -139,6 +152,18 @@ export default function PlaygroundContent() {
       localStorage.setItem('rightTopHeight', rightTopHeight.toString());
     }
   }, [enableInteractions, handleMouseMoveVertical, handleMouseMoveHorizontal]);
+
+  useEffect(() => {
+    if (!taskLoading && taskData && selectedTaskId !== null) {
+      setCurrentTask(taskData?.allTasks?.nodes?.[0]);
+    }
+  }, [taskData, taskLoading, selectedTaskId]);
+
+  useEffect(() => {
+    if (selectedTaskId === null) {
+      navigate('/tasks');
+    }
+  }, [selectedTaskId, navigate]);
 
   useEffect(() => {
     if (isDarkmodeEditor) {
@@ -366,7 +391,7 @@ export default function PlaygroundContent() {
                   sx={{
                     padding: '20px 14px 20px 22px',
                     gap: '15px',
-                    display: 'flex',
+                    display: selectedTaskId === null ? 'none' : 'flex',
                     flexDirection: 'column',
                     height: 'calc(100% - 24px)',
                     overflowY: 'scroll',
@@ -393,7 +418,7 @@ export default function PlaygroundContent() {
                     },
                   }}
                 >
-                  <Box sx={{ typography: 'h3', fontWeight: 'medium', fontSize: '2em' }}>Oppgave X</Box>
+                  <Box sx={{ typography: 'h3', fontWeight: 'medium', fontSize: '2em' }}>{currentTask?.taskName}</Box>
                   <Box
                     sx={{
                       typography: 'body2',
@@ -407,8 +432,12 @@ export default function PlaygroundContent() {
                       color: 'black',
                     }}
                   >
-                    {programmingConstructs.map((item) => (
-                      <Requirement key={item} value={item} size="small" />
+                    {currentTask?.taskrequirementsByTaskId?.nodes.map((req) => (
+                      <Requirement
+                        key={req.requirementByRequirementId.requirementId}
+                        value={req.requirementByRequirementId.requirementName}
+                        size="small"
+                      />
                     ))}
                   </Box>
                   <Box
@@ -422,19 +451,87 @@ export default function PlaygroundContent() {
                     }}
                   >
                     <Box sx={{ display: 'flex', flexDirection: 'row' }}>
-                      Nivå:&nbsp;<Box sx={{ fontWeight: 'medium' }}>{taskDescription[0]}</Box>
+                      Nivå:&nbsp;<Box sx={{ fontWeight: 'medium' }}>{currentTask?.level}</Box>
                     </Box>
                     <Box sx={{ display: 'flex', flexDirection: 'row' }}>
-                      Fag:&nbsp;<Box sx={{ fontWeight: 'medium' }}>{taskDescription[1]}</Box>
+                      Fag:&nbsp;<Box sx={{ fontWeight: 'medium' }}>{currentTask?.courseByCourseId?.courseName}</Box>
                     </Box>
                     <Box sx={{ display: 'flex', flexDirection: 'row' }}>
-                      Lærer:&nbsp;<Box sx={{ fontWeight: 'medium' }}>{taskDescription[2]}</Box>
+                      Lærer:&nbsp;
+                      <Box sx={{ fontWeight: 'medium' }}>
+                        {currentTask?.userByUserId?.firstname} {currentTask?.userByUserId?.lastname}
+                      </Box>
                     </Box>
                   </Box>
-                  <Box sx={{ typography: 'body2' }}>
-                    Lag en funksjon, enterWords, som har ingen innparametre, og returnerer ei liste, wordList, med ord
-                    som brukeren selv har skrevet inn. Brukeren kan avslutte innskriving av ord ved å trykke enter ...
-                  </Box>
+                  <TextField
+                    multiline
+                    size="small"
+                    margin="none"
+                    variant="outlined"
+                    value={currentTask?.taskDescription}
+                    sx={{
+                      display: 'flex',
+                      flex: 1,
+                      '& .MuiInputBase-root': {
+                        maxHeight: '100%',
+                        paddingRight: '3px',
+                        paddingY: '1px',
+                        userSelect: 'none',
+                      },
+                      '& .MuiInputBase-input': {
+                        overflowY: 'scroll !important',
+                        maxHeight: '100%',
+                        paddingRight: '8px',
+                        paddingY: '7px',
+                        boxSizing: 'border-box',
+                        '&::-webkit-scrollbar': {
+                          width: '6px',
+                          borderRadius: '5px',
+                        },
+                        '&::-webkit-scrollbar-track': {
+                          backgroundColor: isDarkmodeEditor
+                            ? NAV_COLORS.editor_pane_background_dark
+                            : NAV_COLORS.editor_pane_background,
+                          borderRadius: '0 0 3px 0',
+                          marginTop: '1.5px',
+                          marginBottom: '1.5px',
+                        },
+                        '&::-webkit-scrollbar-thumb': {
+                          backgroundColor: '#B7B7B7',
+                          borderRadius: '5px',
+                        },
+                        '&::-webkit-scrollbar-thumb:hover': {
+                          backgroundColor: '#9E9E9E',
+                          cursor: 'default',
+                        },
+                      },
+                      '& .MuiOutlinedInput-root': {
+                        '& fieldset': {
+                          border: 'none',
+                        },
+                        '&:hover fieldset': {
+                          border: 'none',
+                        },
+                        '&.Mui-focused fieldset': {
+                          border: 'none',
+                        },
+                      },
+                      ' .MuiOutlinedInput-input': {
+                        color: isDarkmodeEditor ? NAV_COLORS.editor_text_dark : NAV_COLORS.editor_text,
+                      },
+                    }}
+                    slotProps={{
+                      input: {
+                        sx: {
+                          fontWeight: 'normal',
+                          fontSize: '1em',
+                          display: 'flex',
+                          flex: 1,
+                          alignItems: 'flex-start',
+                        },
+                      },
+                    }}
+                  />
                 </Box>
               )}
             </Box>
@@ -615,7 +712,7 @@ export default function PlaygroundContent() {
                     </Typography>
                   </Box>
                 </Grid2>
-                <Editor showCode={showCode} />
+                <Editor showCode={showCode} currentCodeTemplate={currentTask?.codeTemplate || ''} />
               </Box>
             </Grid2>
           </Container>

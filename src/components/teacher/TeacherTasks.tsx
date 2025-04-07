@@ -8,6 +8,7 @@ import {
   FormControlLabel,
   FormGroup,
   Grid2,
+  IconButton,
   Modal,
   Stack,
   Typography,
@@ -36,6 +37,10 @@ import useSelectedStore from '../../stores/useSelectedStore';
 import { UPDATE_TASK_VISIBILITY } from '../../../graphql/mutations/updateTaskVisibility';
 import { DELETE_TASK_BY_TASK_ID } from '../../../graphql/mutations/deleteTaskByTaskId';
 import { classTranslations, typeTranslations } from '../../types/translations';
+import CloseRoundedIcon from '@mui/icons-material/CloseRounded';
+import useDarkmodeStore from '../../stores/useDarkmodeStore';
+import { useNavigate } from 'react-router-dom';
+import { useTaskCodeStore } from '../../stores/useTaskCodeStore';
 
 export default function TeacherTasks() {
   const [open, setOpen] = useState(false);
@@ -46,7 +51,9 @@ export default function TeacherTasks() {
   const [inactiveTasks, setInactiveTasks] = useState(false);
   const userId = parseInt(localStorage.getItem('id')!);
   const classId = parseInt(localStorage.getItem('class_id')!);
+  const { setTaskId } = useTaskCodeStore();
   const { allTasksSelectionModel, setAllTasksSelectionModel } = useStore(useSelectedStore);
+  const { isDarkmode } = useDarkmodeStore();
   const {
     recommendedSelectionModel: createdTasksSelectionModel,
     setRecommendedSelectionModel: setCreatedTasksSelectionModel,
@@ -78,6 +85,9 @@ export default function TeacherTasks() {
       { query: GET_ACTIVE_CREATED_TASKS, variables: { userId: userId } },
     ],
   });
+
+  const navigate = useNavigate();
+
   if (tasksLoading || createdLoading || studentsLoading || activeCreatedLoading) {
     return (
       <Box mt="30vh">
@@ -103,6 +113,7 @@ export default function TeacherTasks() {
         : [],
       level: task.level,
       type: task.type === 'exercise' ? typeTranslations.exercise : typeTranslations.obligatory,
+      taskId: task.taskId,
     }));
   };
 
@@ -119,6 +130,7 @@ export default function TeacherTasks() {
         : [],
       level: task.level,
       type: task.type === 'exercise' ? typeTranslations.exercise : typeTranslations.obligatory,
+      taskId: task.taskId,
     }));
   };
 
@@ -135,6 +147,7 @@ export default function TeacherTasks() {
         : [],
       level: task.level,
       type: task.type === 'exercise' ? typeTranslations.exercise : typeTranslations.obligatory,
+      taskId: task.taskId,
     }));
   };
 
@@ -285,6 +298,10 @@ export default function TeacherTasks() {
                 <SearchBar options={rows2} prompt="Søk etter oppgaver" />
                 <Grid2 container sx={{ flexGrow: 0, ml: 'auto' }} spacing={1}>
                   <Button
+                    onClick={() => {
+                      setTaskId(null);
+                      navigate('/playground');
+                    }}
                     variant="contained"
                     startIcon={<CreateIcon />}
                     color="primary"
@@ -323,7 +340,21 @@ export default function TeacherTasks() {
                     }}
                   >
                     <Fade in={open}>
-                      <Box sx={style}>
+                      <Box sx={style(isDarkmode)}>
+                        <IconButton
+                          onClick={() => {
+                            handleClose();
+                          }}
+                          size="small"
+                          sx={{ position: 'absolute', top: '5px', right: '5px' }}
+                        >
+                          <CloseRoundedIcon
+                            sx={{
+                              color: isDarkmode ? NAV_COLORS.editor_modal_color_dark : NAV_COLORS.editor_modal_color,
+                              fontSize: 'medium',
+                            }}
+                          />
+                        </IconButton>
                         <Grid2 container direction="column" spacing={1}>
                           <Stack direction="row">
                             <Typography id="keep-mounted-modal-title" variant="h5" fontWeight="medium">

@@ -48,6 +48,7 @@ export default function StudentDashboard() {
         recommendedStudent.recommendedByRecommendedId?.type === 'exercise'
           ? typeTranslations.exercise
           : typeTranslations.obligatory,
+      taskId: recommendedStudent.recommendedByRecommendedId?.taskByTaskId.taskId,
     }));
   };
   return (
