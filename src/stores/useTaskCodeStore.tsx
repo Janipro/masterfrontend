@@ -133,65 +133,70 @@ export const useTaskCodeStore = create<execState>((set, get) => ({
 }));
 
 interface newTaskState {
-  taskId: number | null;
-  title: string;
-  description: string;
-  codeTemplate: string;
-  expectedOutput: string;
-  expectedCode: string;
-  requirements: requirement[];
-  level: string;
-  imageUrl: string;
-  publicAccess: boolean;
-  isActive: boolean;
-  courseId: number;
-  userId: number;
-  setTaskId: (taskId: number | null) => void;
-  setTitle: (newCode: string) => void;
-  setDescription: (newOutput: string) => void;
-  setCodeTemplate: (newCodeTemplate: string) => void;
-  setExpectedOutput: (newExpectedOutput: string) => void;
-  setExpectedCode: (newExpectedCode: string) => void;
-  setRequirements: (newRequirements: requirement[]) => void;
-  setLevel: (newLevel: string) => void;
-  setImageUrl: (newImageUrl: string) => void;
-  setPublicAccess: (newPublicAccess: boolean) => void;
-  setIsActive: (newIsActive: boolean) => void;
-  setCourseId: (newCourseId: number) => void;
-  setUserId: (newUserId: number) => void;
-  postTask: () => Promise<void>;
+  newTaskId: number | null;
+  newTitle: string;
+  newDescription: string;
+  newCodeTemplate: string;
+  newExpectedOutput: string;
+  newExpectedCode: string;
+  newRequirements: requirement[];
+  newLevel: string;
+  // newImageUrl: string;
+  newPublicAccess: boolean;
+  newIsActive: boolean;
+  newCourseId: number;
+  newUserId: number;
+  setNewTaskId: (taskId: number | null) => void;
+  setNewTitle: (newCode: string) => void;
+  setNewDescription: (newOutput: string) => void;
+  setNewCodeTemplate: (newCodeTemplate: string) => void;
+  setNewExpectedOutput: (newExpectedOutput: string) => void;
+  setNewExpectedCode: (newExpectedCode: string) => void;
+  setNewRequirements: (newRequirements: requirement[]) => void;
+  setNewLevel: (newLevel: string) => void;
+  // setNewImageUrl: (newImageUrl: string) => void;
+  setNewPublicAccess: (newPublicAccess: boolean) => void;
+  setNewIsActive: (newIsActive: boolean) => void;
+  setNewCourseId: (newCourseId: number) => void;
+  setNewUserId: (newUserId: number) => void;
+  postNewTask: () => Promise<void>;
+  resetNewTask: () => void;
 }
 
-export const useNewTaskStore = create<newTaskState>((set) => ({
-  taskId: null,
-  title: '',
-  description: '',
-  codeTemplate: '',
-  expectedOutput: '',
-  expectedCode: '',
-  requirements: [],
-  level: '',
-  imageUrl: '',
-  publicAccess: false,
-  isActive: false,
-  courseId: 0,
-  userId: 0,
-  setTaskId: (newTaskId: number | null) => set({ taskId: newTaskId }),
-  setTitle: (newTitle: string) => set({ title: newTitle }),
-  setDescription: (newDescription: string) => set({ description: newDescription }),
-  setCodeTemplate: (newCodeTemplate: string) => set({ codeTemplate: newCodeTemplate }),
-  setExpectedOutput: (newExpectedOutput: string) => set({ expectedOutput: newExpectedOutput }),
-  setRequirements: (newRequirements: requirement[]) => set({ requirements: newRequirements }),
-  setExpectedCode: (newExpectedCode: string) => set({ expectedCode: newExpectedCode }),
-  setLevel: (newLevel: string) => set({ level: newLevel }),
-  setImageUrl: (newImageUrl: string) => set({ imageUrl: newImageUrl }),
-  setPublicAccess: (newPublicAccess: boolean) => set({ publicAccess: newPublicAccess }),
-  setIsActive: (newIsActive: boolean) => set({ isActive: newIsActive }),
-  setCourseId: (newCourseId: number) => set({ courseId: newCourseId }),
-  setUserId: (newUserId: number) => set({ userId: newUserId }),
+const initialNewTaskState = {
+  newTaskId: null,
+  newTitle: '',
+  newDescription: '',
+  newCodeTemplate: '',
+  newExpectedOutput: '',
+  newExpectedCode: '',
+  newRequirements: [] as requirement[],
+  newLevel: '',
+  newPublicAccess: false,
+  newIsActive: false,
+  newCourseId: 0,
+  newUserId: 0,
+  // newImageUrl: '',
+};
 
-  postTask: async () => {
-    const code = useCodeStore.getState().code;
+export const useNewTaskStore = create<newTaskState>((set) => ({
+  ...initialNewTaskState,
+  setNewTaskId: (newTaskId: number | null) => set({ newTaskId: newTaskId }),
+  setNewTitle: (newTitle: string) => set({ newTitle: newTitle }),
+  setNewDescription: (newDescription: string) => set({ newDescription: newDescription }),
+  setNewCodeTemplate: (newCodeTemplate: string) => set({ newCodeTemplate: newCodeTemplate }),
+  setNewExpectedOutput: (newExpectedOutput: string) => set({ newExpectedOutput: newExpectedOutput }),
+  setNewRequirements: (newRequirements: requirement[]) => set({ newRequirements: newRequirements }),
+  setNewExpectedCode: (newExpectedCode: string) => set({ newExpectedCode: newExpectedCode }),
+  setNewLevel: (newLevel: string) => set({ newLevel: newLevel }),
+  // setImageUrl: (newImageUrl: string) => set({ newImageUrl: newImageUrl }),
+  setNewPublicAccess: (newPublicAccess: boolean) => set({ newPublicAccess: newPublicAccess }),
+  setNewIsActive: (newIsActive: boolean) => set({ newIsActive: newIsActive }),
+  setNewCourseId: (newCourseId: number) => set({ newCourseId: newCourseId }),
+  setNewUserId: (newUserId: number) => set({ newUserId: newUserId }),
+
+  postNewTask: async () => {
+    const newCode = useCodeStore.getState().code;
     const selectedTaskId = useTaskCodeStore.getState().selectedTaskId;
 
     // must change from localhost to deployed server when server is online
@@ -199,7 +204,50 @@ export const useNewTaskStore = create<newTaskState>((set) => ({
       const response = await fetch('http://localhost:6001/help', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ code, taskId: selectedTaskId }),
+        body: JSON.stringify({ newCode, taskId: selectedTaskId }),
+      });
+
+      const result = await response.json();
+      console.log(result.message);
+      /*
+      if (result.error) {
+        setAIOutput(`Error: ${result.error}`);
+        return;
+      }
+
+      if (result.message) {
+        setAIOutput(result.message);
+      }*/
+    } catch (error) {
+      console.error('Error analyzing code:', error);
+    }
+  },
+
+  resetNewTask: () => set(initialNewTaskState),
+}));
+
+interface updateTaskState {
+  updateTask: () => Promise<void>;
+}
+
+export const useUpdateTaskStore = create<updateTaskState>(() => ({
+  updateTask: async () => {
+    const selectedTaskId = useTaskCodeStore.getState().selectedTaskId;
+    const updateTitle = useNewTaskStore.getState().newTitle;
+    const updateDescription = useNewTaskStore.getState().newDescription;
+    const updatePublicAccess = useNewTaskStore.getState().newPublicAccess;
+
+    // must change from localhost to deployed server when server is online
+    try {
+      const response = await fetch('http://localhost:6001/help', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          taskId: selectedTaskId,
+          taskDescription: updateDescription,
+          taskTitle: updateTitle,
+          publicAccess: updatePublicAccess,
+        }),
       });
 
       const result = await response.json();

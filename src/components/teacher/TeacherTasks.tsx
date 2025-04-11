@@ -40,7 +40,8 @@ import { classTranslations, typeTranslations } from '../../types/translations';
 import CloseRoundedIcon from '@mui/icons-material/CloseRounded';
 import useDarkmodeStore from '../../stores/useDarkmodeStore';
 import { useNavigate } from 'react-router-dom';
-import { useTaskCodeStore } from '../../stores/useTaskCodeStore';
+import { useCodeStore, useTaskCodeStore } from '../../stores/useTaskCodeStore';
+import useTeacherStore from '../../stores/useTeacherStore';
 
 export default function TeacherTasks() {
   const [open, setOpen] = useState(false);
@@ -54,6 +55,8 @@ export default function TeacherTasks() {
   const { setTaskId } = useTaskCodeStore();
   const { allTasksSelectionModel, setAllTasksSelectionModel } = useStore(useSelectedStore);
   const { isDarkmode } = useDarkmodeStore();
+  const { setIsOwner } = useTeacherStore();
+  const { setCode } = useCodeStore();
   const {
     recommendedSelectionModel: createdTasksSelectionModel,
     setRecommendedSelectionModel: setCreatedTasksSelectionModel,
@@ -300,6 +303,8 @@ export default function TeacherTasks() {
                   <Button
                     onClick={() => {
                       setTaskId(null);
+                      setCode('');
+                      setIsOwner(true);
                       navigate('/playground');
                     }}
                     variant="contained"

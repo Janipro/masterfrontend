@@ -4,7 +4,7 @@ import { nbNO } from '@mui/x-data-grid/locales/nbNO';
 import { useMemo, useState } from 'react';
 import { task, student, recommended, recommendedStudent } from '../types/tableProps';
 import useTeacherStore from '../stores/useTeacherStore';
-import { useTaskCodeStore } from '../stores/useTaskCodeStore';
+import { useCodeStore, useTaskCodeStore } from '../stores/useTaskCodeStore';
 import { useNavigate } from 'react-router-dom';
 
 const paginationModel = { page: 0, pageSize: 5 };
@@ -25,7 +25,8 @@ export default function Table({
   type Row = (typeof rows)[number];
   const [initialRows /*, setRows*/] = useState<Row[]>(rows);
   const { isTeacher, setIsOwner } = useTeacherStore();
-  const { setTaskId } = useTaskCodeStore();
+  const { setTaskId, selectedTaskId } = useTaskCodeStore();
+  const { setCode } = useCodeStore();
   const navigate = useNavigate();
 
   {
@@ -74,7 +75,10 @@ export default function Table({
 
             if (hasTaskId(initialRows)) {
               if (params.field === 'title') {
-                setTaskId(params.row.taskId);
+                if (params.row.taskId !== selectedTaskId) {
+                  setTaskId(params.row.taskId);
+                  setCode('');
+                }
                 const email = localStorage.getItem('email') || '';
                 setIsOwner(params.row.owner.toLowerCase() === email.toLowerCase()); //should probably compare user ids instead, but all the tables only has owner (email) atm
                 navigate('/playground');

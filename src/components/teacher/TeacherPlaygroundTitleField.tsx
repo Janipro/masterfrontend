@@ -4,7 +4,7 @@ import useDarkmodeEditorStore from '../../stores/useDarkmodeEditorStore';
 import { NAV_COLORS } from '../../types/navColors';
 
 const TeacherPlaygroundTitleField = () => {
-  const { title, setTitle } = useNewTaskStore();
+  const { newTitle, setNewTitle } = useNewTaskStore();
   const { isDarkmodeEditor } = useDarkmodeEditorStore();
 
   return (
@@ -13,9 +13,9 @@ const TeacherPlaygroundTitleField = () => {
       size="small"
       margin="none"
       variant="outlined"
-      value={title}
-      onChange={(e) => setTitle(e.target.value)}
-      helperText={`${title?.length}/100`}
+      value={newTitle}
+      onChange={(e) => setNewTitle(e.target.value)}
+      helperText={`${newTitle?.length}/100`}
       slotProps={{
         htmlInput: {
           maxLength: 100,

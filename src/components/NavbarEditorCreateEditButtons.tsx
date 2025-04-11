@@ -4,13 +4,50 @@ import ShareRoundedIcon from '@mui/icons-material/ShareRounded';
 import SaveRoundedIcon from '@mui/icons-material/SaveRounded';
 import { NAV_COLORS } from '../types/navColors';
 import useDarkmodeEditorStore from '../stores/useDarkmodeEditorStore';
-import { useTaskCodeStore } from '../stores/useTaskCodeStore';
+import { useNewTaskStore, useTaskCodeStore } from '../stores/useTaskCodeStore';
+import { useMutation } from '@apollo/client';
+import { UPDATE_TASK } from '../../graphql/mutations/updateTask';
+import { GET_CREATED_TASKS } from '../../graphql/queries/getCreatedTasks';
+import { GET_ACTIVE_CREATED_TASKS } from '../../graphql/queries/getActiveCreatedTasks';
+import { GET_ALL_TASKS } from '../../graphql/queries/getAllTasks';
+import { GET_RECOMMENDEDS } from '../../graphql/queries/getRecommendeds';
+import { GET_ACTIVE_RECOMMENDEDS } from '../../graphql/queries/getActiveRecommendeds';
+import { GET_TASK } from '../../graphql/queries/getTask';
 
 const functions = ['Kjør', 'Publiser', 'Lagre endringer'];
 
 export default function NavbarEditorCreateEditButtons() {
   const { executeCode, selectedTaskId } = useTaskCodeStore();
   const { isDarkmodeEditor } = useDarkmodeEditorStore();
+  const { newTitle, newDescription, newPublicAccess } = useNewTaskStore();
+  const userId = parseInt(localStorage.getItem('id')!);
+
+  const [updateTask] = useMutation(UPDATE_TASK, {
+    refetchQueries: [
+      { query: GET_CREATED_TASKS, variables: { userId: userId } },
+      { query: GET_ACTIVE_CREATED_TASKS, variables: { userId: userId } },
+      { query: GET_RECOMMENDEDS, variables: { userId: userId } },
+      { query: GET_ACTIVE_RECOMMENDEDS, variables: { userId: userId } },
+      { query: GET_ALL_TASKS },
+      { query: GET_TASK, variables: { taskId: selectedTaskId } },
+    ],
+  });
+
+  const handleUpdateTask = async () => {
+    try {
+      await updateTask({
+        variables: {
+          taskId: selectedTaskId,
+          taskName: newTitle,
+          taskDescription: newDescription,
+          publicAccess: newPublicAccess,
+        },
+      });
+    } catch (err) {
+      console.error('Failed to update task:', err);
+    }
+  };
+
   return (
     <Box
       sx={{
@@ -109,6 +146,14 @@ export default function NavbarEditorCreateEditButtons() {
 
         <Button
           key={selectedTaskId === null ? functions[1] : functions[2]}
+          onClick={() => {
+            if (selectedTaskId === null) {
+              console.log('Publish not implemented');
+            } else {
+              console.log('ok');
+              handleUpdateTask();
+            }
+          }}
           sx={{
             color: isDarkmodeEditor ? NAV_COLORS.editor_text_dark : NAV_COLORS.editor_text,
             display: 'flex',

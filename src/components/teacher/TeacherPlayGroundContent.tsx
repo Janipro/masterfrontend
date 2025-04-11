@@ -8,7 +8,18 @@ import DescriptionIcon from '../../assets/description.svg?react';
 import WbIncandescentRoundedIcon from '@mui/icons-material/WbIncandescentRounded';
 import ExpandLessRoundedIcon from '@mui/icons-material/ExpandLessRounded';
 import Editor from '../Editor';
-import { Container, CssBaseline, Grid2, IconButton, useTheme } from '@mui/material';
+import {
+  Container,
+  CssBaseline,
+  FormControl,
+  FormControlLabel,
+  FormLabel,
+  Grid2,
+  IconButton,
+  Radio,
+  RadioGroup,
+  useTheme,
+} from '@mui/material';
 import { NAV_COLORS } from '../../types/navColors';
 import Requirement from '../Requirement';
 import Terminal from '../Terminal';
@@ -29,32 +40,17 @@ export default function TeacherPlaygroundContent() {
   const { setCode } = useCodeStore();
   const [currentTask, setCurrentTask] = useState<task>();
   const {
-    setTaskId,
-    //title,
-    setTitle,
-    description,
-    setDescription,
-    //codeTemplate,
-    setCodeTemplate,
-    //expectedOutput,
-    setExpectedOutput,
-    //expectedCode,
-    //setExpectedCode,
-    //requirements,
-    //setRequirements,
-    //level,
-    //setLevel,
-    //imageUrl,
-    //setImageUrl,
-    //publicAccess,
-    setPublicAccess,
-    //isActive,
-    //setIsActive,
-    //courseId,
-    //setCourseId,
-    //userId,
-    //setUserId,
+    setNewTaskId,
+    setNewTitle,
+    newDescription,
+    setNewDescription,
+    setNewCodeTemplate,
+    setNewExpectedOutput,
+    setNewPublicAccess,
+    resetNewTask,
+    newPublicAccess,
   } = useNewTaskStore();
+
   const [openModal, setOpenModal] = React.useState(false);
   const [newRequirements, setNewRequirements] = useState<requirement[]>([]);
   const [allRequirements, setAllRequirements] = useState<requirement[]>([]);
@@ -190,18 +186,32 @@ export default function TeacherPlaygroundContent() {
   }, [enableInteractions, handleMouseMoveVertical, handleMouseMoveHorizontal]);
 
   useEffect(() => {
+    resetNewTask();
+  }, []);
+
+  useEffect(() => {
     if (!taskLoading && taskData && selectedTaskId !== null) {
       const task = taskData?.allTasks?.nodes?.[0];
-      setTaskId(task?.taskId);
+      setNewTaskId(task?.taskId);
       setCurrentTask(task);
-      setTitle(task?.taskName);
-      setDescription(task?.taskDescription);
-      setExpectedOutput(task?.expectedOutput);
+      setNewTitle(task?.taskName);
+      setNewDescription(task?.taskDescription);
+      setNewExpectedOutput(task?.expectedOutput);
       setCode(task?.expectedCode);
-      setPublicAccess(task?.publicAccess);
-      setCodeTemplate(task?.codeTemplate);
+      setNewPublicAccess(task?.publicAccess);
+      setNewCodeTemplate(task?.codeTemplate);
     }
-  }, [taskData, taskLoading, selectedTaskId]);
+  }, [
+    taskData,
+    taskLoading,
+    selectedTaskId,
+    setNewTaskId,
+    setNewTitle,
+    setNewDescription,
+    setCode,
+    setNewPublicAccess,
+    setNewCodeTemplate,
+  ]);
 
   useEffect(() => {
     if (!requirementsLoading && requirementsData) {
@@ -320,6 +330,10 @@ export default function TeacherPlaygroundContent() {
 
   const handleOpenModal = () => setOpenModal(true);
   const handleCloseModal = () => setOpenModal(false);
+
+  function onChangeRadio(value: string): void {
+    setNewPublicAccess(value === 'Offentlig');
+  }
 
   return (
     <Box
@@ -495,13 +509,24 @@ export default function TeacherPlaygroundContent() {
                         Krav:
                       </Box>
                     ) : null}
-                    {currentTask?.taskrequirementsByTaskId?.nodes.map((req) => (
-                      <Requirement
-                        key={req.requirementByRequirementId.requirementId}
-                        value={req.requirementByRequirementId.requirementName}
-                        size="small"
-                      />
-                    ))}
+                    {selectedTaskId === null
+                      ? newRequirements
+                          .sort((a, b) => a.requirementId - b.requirementId)
+                          .map((req) => (
+                            <Requirement key={req.requirementId} value={req.requirementName} size="small" />
+                          ))
+                      : [...(currentTask?.taskrequirementsByTaskId?.nodes || [])]
+                          .sort(
+                            (a, b) =>
+                              a.requirementByRequirementId.requirementId - b.requirementByRequirementId.requirementId
+                          )
+                          .map((req) => (
+                            <Requirement
+                              key={req.requirementByRequirementId.requirementId}
+                              value={req.requirementByRequirementId.requirementName}
+                              size="small"
+                            />
+                          ))}
                     {selectedTaskId === null ? (
                       <Typography
                         onClick={handleOpenModal}
@@ -558,8 +583,8 @@ export default function TeacherPlaygroundContent() {
                     size="small"
                     margin="none"
                     variant="outlined"
-                    value={description}
-                    onChange={(e) => setDescription(e.target.value)}
+                    value={newDescription}
+                    onChange={(e) => setNewDescription(e.target.value)}
                     sx={{
                       display: 'flex',
                       flex: 1,
@@ -576,7 +601,6 @@ export default function TeacherPlaygroundContent() {
                         overflowY: 'scroll !important',
                         maxHeight: '100%',
                         paddingRight: '8px',
-                        paddingY: '7px',
                         boxSizing: 'border-box',
                         '&::-webkit-scrollbar': {
                           width: '6px',
@@ -638,19 +662,76 @@ export default function TeacherPlaygroundContent() {
                       overflowWrap: 'anywhere',
                     }}
                   >
-                    <Box sx={{ display: 'flex', flexDirection: 'row' }}>Tilgangsnivå:</Box>
-                    <Box
+                    <FormControl
                       sx={{ display: 'flex', flexDirection: 'row', flexWrap: 'wrap', columnGap: '20px', rowGap: '5px' }}
                     >
-                      <Box sx={{ display: 'flex', flexDirection: 'row' }}>
-                        <Box sx={{ fontWeight: 'medium' }}>Nivåaaaassssssssffddddddddddddddf</Box>{' '}
-                        <Box>wtfffffffff</Box>
-                      </Box>
-                      <Box sx={{ display: 'flex', flexDirection: 'row' }}>
-                        <Box sx={{ fontWeight: 'medium' }}>Nivåaaaassssssssffddddddddddddddf</Box>{' '}
-                        <Box>wtfffffffff</Box>
-                      </Box>
-                    </Box>
+                      <FormLabel
+                        sx={{
+                          typography: 'body2',
+                          fontWeight: '600',
+                          color: isDarkmodeEditor ? NAV_COLORS.editor_text_dark : NAV_COLORS.editor_text,
+                          '&.Mui-focused': {
+                            color: isDarkmodeEditor ? NAV_COLORS.editor_text_dark : NAV_COLORS.editor_text,
+                          },
+                          display: 'flex',
+                          alignItems: 'center',
+                        }}
+                        id="custom-radio-group"
+                      >
+                        Tilgangsnivå
+                      </FormLabel>
+                      <RadioGroup
+                        row
+                        aria-labelledby="custom-radio-group"
+                        name="custom-radio"
+                        sx={{
+                          display: 'flex',
+                          flexDirection: 'row',
+                          flexWrap: 'wrap',
+                          columnGap: '20px',
+                          rowGap: '5px',
+                        }}
+                        value={newPublicAccess ? 'Offentlig' : 'Privat'}
+                        onChange={(e) => onChangeRadio(e.target.value)}
+                      >
+                        <FormControlLabel
+                          value="Offentlig"
+                          control={
+                            <Radio
+                              sx={{
+                                color: isDarkmodeEditor ? '#9d9d9d' : '#b7b7b7',
+                                '&.Mui-checked': {
+                                  color: '#1976d2',
+                                },
+                              }}
+                            />
+                          }
+                          label={
+                            <Box sx={{ display: 'flex', flexDirection: 'row', gap: 1 }}>
+                              <Box sx={{ fontWeight: 'medium' }}>Offentlig</Box>
+                            </Box>
+                          }
+                        />
+                        <FormControlLabel
+                          value="Privat"
+                          control={
+                            <Radio
+                              sx={{
+                                color: isDarkmodeEditor ? '#9d9d9d' : '#b7b7b7',
+                                '&.Mui-checked': {
+                                  color: '#1976d2',
+                                },
+                              }}
+                            />
+                          }
+                          label={
+                            <Box sx={{ display: 'flex', flexDirection: 'row', gap: 1 }}>
+                              <Box sx={{ fontWeight: 'medium' }}>Privat</Box>
+                            </Box>
+                          }
+                        />
+                      </RadioGroup>
+                    </FormControl>
                   </Box>
                 </Box>
               )}

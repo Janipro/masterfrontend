@@ -10,6 +10,7 @@ import { useCodeStore, useNewTaskStore, useTaskCodeStore } from '../stores/useTa
 import useDarkmodeEditorStore from '../stores/useDarkmodeEditorStore';
 import { NAV_COLORS } from '../types/navColors';
 import useEditorViewStore from '../stores/useEditorViewStore';
+import useTeacherStore from '../stores/useTeacherStore';
 
 const lightTheme = EditorView.theme({
   '&': {
@@ -110,31 +111,32 @@ const darkTheme = EditorView.theme({
 
 type TerminalProps = {
   showCode: boolean;
-  currentCodeTemplate: string;
+  currentCodeTemplate: string; // TeacherPlaygroundContent sends currentCodeTemplate = '' every time
 };
 
 export default function Editor({ showCode, currentCodeTemplate }: TerminalProps) {
   const { code, setCode } = useCodeStore();
   const { isDarkmodeEditor } = useDarkmodeEditorStore();
   const { selectedTaskId } = useTaskCodeStore();
-  const { codeTemplate, setCodeTemplate } = useNewTaskStore();
+  const { newCodeTemplate, setNewCodeTemplate } = useNewTaskStore();
+  const { isOwner } = useTeacherStore();
 
   const onChange = useCallback(
     (val: string) => {
-      if (!showCode && currentCodeTemplate === '' && selectedTaskId !== null && codeTemplate) {
-        setCodeTemplate(val);
-      } else {
+      if (!showCode && isOwner && selectedTaskId === null) {
+        setNewCodeTemplate(val);
+      } else if ((showCode && isOwner && selectedTaskId === null) || !isOwner) {
         setCode(val);
       }
     },
-    [setCode, setCodeTemplate, showCode, currentCodeTemplate, selectedTaskId, codeTemplate]
+    [setCode, setNewCodeTemplate, showCode, currentCodeTemplate, selectedTaskId, newCodeTemplate, isOwner]
   );
 
   useEffect(() => {
-    if (code === '') {
+    if (code === '' && isOwner === false) {
       setCode(currentCodeTemplate);
     }
-  }, [currentCodeTemplate, code, setCode]);
+  }, [currentCodeTemplate, code, setCode, isOwner]);
 
   return (
     <Box
@@ -202,9 +204,15 @@ export default function Editor({ showCode, currentCodeTemplate }: TerminalProps)
           value={
             showCode
               ? code
-              : currentCodeTemplate === '' && selectedTaskId !== null && codeTemplate
-                ? codeTemplate
+              : isOwner
+                ? selectedTaskId === null
+                  ? newCodeTemplate
+                  : newCodeTemplate
+                    ? newCodeTemplate
+                    : 'Ingen kode tilgjengelig..'
                 : currentCodeTemplate
+                  ? currentCodeTemplate
+                  : 'Ingen kodemal tilgjengelig...'
           }
           height="100%"
           width="100%"
@@ -215,7 +223,13 @@ export default function Editor({ showCode, currentCodeTemplate }: TerminalProps)
             indentUnit.of('    '),
             highlightSelectionMatches(),
             EditorView.editable.of(
-              showCode ? true : currentCodeTemplate === '' && selectedTaskId !== null && codeTemplate ? true : false
+              showCode
+                ? isOwner && selectedTaskId !== null
+                  ? false
+                  : true
+                : isOwner && selectedTaskId === null
+                  ? true
+                  : false
             ),
           ]}
           onChange={onChange}

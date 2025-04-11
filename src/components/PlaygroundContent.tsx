@@ -155,7 +155,7 @@ export default function PlaygroundContent() {
 
   useEffect(() => {
     if (!taskLoading && taskData && selectedTaskId !== null) {
-      setCurrentTask(taskData?.allTasks?.nodes?.[0]);
+      setCurrentTask(taskData.allTasks.nodes?.[0]);
     }
   }, [taskData, taskLoading, selectedTaskId]);
 
@@ -432,13 +432,18 @@ export default function PlaygroundContent() {
                       color: 'black',
                     }}
                   >
-                    {currentTask?.taskrequirementsByTaskId?.nodes.map((req) => (
-                      <Requirement
-                        key={req.requirementByRequirementId.requirementId}
-                        value={req.requirementByRequirementId.requirementName}
-                        size="small"
-                      />
-                    ))}
+                    {[...(currentTask?.taskrequirementsByTaskId?.nodes || [])]
+                      .sort(
+                        (a, b) =>
+                          a.requirementByRequirementId.requirementId - b.requirementByRequirementId.requirementId
+                      )
+                      .map((req) => (
+                        <Requirement
+                          key={req.requirementByRequirementId.requirementId}
+                          value={req.requirementByRequirementId.requirementName}
+                          size="small"
+                        />
+                      ))}
                   </Box>
                   <Box
                     sx={{
@@ -482,7 +487,6 @@ export default function PlaygroundContent() {
                         overflowY: 'scroll !important',
                         maxHeight: '100%',
                         paddingRight: '8px',
-                        paddingY: '7px',
                         boxSizing: 'border-box',
                         '&::-webkit-scrollbar': {
                           width: '6px',
