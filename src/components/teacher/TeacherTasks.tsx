@@ -8,6 +8,7 @@ import {
   FormControlLabel,
   FormGroup,
   Grid2,
+  IconButton,
   Modal,
   Stack,
   Typography,
@@ -33,6 +34,11 @@ import { useStore } from 'zustand';
 import useSelectedStore from '../../stores/useSelectedStore';
 import { UPDATE_TASK_VISIBILITY } from '../../../graphql/mutations/updateTaskVisibility';
 import { DELETE_TASK_BY_TASK_ID } from '../../../graphql/mutations/deleteTaskByTaskId';
+import CloseRoundedIcon from '@mui/icons-material/CloseRounded';
+import useDarkmodeStore from '../../stores/useDarkmodeStore';
+import { useNavigate } from 'react-router-dom';
+import { useCodeStore, useTaskCodeStore } from '../../stores/useTaskCodeStore';
+import useTeacherStore from '../../stores/useOwnerStore';
 import { classTranslations, courseTranslations, typeTranslations } from '../../types/translations';
 import { GET_ALL_STUDY_GROUPS } from '../../../graphql/queries/getAllStudygroups';
 import { GET_ENROLMENTS_BY_STUDY_GROUP_ID } from '../../../graphql/queries/getEnrolmentsByStudyGroupId';
@@ -46,6 +52,11 @@ export default function TeacherTasks() {
   const [inactiveTasks, setInactiveTasks] = useState(false);
   const client = useApolloClient();
   const userId = parseInt(localStorage.getItem('id')!);
+  //const classId = parseInt(localStorage.getItem('class_id')!);
+  const { setTaskId } = useTaskCodeStore();
+  const { isDarkmode } = useDarkmodeStore();
+  const { setIsOwner } = useTeacherStore();
+  const { setCode } = useCodeStore();
   const {
     allTasksSelectionModel,
     studygroupSelectionModel,
@@ -80,6 +91,9 @@ export default function TeacherTasks() {
       { query: GET_ACTIVE_CREATED_TASKS, variables: { userId: userId } },
     ],
   });
+
+  const navigate = useNavigate();
+
   if (tasksLoading || createdLoading || studygroupsLoading || activeCreatedLoading) {
     return (
       <Box mt="30vh">
@@ -104,6 +118,7 @@ export default function TeacherTasks() {
           )
         : [],
       level: task.level,
+      taskId: task.taskId,
       type: task.type.toLowerCase() === 'exercise' ? typeTranslations.exercise : typeTranslations.obligatory,
       difficulty: task.difficulty,
     }));
@@ -121,6 +136,7 @@ export default function TeacherTasks() {
           )
         : [],
       level: task.level,
+      taskId: task.taskId,
       type: task.type.toLowerCase() === 'exercise' ? typeTranslations.exercise : typeTranslations.obligatory,
       difficulty: task.difficulty,
     }));
@@ -138,6 +154,7 @@ export default function TeacherTasks() {
           )
         : [],
       level: task.level,
+      taskId: task.taskId,
       type: task.type.toLowerCase() === 'exercise' ? typeTranslations.exercise : typeTranslations.obligatory,
       difficulty: task.difficulty,
     }));
@@ -301,6 +318,12 @@ export default function TeacherTasks() {
                 {/*<SearchBar options={rows2} prompt="Søk etter oppgaver" />*/}
                 <Grid2 container sx={{ flexGrow: 0, ml: 'auto' }} spacing={1}>
                   <Button
+                    onClick={() => {
+                      setTaskId(null);
+                      setCode('');
+                      setIsOwner(true);
+                      navigate('/playground');
+                    }}
                     variant="contained"
                     startIcon={<CreateIcon />}
                     color="primary"
@@ -339,7 +362,21 @@ export default function TeacherTasks() {
                     }}
                   >
                     <Fade in={open}>
-                      <Box sx={style}>
+                      <Box sx={style(isDarkmode)}>
+                        <IconButton
+                          onClick={() => {
+                            handleClose();
+                          }}
+                          size="small"
+                          sx={{ position: 'absolute', top: '5px', right: '5px' }}
+                        >
+                          <CloseRoundedIcon
+                            sx={{
+                              color: isDarkmode ? NAV_COLORS.editor_modal_color_dark : NAV_COLORS.editor_modal_color,
+                              fontSize: 'medium',
+                            }}
+                          />
+                        </IconButton>
                         <Grid2 container direction="column" spacing={1}>
                           <Stack direction="row">
                             <Typography id="keep-mounted-modal-title" variant="h5" fontWeight="medium">

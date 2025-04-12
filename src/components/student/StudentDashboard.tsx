@@ -48,6 +48,7 @@ export default function StudentDashboard() {
         recommendedStudent.recommendedByRecommendedId?.type.toLowerCase() === 'exercise'
           ? typeTranslations.exercise
           : typeTranslations.obligatory,
+      taskId: recommendedStudent.recommendedByRecommendedId?.taskByTaskId.taskId,
       difficulty: recommendedStudent.recommendedByRecommendedId?.taskByTaskId.difficulty,
       due: recommendedStudent.recommendedByRecommendedId?.taskByTaskId.due == null ? 'Ingen frist' : '',
     }));

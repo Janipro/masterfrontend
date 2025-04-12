@@ -12,6 +12,7 @@ export const GET_RECOMMENDED_STUDENTS = gql`
           studyGroupId
           type
           taskByTaskId {
+            taskId
             taskName
             taskDescription
             level

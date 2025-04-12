@@ -41,6 +41,7 @@ export default function StudentTasks() {
           )
         : [],
       level: task.level,
+      taskId: task.taskId,
       type: task.type.toLowerCase() === 'exercise' ? typeTranslations.exercise : typeTranslations.obligatory,
       difficulty: task.difficulty,
     }));
@@ -62,6 +63,7 @@ export default function StudentTasks() {
         recommendedStudent.recommendedByRecommendedId?.type.toLowerCase() === 'exercise'
           ? typeTranslations.exercise
           : typeTranslations.obligatory,
+      taskId: recommendedStudent.recommendedByRecommendedId?.taskByTaskId.taskId,
       difficulty: recommendedStudent.recommendedByRecommendedId?.taskByTaskId.difficulty,
       due: recommendedStudent.recommendedByRecommendedId?.taskByTaskId.due == null ? 'Ingen frist' : '',
     }));

@@ -1,30 +1,66 @@
 import { useState, useRef, useCallback, useEffect } from 'react';
 import Box from '@mui/material/Box';
+import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
-import CodeIcon from '../assets/code.svg?react';
-import TerminalIcon from '../assets/terminal.svg?react';
-import DescriptionIcon from '../assets/description.svg?react';
+import CodeIcon from '../../assets/code.svg?react';
+import TerminalIcon from '../../assets/terminal.svg?react';
+import DescriptionIcon from '../../assets/description.svg?react';
 import WbIncandescentRoundedIcon from '@mui/icons-material/WbIncandescentRounded';
 import ExpandLessRoundedIcon from '@mui/icons-material/ExpandLessRounded';
-import Editor from './Editor';
-import { Container, CssBaseline, Grid2, IconButton, TextField, useTheme } from '@mui/material';
-import { NAV_COLORS } from '../types/navColors';
-import Requirement from './Requirement';
-import Terminal from './Terminal';
-import useDarkmodeEditorStore from '../stores/useDarkmodeEditorStore';
-import { GET_TASK } from '../../graphql/queries/getTask';
+import Editor from '../Editor';
+import {
+  Container,
+  CssBaseline,
+  FormControl,
+  FormControlLabel,
+  FormLabel,
+  Grid2,
+  IconButton,
+  Radio,
+  RadioGroup,
+  useTheme,
+} from '@mui/material';
+import { NAV_COLORS } from '../../types/navColors';
+import Requirement from '../Requirement';
+import Terminal from '../Terminal';
+import useDarkmodeEditorStore from '../../stores/useDarkmodeEditorStore';
+import TeacherPlaygroundTitleField from './TeacherPlaygroundTitleField';
+import { useCodeStore, useNewTaskStore, useTaskCodeStore } from '../../stores/useTaskCodeStore';
 import { useQuery } from '@apollo/client';
-import { task } from '../types/tableProps';
-import { useTaskCodeStore } from '../stores/useTaskCodeStore';
-import { useNavigate } from 'react-router-dom';
+import { GET_ALL_REQUIREMENTS } from '../../../graphql/queries/getAllRequirements';
+import { requirement, task } from '../../types/tableProps';
+import React from 'react';
+import TeacherPlaygroundRequirementsModal from './TeacherPlaygroundRequirementsModal';
+import { GET_TASK } from '../../../graphql/queries/getTask';
+import TeacherPlaygroundDropdown from './TeacherPlayGroundDropdown';
+import { GET_ALL_COURSES } from '../../../graphql/queries/getAllCourses';
+import { course } from '../../types/tableProps';
 
-export default function PlaygroundContent() {
+export default function TeacherPlaygroundContent() {
   const theme = useTheme();
   const { isDarkmodeEditor } = useDarkmodeEditorStore();
-  const { selectedTaskId } = useTaskCodeStore();
-  const navigate = useNavigate();
   const [showCode, setShowCode] = useState(true);
+  const { setCode } = useCodeStore();
   const [currentTask, setCurrentTask] = useState<task>();
+  const {
+    setNewTaskId, // only used by edit task
+    setNewTitle,
+    newDescription,
+    setNewDescription,
+    setNewCodeTemplate,
+    setNewExpectedOutput,
+    newRequirements, // only used by create task
+    setNewRequirements, // only used by create task
+    setNewPublicAccess, // only used by create task
+    setNewLevel, // only used by create task
+    setNewCourseId, // only used by create task
+    resetNewTask,
+    newPublicAccess,
+  } = useNewTaskStore();
+
+  const [openRequirementsModal, setOpenRequirementsModal] = React.useState(false);
+  const [allRequirements, setAllRequirements] = useState<requirement[]>([]);
+  const { selectedTaskId } = useTaskCodeStore();
   const [terminalCollapsed, setTerminalCollapsed] = useState(() => {
     return localStorage.getItem('terminalCollapsed') === 'true';
   });
@@ -43,9 +79,39 @@ export default function PlaygroundContent() {
   const rightBottomPaneRef = useRef<HTMLDivElement | null>(null);
   const isResizingVertical = useRef(false);
   const isResizingHorizontal = useRef(false);
+  const userFullName = localStorage.getItem('full_name');
 
-  /*const taskDescription: string[] = ['VG1', 'Matematikk', 'Giga Elise'];
-  const programmingConstructs = [
+  const [selectedLevel, setSelectedLevel] = useState('Velg nivå');
+  const levelOptions = [
+    // should have a grade/level table in db that the other tables references (for instance for the task table)
+    '1. klasse',
+    '2. klasse',
+    '3. klasse',
+    '4. klasse',
+    '5. klasse',
+    '6. klasse',
+    '7. klasse',
+    '8. klasse',
+    '9. klasse',
+    '10. klasse',
+    'VG1',
+    'VG2',
+    'VG3',
+  ];
+
+  const { loading: courseLoading, data: courseData } = useQuery(GET_ALL_COURSES);
+  const [selectedCourse, setSelectedCourse] = useState('Velg fag');
+  const courseOptions = courseData?.allCourses.nodes.map((course: course) => course.courseName);
+
+  const { loading: requirementsLoading, data: requirementsData } = useQuery(GET_ALL_REQUIREMENTS);
+
+  const { loading: taskLoading, data: taskData } = useQuery(GET_TASK, {
+    variables: { taskId: selectedTaskId },
+    skip: selectedTaskId === null,
+  });
+
+  //const taskDescription: string[] = ['VG1', 'Matematikk', 'Giga Elise'];
+  /*const programmingConstructs = [
     'if-statement',
     'for-loop',
     'while-loop',
@@ -71,11 +137,6 @@ export default function PlaygroundContent() {
     'thread',
     'enum',
   ];*/
-
-  const { loading: taskLoading, data: taskData } = useQuery(GET_TASK, {
-    variables: { taskId: selectedTaskId },
-    skip: selectedTaskId === null,
-  });
 
   const disableInteractions = useCallback(() => {
     if (leftPaneRef.current) {
@@ -154,16 +215,38 @@ export default function PlaygroundContent() {
   }, [enableInteractions, handleMouseMoveVertical, handleMouseMoveHorizontal]);
 
   useEffect(() => {
-    if (!taskLoading && taskData && selectedTaskId !== null) {
-      setCurrentTask(taskData.allTasks.nodes?.[0]);
-    }
-  }, [taskData, taskLoading, selectedTaskId]);
+    resetNewTask();
+  }, []);
 
   useEffect(() => {
-    if (selectedTaskId === null) {
-      navigate('/tasks');
+    if (!taskLoading && taskData && selectedTaskId !== null) {
+      const task = taskData?.allTasks?.nodes?.[0];
+      setNewTaskId(task?.taskId);
+      setCurrentTask(task);
+      setNewTitle(task?.taskName);
+      setNewDescription(task?.taskDescription);
+      setNewExpectedOutput(task?.expectedOutput);
+      setCode(task?.expectedCode);
+      setNewPublicAccess(task?.publicAccess);
+      setNewCodeTemplate(task?.codeTemplate);
     }
-  }, [selectedTaskId, navigate]);
+  }, [
+    taskData,
+    taskLoading,
+    selectedTaskId,
+    setNewTaskId,
+    setNewTitle,
+    setNewDescription,
+    setCode,
+    setNewPublicAccess,
+    setNewCodeTemplate,
+  ]);
+
+  useEffect(() => {
+    if (!requirementsLoading && requirementsData) {
+      setAllRequirements(requirementsData.allRequirements.nodes);
+    }
+  }, [requirementsLoading, requirementsData]);
 
   useEffect(() => {
     if (isDarkmodeEditor) {
@@ -274,6 +357,22 @@ export default function PlaygroundContent() {
     setShowCode(false);
   };
 
+  const handleOpenRequirementsModal = () => setOpenRequirementsModal(true);
+  const handleCloseRequirementsModal = () => setOpenRequirementsModal(false);
+
+  const onChangeRadio = (value: string): void => {
+    setNewPublicAccess(value === 'Offentlig');
+  };
+
+  const handleSetSelectedLevel = (value: string): void => {
+    setSelectedLevel(value);
+    setNewLevel(value);
+  };
+
+  const handleSetSelectedCourse = (value: string): void => {
+    setSelectedCourse(value);
+    setNewCourseId(courseData.allCourses.nodes.find((course: course) => course.courseName === value).courseId);
+  };
   return (
     <Box
       ref={containerRef}
@@ -391,7 +490,7 @@ export default function PlaygroundContent() {
                   sx={{
                     padding: '20px 14px 20px 22px',
                     gap: '15px',
-                    display: selectedTaskId === null ? 'none' : 'flex',
+                    display: 'flex',
                     flexDirection: 'column',
                     height: 'calc(100% - 24px)',
                     overflowY: 'scroll',
@@ -416,9 +515,20 @@ export default function PlaygroundContent() {
                     '&::-webkit-scrollbar-thumb:hover': {
                       backgroundColor: '#9E9E9E',
                     },
+                    '& .MuiOutlinedInput-root': {
+                      '& fieldset': {
+                        border: `1px solid ${isDarkmodeEditor ? NAV_COLORS.editor_textfield_border_dark : NAV_COLORS.editor_textfield_border}`,
+                      },
+                      '&:hover fieldset': {
+                        border: `1px solid ${isDarkmodeEditor ? NAV_COLORS.editor_textfield_border_hover_dark : NAV_COLORS.editor_textfield_border_hover}`,
+                      },
+                      '&.Mui-focused fieldset': {
+                        border: `1px solid ${isDarkmodeEditor ? NAV_COLORS.editor_textfield_border_selected_dark : NAV_COLORS.editor_textfield_border_selected}`,
+                      },
+                    },
                   }}
                 >
-                  <Box sx={{ typography: 'h3', fontWeight: 'medium', fontSize: '2em' }}>{currentTask?.taskName}</Box>
+                  <TeacherPlaygroundTitleField />
                   <Box
                     sx={{
                       typography: 'body2',
@@ -432,51 +542,133 @@ export default function PlaygroundContent() {
                       color: 'black',
                     }}
                   >
-                    {[...(currentTask?.taskrequirementsByTaskId?.nodes || [])]
-                      .sort(
-                        (a, b) =>
-                          a.requirementByRequirementId.requirementId - b.requirementByRequirementId.requirementId
-                      )
-                      .map((req) => (
-                        <Requirement
-                          key={req.requirementByRequirementId.requirementId}
-                          value={req.requirementByRequirementId.requirementName}
-                          size="small"
-                        />
-                      ))}
+                    {selectedTaskId === null ? (
+                      <Box sx={{ typography: 'body2', fontWeight: '600', color: isDarkmodeEditor ? 'white' : 'black' }}>
+                        Krav:
+                      </Box>
+                    ) : null}
+                    {selectedTaskId === null
+                      ? newRequirements
+                          .sort((a, b) => a.requirementId - b.requirementId)
+                          .map((req) => (
+                            <Requirement key={req.requirementId} value={req.requirementName} size="small" />
+                          ))
+                      : [...(currentTask?.taskrequirementsByTaskId?.nodes || [])]
+                          .sort(
+                            (a, b) =>
+                              a.requirementByRequirementId.requirementId - b.requirementByRequirementId.requirementId
+                          )
+                          .map((req) => (
+                            <Requirement
+                              key={req.requirementByRequirementId.requirementId}
+                              value={req.requirementByRequirementId.requirementName}
+                              size="small"
+                            />
+                          ))}
+                    {selectedTaskId === null ? (
+                      <Typography
+                        onClick={handleOpenRequirementsModal}
+                        noWrap
+                        component="div"
+                        fontSize={'small'}
+                        sx={{
+                          lineHeight: '1.4',
+                          boxSizing: 'border-box',
+                          paddingX: '6.22px',
+                          paddingY: '0px',
+                          marginY: '1.57px',
+                          borderRadius: '20px',
+                          fontWeight: 'medium',
+                          boxShadow: 2,
+                          textAlign: 'center',
+                          fontSize: '1.1em',
+                          backgroundColor: isDarkmodeEditor ? '#9d9d9d' : '#cbcbcb',
+                          border: isDarkmodeEditor ? '#989898 1px solid' : '#d0d0d0 1px solid',
+                          '&:hover': {
+                            backgroundColor: isDarkmodeEditor ? '#888888' : '#b8b8b8',
+                            border: isDarkmodeEditor ? '#868686 1px solid' : '#b5b5b5 1px solid',
+                            cursor: 'pointer',
+                          },
+                        }}
+                      >
+                        +
+                      </Typography>
+                    ) : null}
                   </Box>
-                  <Box
-                    sx={{
-                      typography: 'body2',
-                      fontWeight: '600',
-                      display: 'flex',
-                      width: '100%',
-                      flexWrap: 'wrap',
-                      gap: '20px',
-                    }}
-                  >
-                    <Box sx={{ display: 'flex', flexDirection: 'row' }}>
-                      Nivå:&nbsp;<Box sx={{ fontWeight: 'medium' }}>{currentTask?.level}</Box>
-                    </Box>
-                    <Box sx={{ display: 'flex', flexDirection: 'row' }}>
-                      Fag:&nbsp;<Box sx={{ fontWeight: 'medium' }}>{currentTask?.courseByCourseId?.courseName}</Box>
-                    </Box>
-                    <Box sx={{ display: 'flex', flexDirection: 'row' }}>
-                      Lærer:&nbsp;
-                      <Box sx={{ fontWeight: 'medium' }}>
-                        {currentTask?.userByUserId?.firstname} {currentTask?.userByUserId?.lastname}
+                  {selectedTaskId === null ? (
+                    <Box
+                      sx={{
+                        typography: 'body2',
+                        fontWeight: '600',
+                        display: 'flex',
+                        width: '100%',
+                        flexWrap: 'wrap',
+                        gap: '20px',
+                        alignItems: 'center',
+                      }}
+                    >
+                      <Box sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
+                        Nivå:
+                        <TeacherPlaygroundDropdown
+                          itemList={levelOptions}
+                          selectedItem={selectedLevel}
+                          setSelectedItem={handleSetSelectedLevel}
+                        />
+                      </Box>
+                      {courseLoading ? null : (
+                        <Box sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
+                          Fag:
+                          <TeacherPlaygroundDropdown
+                            itemList={courseOptions}
+                            selectedItem={selectedCourse}
+                            setSelectedItem={handleSetSelectedCourse}
+                          />
+                        </Box>
+                      )}
+                      <Box sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
+                        Lærer:&nbsp;
+                        <Box sx={{ fontWeight: 'medium' }}>{userFullName}</Box>
                       </Box>
                     </Box>
-                  </Box>
+                  ) : (
+                    <Box
+                      sx={{
+                        typography: 'body2',
+                        fontWeight: '600',
+                        display: 'flex',
+                        width: '100%',
+                        flexWrap: 'wrap',
+                        gap: '20px',
+                      }}
+                    >
+                      <Box sx={{ display: 'flex', flexDirection: 'row' }}>
+                        Nivå:&nbsp;<Box sx={{ fontWeight: 'medium' }}>{currentTask?.level}</Box>
+                      </Box>
+                      <Box sx={{ display: 'flex', flexDirection: 'row' }}>
+                        Fag:&nbsp;<Box sx={{ fontWeight: 'medium' }}>{currentTask?.courseByCourseId?.courseName}</Box>
+                      </Box>
+                      <Box sx={{ display: 'flex', flexDirection: 'row' }}>
+                        Lærer:&nbsp;
+                        <Box sx={{ fontWeight: 'medium' }}>
+                          {currentTask?.userByUserId?.firstname} {currentTask?.userByUserId?.lastname}
+                        </Box>
+                      </Box>
+                    </Box>
+                  )}
                   <TextField
                     multiline
+                    fullWidth
                     size="small"
                     margin="none"
                     variant="outlined"
-                    value={currentTask?.taskDescription}
+                    value={newDescription}
+                    onChange={(e) => setNewDescription(e.target.value)}
                     sx={{
                       display: 'flex',
                       flex: 1,
+                      maxHeight: '100%',
+                      minHeight: '107px',
+                      overflow: 'hidden',
                       '& .MuiInputBase-root': {
                         maxHeight: '100%',
                         paddingRight: '3px',
@@ -511,13 +703,13 @@ export default function PlaygroundContent() {
                       },
                       '& .MuiOutlinedInput-root': {
                         '& fieldset': {
-                          border: 'none',
+                          border: `1px solid ${isDarkmodeEditor ? NAV_COLORS.editor_textfield_border_dark : NAV_COLORS.editor_textfield_border}`,
                         },
                         '&:hover fieldset': {
-                          border: 'none',
+                          border: `1px solid ${isDarkmodeEditor ? NAV_COLORS.editor_textfield_border_hover_dark : NAV_COLORS.editor_textfield_border_hover}`,
                         },
                         '&.Mui-focused fieldset': {
-                          border: 'none',
+                          border: `1px solid ${isDarkmodeEditor ? NAV_COLORS.editor_textfield_border_selected_dark : NAV_COLORS.editor_textfield_border_selected}`,
                         },
                       },
                       ' .MuiOutlinedInput-input': {
@@ -536,6 +728,89 @@ export default function PlaygroundContent() {
                       },
                     }}
                   />
+                  <Box
+                    sx={{
+                      typography: 'body2',
+                      fontWeight: '600',
+                      display: 'flex',
+                      width: '100%',
+                      flexWrap: 'wrap',
+                      columnGap: '20px',
+                      rowGap: '2px',
+                      overflowWrap: 'anywhere',
+                    }}
+                  >
+                    <FormControl
+                      sx={{ display: 'flex', flexDirection: 'row', flexWrap: 'wrap', columnGap: '20px', rowGap: '5px' }}
+                    >
+                      <FormLabel
+                        sx={{
+                          typography: 'body2',
+                          fontWeight: '600',
+                          color: isDarkmodeEditor ? NAV_COLORS.editor_text_dark : NAV_COLORS.editor_text,
+                          '&.Mui-focused': {
+                            color: isDarkmodeEditor ? NAV_COLORS.editor_text_dark : NAV_COLORS.editor_text,
+                          },
+                          display: 'flex',
+                          alignItems: 'center',
+                        }}
+                        id="custom-radio-group"
+                      >
+                        Tilgangsnivå
+                      </FormLabel>
+                      <RadioGroup
+                        row
+                        aria-labelledby="custom-radio-group"
+                        name="custom-radio"
+                        sx={{
+                          display: 'flex',
+                          flexDirection: 'row',
+                          flexWrap: 'wrap',
+                          columnGap: '20px',
+                          rowGap: '5px',
+                        }}
+                        value={newPublicAccess ? 'Offentlig' : 'Privat'}
+                        onChange={(e) => onChangeRadio(e.target.value)}
+                      >
+                        <FormControlLabel
+                          value="Offentlig"
+                          control={
+                            <Radio
+                              sx={{
+                                color: isDarkmodeEditor ? '#9d9d9d' : '#b7b7b7',
+                                '&.Mui-checked': {
+                                  color: '#1976d2',
+                                },
+                              }}
+                            />
+                          }
+                          label={
+                            <Box sx={{ display: 'flex', flexDirection: 'row', gap: 1 }}>
+                              <Box sx={{ fontWeight: 'medium' }}>Offentlig</Box>
+                            </Box>
+                          }
+                        />
+                        <FormControlLabel
+                          value="Privat"
+                          control={
+                            <Radio
+                              sx={{
+                                color: isDarkmodeEditor ? '#9d9d9d' : '#b7b7b7',
+                                '&.Mui-checked': {
+                                  color: '#1976d2',
+                                },
+                              }}
+                            />
+                          }
+                          label={
+                            <Box sx={{ display: 'flex', flexDirection: 'row', gap: 1 }}>
+                              <Box sx={{ fontWeight: 'medium' }}>Privat</Box>
+                            </Box>
+                          }
+                        />
+                      </RadioGroup>
+                    </FormControl>
+                  </Box>
                 </Box>
               )}
             </Box>
@@ -630,7 +905,7 @@ export default function PlaygroundContent() {
                       style={{ marginLeft: '0.4em', marginRight: '0.2em' }}
                     />
                     <Typography sx={{ fontWeight: 'medium', userSelect: 'none', fontSize: '0.95em' }}>
-                      Python Kode
+                      {showCode ? 'Python Kodefasit' : 'Python Kodemal'}
                     </Typography>
                   </Box>
                   <Box sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
@@ -716,7 +991,7 @@ export default function PlaygroundContent() {
                     </Typography>
                   </Box>
                 </Grid2>
-                <Editor showCode={showCode} currentCodeTemplate={currentTask?.codeTemplate || ''} />
+                <Editor showCode={showCode} currentCodeTemplate={''} />
               </Box>
             </Grid2>
           </Container>
@@ -847,6 +1122,13 @@ export default function PlaygroundContent() {
           </Container>
         </Box>
       </Box>
+      <TeacherPlaygroundRequirementsModal
+        openModal={openRequirementsModal}
+        closeModal={handleCloseRequirementsModal}
+        allRequirements={allRequirements}
+        requirements={newRequirements}
+        setRequirements={setNewRequirements}
+      />
     </Box>
   );
 }

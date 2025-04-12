@@ -10,6 +10,7 @@ import {
   FormControlLabel,
   FormGroup,
   Grid2,
+  IconButton,
   InputLabel,
   MenuItem,
   Modal,
@@ -26,7 +27,7 @@ import CreateIcon from '@mui/icons-material/Create';
 import Table from '../Table';
 import InfoCard from '../InfoCard';
 import { useState } from 'react';
-import { style } from '../../types/navColors';
+import { NAV_COLORS, style } from '../../types/navColors';
 import { columns3, columns5 } from '../../types/userData';
 import { useMutation, useQuery } from '@apollo/client';
 import { GET_ALL_COURSES } from '../../../graphql/queries/getAllCourses';
@@ -43,6 +44,8 @@ import { useStore } from 'zustand';
 import { GET_RECOMMENDEDS } from '../../../graphql/queries/getRecommendeds';
 import { GET_ACTIVE_RECOMMENDEDS } from '../../../graphql/queries/getActiveRecommendeds';
 import { classTranslations, typeTranslations } from '../../types/translations';
+import CloseRoundedIcon from '@mui/icons-material/CloseRounded';
+import useDarkmodeStore from '../../stores/useDarkmodeStore';
 
 export default function TeacherDashboard() {
   const [open, setOpen] = useState(false);
@@ -56,6 +59,7 @@ export default function TeacherDashboard() {
   const userId = parseInt(localStorage.getItem('id')!);
   const schoolId = parseInt(localStorage.getItem('school_id')!);
   const classId = parseInt(localStorage.getItem('class_id')!);
+  const { isDarkmode } = useDarkmodeStore();
   const { studentSelectionModel, recommendedSelectionModel, setStudentSelectionModel, setRecommendedSelectionModel } =
     useStore(useSelectedStore);
 
@@ -129,6 +133,7 @@ export default function TeacherDashboard() {
           )
         : [],
       level: recommended.taskByTaskId?.level,
+      taskId: recommended.taskByTaskId?.taskId,
       type: recommended.type.toLowerCase() == 'exercise' ? typeTranslations.exercise : typeTranslations.obligatory,
       difficulty: recommended.taskByTaskId?.difficulty,
       due: recommended.taskByTaskId?.due == null ? 'Ingen frist' : '',
@@ -147,6 +152,7 @@ export default function TeacherDashboard() {
           )
         : [],
       level: recommended.taskByTaskId?.level,
+      taskId: recommended.taskByTaskId?.taskId,
       type: recommended.type.toLowerCase() == 'exercise' ? typeTranslations.exercise : typeTranslations.obligatory,
       difficulty: recommended.taskByTaskId?.difficulty,
       due: recommended.taskByTaskId?.due == null ? 'Ingen frist' : '',
@@ -263,7 +269,21 @@ export default function TeacherDashboard() {
                     }}
                   >
                     <Fade in={open}>
-                      <Box sx={style}>
+                      <Box sx={style(isDarkmode)}>
+                        <IconButton
+                          onClick={() => {
+                            handleClose();
+                          }}
+                          size="small"
+                          sx={{ position: 'absolute', top: '5px', right: '5px' }}
+                        >
+                          <CloseRoundedIcon
+                            sx={{
+                              color: isDarkmode ? NAV_COLORS.editor_modal_color_dark : NAV_COLORS.editor_modal_color,
+                              fontSize: 'medium',
+                            }}
+                          />
+                        </IconButton>
                         <Grid2 container direction="column" spacing={2}>
                           <Stack direction="row">
                             <Typography id="keep-mounted-modal-title" variant="h5" fontWeight="medium">

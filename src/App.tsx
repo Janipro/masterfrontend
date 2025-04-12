@@ -85,11 +85,11 @@ function App() {
           <Routes>
             <Route path="/" element={loggedIn ? <Home /> : <Login />} />
             {/*<Route path="/register" element={<Register />} />*/}
-            <Route path="/playground" element={<Playground />} />
-            <Route path="/tasks" element={<Tasks />} />
-            <Route path="/class/:id" element={<Class />} />
-            <Route path="/classes" element={<Classes />} />
-            <Route path="/statistics" element={<Statistics />} />
+            <Route path="/playground" element={loggedIn ? <Playground /> : <Login />} />
+            <Route path="/tasks" element={loggedIn ? <Tasks /> : <Login />} />
+            <Route path="/class/:id" element={loggedIn ? <Class /> : <Login />} />
+            <Route path="/classes" element={loggedIn ? <Classes /> : <Login />} />
+            <Route path="/statistics" element={loggedIn ? <Statistics /> : <Login />} />
           </Routes>
         </Router>
       </ThemeProvider>

@@ -33,16 +33,31 @@ export const NAV_COLORS = {
   editor_button_template_unselected_backgroundcolor_dark: '#3d3d3d',
   editor_button_template_unselected_color: '#93a7bc',
   editor_button_template_unselected_color_dark: '#aaaaaa',
+  editor_textfield_border: '#b0b0b0',
+  editor_textfield_border_dark: '#585858',
+  editor_textfield_border_hover: '#909090',
+  editor_textfield_border_hover_dark: '#909090',
+  editor_textfield_border_selected: '#707070',
+  editor_textfield_border_selected_dark: '#C0C0C0',
+  editor_modal_background: '#FFFFFF',
+  editor_modal_background_dark: '#282828',
+  editor_modal_color: '#323232',
+  editor_modal_color_dark: '#A7A7A7',
 };
 
-export const style = {
+export const style = (isDarkmode: boolean) => ({
   position: 'absolute',
   top: '50%',
   left: '50%',
   transform: 'translate(-50%, -50%)',
-  width: 'auto',
+  height: 'auto',
   bgcolor: 'background.paper',
-  border: '2px solid #000',
-  boxShadow: 24,
+  /*isDarkmode
+      ? NAV_COLORS.editor_button_background_dark
+      : NAV_COLORS.editor_button_background,*/
+  color: isDarkmode ? NAV_COLORS.editor_icon_redo_undo_background_dark : NAV_COLORS.editor_icon_background,
+  boxShadow: 5,
+  borderRadius: '5px',
   p: 4,
-};
+  textAlign: 'center',
+});

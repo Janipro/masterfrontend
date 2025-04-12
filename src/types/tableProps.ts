@@ -1,6 +1,10 @@
 export type task = {
   taskId: number;
   taskName: string;
+  taskDescription: string;
+  expectedCode: string;
+  expectedOutput: string;
+  codeTemplate: string;
   level: string;
   difficulty: string;
   courseByCourseId?: course;
@@ -14,6 +18,7 @@ export type task = {
   class: string;
   isActive: boolean;
   isPublic: boolean;
+  imageUrl: string;
 };
 
 export type course = {

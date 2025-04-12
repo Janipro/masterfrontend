@@ -25,6 +25,7 @@ export default function Terminal({ terminalCollapsed }: TerminalProps) {
     <Box
       ref={terminalRef}
       sx={{
+        lineBreak: 'anywhere',
         padding: '10px',
         typography: 'body2',
         fontSize: '0.8em',

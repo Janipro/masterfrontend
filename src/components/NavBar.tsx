@@ -11,18 +11,20 @@ import PopUpMenu from './PopUpMenu';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import SettingsIcon from '@mui/icons-material/Settings';
 import { Link } from 'react-router-dom';
-import { CssBaseline, FormControlLabel, FormGroup, Modal, Stack, Switch } from '@mui/material';
+import { CssBaseline, Fade, FormControlLabel, FormGroup, Modal, Stack, Switch } from '@mui/material';
 import { NAV_COLORS } from '../types/navColors';
 import NotificationsRoundedIcon from '@mui/icons-material/NotificationsRounded';
 import { useNavigate } from 'react-router-dom';
 import useDarkmodeStore from '../stores/useDarkmodeStore';
 import useDarkmodeEditorStore from '../stores/useDarkmodeEditorStore';
 import logo from '../assets/educode.png';
+import CloseRoundedIcon from '@mui/icons-material/CloseRounded';
 
 const settings = ['Profil', 'Logg ut'];
 
 export default function NavBar() {
   const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(null);
+  const isTeacher = localStorage.getItem('is_admin') == 'true';
   const { isDarkmode, setDarkmode } = useDarkmodeStore();
   const { isDarkmodeEditor, setDarkmodeEditor } = useDarkmodeEditorStore();
 
@@ -76,6 +78,18 @@ export default function NavBar() {
             <PopUpMenu isEditor={false} />
           </Box>
           <Stack direction="row" sx={{ flexGrow: 0, ml: 'auto', alignItems: 'center' }}>
+            <FormGroup sx={{ display: 'none' }}>
+              <FormControlLabel
+                control={
+                  <Switch
+                    checked={isTeacher}
+                    onChange={(e) => localStorage.setItem('is_admin', e.target.checked.toString())}
+                  />
+                }
+                label="Lærermodus"
+              />
+            </FormGroup>
+
             <IconButton>
               <NotificationsRoundedIcon sx={{ color: isDarkmode ? NAV_COLORS.text_dark : NAV_COLORS.text }} />
             </IconButton>
@@ -83,47 +97,57 @@ export default function NavBar() {
               <SettingsIcon sx={{ color: isDarkmode ? NAV_COLORS.text_dark : NAV_COLORS.text }} />
             </IconButton>
             <Modal open={open} onClose={handleClose} aria-labelledby="settings-modal-title">
-              <Box
-                sx={{
-                  position: 'absolute',
-                  top: '50%',
-                  left: '50%',
-                  transform: 'translate(-50%, -50%)',
-                  width: 300,
-                  heigth: 'auto',
-                  bgcolor: isDarkmode ? NAV_COLORS.editor_button_background_dark : NAV_COLORS.editor_button_background,
-                  color: isDarkmode
-                    ? NAV_COLORS.editor_icon_redo_undo_background_dark
-                    : NAV_COLORS.editor_icon_background,
-                  boxShadow: 5,
-                  borderRadius: '5px',
-                  p: 4,
-                  textAlign: 'center',
-                }}
-              >
-                <Typography id="settings-modal-title" variant="h5" component="h2" fontWeight="500">
-                  Innstillinger
-                </Typography>
-                <Stack direction="column" alignItems="left" mt={4} gap={1}>
-                  <FormGroup>
-                    <FormControlLabel
-                      control={<Switch defaultChecked={isDarkmode} onChange={() => setDarkmode(!isDarkmode)} />}
-                      label="Nettside mørk modus"
+              <Fade in={open}>
+                <Box
+                  sx={{
+                    position: 'absolute',
+                    top: '50%',
+                    left: '50%',
+                    transform: 'translate(-50%, -50%)',
+                    width: 300,
+                    heigth: 'auto',
+                    bgcolor: isDarkmode ? NAV_COLORS.editor_modal_background_dark : NAV_COLORS.editor_modal_background,
+                    boxShadow: 5,
+                    borderRadius: '5px',
+                    p: 4,
+                    textAlign: 'center',
+                  }}
+                >
+                  <IconButton
+                    onClick={() => {
+                      handleClose();
+                    }}
+                    size="small"
+                    sx={{ position: 'absolute', top: '5px', right: '5px' }}
+                  >
+                    <CloseRoundedIcon
+                      sx={{
+                        color: isDarkmode ? NAV_COLORS.editor_modal_color_dark : NAV_COLORS.editor_modal_color,
+                        fontSize: 'medium',
+                      }}
                     />
-                  </FormGroup>
-                  <FormGroup>
-                    <FormControlLabel
-                      control={
-                        <Switch
-                          defaultChecked={isDarkmodeEditor}
-                          onChange={() => setDarkmodeEditor(!isDarkmodeEditor)}
-                        />
-                      }
-                      label="Editor mørk modus"
-                    />
-                  </FormGroup>
-                </Stack>
-              </Box>
+                  </IconButton>
+                  <Typography id="settings-modal-title" variant="h5" component="h2" fontWeight="500">
+                    Innstillinger
+                  </Typography>
+                  <Stack direction="column" alignItems="left" mt={4} gap={1}>
+                    <FormGroup>
+                      <FormControlLabel
+                        control={<Switch checked={isDarkmode} onChange={(e) => setDarkmode(e.target.checked)} />}
+                        label="Nettside mørk modus"
+                      />
+                    </FormGroup>
+                    <FormGroup>
+                      <FormControlLabel
+                        control={
+                          <Switch checked={isDarkmodeEditor} onChange={(e) => setDarkmodeEditor(e.target.checked)} />
+                        }
+                        label="Editor mørk modus"
+                      />
+                    </FormGroup>
+                  </Stack>
+                </Box>
+              </Fade>
             </Modal>
             <IconButton
               onClick={handleOpenUserMenu}
@@ -132,7 +156,50 @@ export default function NavBar() {
               <AccountCircleIcon />
             </IconButton>
             <Menu
-              sx={{ mt: '45px' }}
+              sx={{
+                mt: '35px',
+                display: { xs: 'none', sm: 'none', md: 'none', lg: 'block', xl: 'block' },
+                '& .MuiPaper-root': {
+                  backgroundColor: isDarkmode
+                    ? NAV_COLORS.editor_button_background_dark
+                    : NAV_COLORS.editor_button_background,
+                  color: isDarkmode ? NAV_COLORS.editor_icon_background_dark : NAV_COLORS.editor_icon_background,
+                },
+                '& .MuiMenuItem-root': {
+                  color: isDarkmode ? NAV_COLORS.editor_icon_background_dark : NAV_COLORS.editor_icon_background,
+                  '&:hover': {
+                    backgroundColor: isDarkmode
+                      ? NAV_COLORS.editor_menu_background_highlight_dark
+                      : NAV_COLORS.editor_menu_background_highlight,
+                  },
+                },
+                '& .MuiList-root': {
+                  padding: 0,
+                },
+              }}
+              slotProps={{
+                paper: {
+                  sx: {
+                    '&::-webkit-scrollbar': {
+                      width: '6px',
+                      borderRadius: '5px',
+                    },
+                    '&::-webkit-scrollbar-track': {
+                      backgroundColor: isDarkmode
+                        ? NAV_COLORS.editor_pane_background_dark
+                        : NAV_COLORS.editor_pane_background,
+                      borderRadius: '0 5px 5px 0',
+                    },
+                    '&::-webkit-scrollbar-thumb': {
+                      backgroundColor: '#B7B7B7',
+                      borderRadius: '5px',
+                    },
+                    '&::-webkit-scrollbar-thumb:hover': {
+                      backgroundColor: '#9E9E9E',
+                    },
+                  },
+                },
+              }}
               id="menu-appbar"
               anchorEl={anchorElUser}
               anchorOrigin={{

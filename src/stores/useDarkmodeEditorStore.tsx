@@ -9,8 +9,11 @@ type DarkmodeEditorAction = {
 };
 
 const useDarkmodeEditorStore = create<DarkmodeEditorState & DarkmodeEditorAction>()((set) => ({
-  isDarkmodeEditor: false,
-  setDarkmodeEditor: (updateDarkmodeEditorState) => set(() => ({ isDarkmodeEditor: updateDarkmodeEditorState })),
+  isDarkmodeEditor: localStorage.getItem('isDarkmodeEditor') === 'true',
+  setDarkmodeEditor: (updateDarkmodeEditorState) => {
+    localStorage.setItem('isDarkmodeEditor', updateDarkmodeEditorState.toString());
+    set(() => ({ isDarkmodeEditor: updateDarkmodeEditorState }));
+  },
 }));
 
 export default useDarkmodeEditorStore;

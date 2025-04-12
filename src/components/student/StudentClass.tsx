@@ -55,6 +55,7 @@ export default function StudentClass() {
           : typeTranslations.obligatory,
       difficulty: recommendedStudent.recommendedByRecommendedId?.taskByTaskId.difficulty,
       due: recommendedStudent.recommendedByRecommendedId?.taskByTaskId.due == null ? 'Ingen frist' : '',
+      taskId: recommendedStudent.recommendedByRecommendedId?.taskByTaskId.taskId,
     }));
   };
 
