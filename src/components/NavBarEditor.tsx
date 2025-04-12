@@ -39,7 +39,7 @@ export default function NavBarEditor() {
   const { isDarkmode, setDarkmode } = useDarkmodeStore();
   const { isDarkmodeEditor, setDarkmodeEditor } = useDarkmodeEditorStore();
   const { selectedTaskId } = useTaskCodeStore();
-  const isTeacher = localStorage.getItem('is_admin');
+  const isTeacher = localStorage.getItem('is_admin') == 'true';
 
   const [open, setOpen] = React.useState(false);
   const handleOpen = () => setOpen(true);
@@ -348,7 +348,7 @@ export default function NavBarEditor() {
                 <FormControlLabel
                   control={
                     <Switch
-                      checked={isTeacher === 'true'}
+                      checked={isTeacher}
                       onChange={(e) => localStorage.setItem('is_admin', e.target.checked.toString())}
                       sx={{
                         '& .MuiSwitch-thumb': {

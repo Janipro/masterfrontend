@@ -28,7 +28,7 @@ import Table from '../Table';
 import InfoCard from '../InfoCard';
 import { useState } from 'react';
 import { NAV_COLORS, style } from '../../types/navColors';
-import { columns, columns3 } from '../../types/userData';
+import { columns3, columns5 } from '../../types/userData';
 import { useMutation, useQuery } from '@apollo/client';
 import { GET_ALL_COURSES } from '../../../graphql/queries/getAllCourses';
 import { GET_ALL_STUDENTS } from '../../../graphql/queries/getAllStudents';
@@ -59,9 +59,9 @@ export default function TeacherDashboard() {
   const userId = parseInt(localStorage.getItem('id')!);
   const schoolId = parseInt(localStorage.getItem('school_id')!);
   const classId = parseInt(localStorage.getItem('class_id')!);
-  const { studentSelectionModel, setStudentSelectionModel } = useStore(useSelectedStore);
-  const { recommendedSelectionModel, setRecommendedSelectionModel } = useStore(useSelectedStore);
   const { isDarkmode } = useDarkmodeStore();
+  const { studentSelectionModel, recommendedSelectionModel, setStudentSelectionModel, setRecommendedSelectionModel } =
+    useStore(useSelectedStore);
 
   const handleChangeCourse = (event: SelectChangeEvent) => {
     setCourse(event.target.value);
@@ -83,7 +83,7 @@ export default function TeacherDashboard() {
     variables: { userId: userId },
   });
   const { loading: studentsLoading, data: studentsData } = useQuery(GET_ALL_STUDENTS, {
-    variables: { classId: classId },
+    variables: { classId: classId, schoolId: schoolId },
   });
   const [createStudygroup] = useMutation(CREATE_STUDY_GROUP, {
     refetchQueries: [{ query: GET_ALL_ACTIVE_STUDY_GROUPS, variables: { userId: userId } }],
@@ -133,8 +133,10 @@ export default function TeacherDashboard() {
           )
         : [],
       level: recommended.taskByTaskId?.level,
-      type: recommended.type === 'exercise' ? typeTranslations.exercise : typeTranslations.obligatory,
       taskId: recommended.taskByTaskId?.taskId,
+      type: recommended.type.toLowerCase() == 'exercise' ? typeTranslations.exercise : typeTranslations.obligatory,
+      difficulty: recommended.taskByTaskId?.difficulty,
+      due: recommended.taskByTaskId?.due == null ? 'Ingen frist' : '',
     }));
   };
 
@@ -150,8 +152,10 @@ export default function TeacherDashboard() {
           )
         : [],
       level: recommended.taskByTaskId?.level,
-      type: recommended.type === 'exercise' ? typeTranslations.exercise : typeTranslations.obligatory,
       taskId: recommended.taskByTaskId?.taskId,
+      type: recommended.type.toLowerCase() == 'exercise' ? typeTranslations.exercise : typeTranslations.obligatory,
+      difficulty: recommended.taskByTaskId?.difficulty,
+      due: recommended.taskByTaskId?.due == null ? 'Ingen frist' : '',
     }));
   };
 
@@ -170,8 +174,8 @@ export default function TeacherDashboard() {
       for (const studentId in studentSelectionModel) {
         await createEnrolment({
           variables: {
-            studyGroupId: studyGroupId,
             userId: studentSelectionModel[studentId],
+            studyGroupId: studyGroupId,
           },
         });
       }
@@ -323,7 +327,13 @@ export default function TeacherDashboard() {
                             }}
                           />
                           <Stack direction="row"></Stack>
-                          <Table rows={getClass()} columns={columns3} selectable />
+                          <Table
+                            rows={getClass()}
+                            columns={columns3}
+                            selectable
+                            selectionModel={studentSelectionModel}
+                            setSelectionModel={setStudentSelectionModel}
+                          />
                           <Button
                             variant="contained"
                             startIcon={<CreateIcon />}
@@ -372,7 +382,7 @@ export default function TeacherDashboard() {
               textAlign: 'left',
             }}
           >
-            <Grid2 container direction="row" sx={{ mb: 0.5 }}>
+            <Grid2 container direction="row" sx={{ mb: 2 }}>
               <Typography variant="h5" noWrap component="div">
                 Utdelte oppgaver
               </Typography>
@@ -423,7 +433,7 @@ export default function TeacherDashboard() {
             </Grid2>
             <Table
               rows={inactiveTasks ? getGivenRecommendeds() : getActiveGivenRecommendeds()}
-              columns={columns}
+              columns={columns5}
               selectable
               key={inactiveTasks ? 'inactive' : 'active'}
               selectionModel={recommendedSelectionModel}

@@ -21,12 +21,13 @@ const TeacherPlaygroundCreateTaskModal: React.FC<CreateTaskModalProps> = ({
   handleCreateTask,
 }) => {
   const { isDarkmodeEditor } = useDarkmodeEditorStore();
-  const { newTitle, newExpectedOutput } = useNewTaskStore();
+  const { newTitle, newExpectedOutput, resetNewTask } = useNewTaskStore();
   const navigate = useNavigate();
 
   const confirmCreateTask = () => {
     handleCreateTask();
     closeModal();
+    resetNewTask();
     navigate('/tasks');
   };
 
@@ -42,7 +43,7 @@ const TeacherPlaygroundCreateTaskModal: React.FC<CreateTaskModalProps> = ({
             top: '50%',
             left: '50%',
             transform: 'translate(-50%, -50%)',
-            height: '35%',
+            height: '45%',
             width: '36%',
             minHeight: '350px',
             minWidth: '300px',

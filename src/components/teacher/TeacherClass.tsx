@@ -24,7 +24,7 @@ import AnnouncementIcon from '@mui/icons-material/Announcement';
 import { useState } from 'react';
 import PostAddIcon from '@mui/icons-material/PostAdd';
 import CreateIcon from '@mui/icons-material/Create';
-import { columns } from '../../types/userData';
+import { columns5 } from '../../types/userData';
 import { announcement, taskRequirement, course, recommended } from '../../types/tableProps';
 import { useMutation, useQuery } from '@apollo/client';
 import { GET_ALL_ANNOUNCEMENTS } from '../../../graphql/queries/getAllAnnouncements';
@@ -33,7 +33,7 @@ import { UPDATE_STUDY_GROUP_BY_STUDY_GROUP_ID } from '../../../graphql/mutations
 import { GET_STUDY_GROUP_BY_STUDY_GROUP_ID } from '../../../graphql/queries/getStudygroupByStudyGroupId';
 import { useParams } from 'react-router-dom';
 import { GET_ALL_COURSES } from '../../../graphql/queries/getAllCourses';
-import { GET_RECOMMENDEDS } from '../../../graphql/queries/getRecommendeds';
+import { GET_RECOMMENDEDS_BY_STUDY_GROUP_ID } from '../../../graphql/queries/getRecommendedsByStudyGroupId';
 import { typeTranslations } from '../../types/translations';
 import CloseRoundedIcon from '@mui/icons-material/CloseRounded';
 import useDarkmodeStore from '../../stores/useDarkmodeStore';
@@ -58,7 +58,7 @@ export default function TeacherClass() {
     loading: recommendedLoading,
     error,
     data: recommendedData,
-  } = useQuery(GET_RECOMMENDEDS, { variables: { userId: userId } });
+  } = useQuery(GET_RECOMMENDEDS_BY_STUDY_GROUP_ID, { variables: { userId: userId, studyGroupId: parseInt(id!) } });
   const { loading: announcementLoading, data: announcementData } = useQuery(GET_ALL_ANNOUNCEMENTS, {
     variables: { studyGroupId: parseInt(id!) },
   });
@@ -106,8 +106,10 @@ export default function TeacherClass() {
           )
         : [],
       level: recommended.taskByTaskId?.level,
-      type: recommended.type === 'exercise' ? typeTranslations.exercise : typeTranslations.obligatory,
       taskId: recommended.taskByTaskId?.taskId,
+      type: recommended.type.toLowerCase() == 'exercise' ? typeTranslations.exercise : typeTranslations.obligatory,
+      difficulty: recommended.taskByTaskId?.difficulty,
+      due: recommended.taskByTaskId?.due == null ? 'Ingen frist' : '',
     }));
   };
 
@@ -370,7 +372,7 @@ export default function TeacherClass() {
                 Utdelte oppgaver
               </Typography>
             </Grid2>
-            <Table rows={getGivenRecommendeds()} columns={columns} selectable />
+            <Table rows={getGivenRecommendeds()} columns={columns5} selectable />
           </Grid2>
         </Container>
       </Box>

@@ -9,7 +9,7 @@ import { useTaskCodeStore } from '../stores/useTaskCodeStore';
 export default function EditorPage() {
   const { isOwner } = useOwnerStore();
   const { selectedTaskId } = useTaskCodeStore();
-  const isTeacher = localStorage.getItem('is_admin');
+  const isTeacher = localStorage.getItem('is_admin') == 'true';
 
   useEffect(() => {
     const rootElement = document.getElementById('root');

@@ -2,12 +2,12 @@ import { Box, Paper } from '@mui/material';
 import { DataGrid, GridCellParams, GridColDef, GridRowSelectionModel } from '@mui/x-data-grid';
 import { nbNO } from '@mui/x-data-grid/locales/nbNO';
 import { useMemo, useState } from 'react';
-import { task, student, recommended, recommendedStudent } from '../types/tableProps';
 import useOwnerStore from '../stores/useOwnerStore';
 import { useCodeStore, useTaskCodeStore } from '../stores/useTaskCodeStore';
 import { useNavigate } from 'react-router-dom';
+import { task, student, recommended, recommendedStudent, studygroup } from '../types/tableProps';
 
-const paginationModel = { page: 0, pageSize: 5 };
+const paginationModel = { page: 0, pageSize: 10 };
 
 export default function Table({
   rows,
@@ -16,7 +16,7 @@ export default function Table({
   selectionModel,
   setSelectionModel,
 }: {
-  rows: task[] | student[] | recommended[] | recommendedStudent[];
+  rows: task[] | student[] | recommended[] | recommendedStudent[] | studygroup[];
   selectable: boolean;
   columns: GridColDef[];
   selectionModel?: GridRowSelectionModel;
@@ -25,7 +25,7 @@ export default function Table({
   type Row = (typeof rows)[number];
   const [initialRows /*, setRows*/] = useState<Row[]>(rows);
   const { setIsOwner } = useOwnerStore();
-  const isTeacher = localStorage.getItem('is_admin');
+  const isTeacher = localStorage.getItem('is_admin') == 'true';
   const { setTaskId, selectedTaskId } = useTaskCodeStore();
   const { setCode } = useCodeStore();
   const navigate = useNavigate();
@@ -58,7 +58,7 @@ export default function Table({
           rows={initialRows}
           columns={columns}
           initialState={{ pagination: { paginationModel } }}
-          pageSizeOptions={[5, 10]}
+          pageSizeOptions={[5, 10, 20]}
           sx={{ border: 0 }}
           localeText={nbNO.components.MuiDataGrid.defaultProps.localeText}
           checkboxSelection={selectable}
@@ -77,11 +77,17 @@ export default function Table({
             };
 
             if (hasTaskId(initialRows)) {
+              console.log('it has taskid');
               if (params.field === 'title') {
+                console.log('clicked on tht title');
                 if (params.row.taskId !== selectedTaskId) {
+                  console.log('not same taskid');
+                  console.log(params.row.taskId);
                   setTaskId(params.row.taskId);
                   setCode('');
                 }
+                console.log('last stsep');
+
                 const email = localStorage.getItem('email') || '';
                 setIsOwner(params.row.owner.toLowerCase() === email.toLowerCase()); //should probably compare user ids instead, but all the tables only has owner (email) atm
                 navigate('/playground');

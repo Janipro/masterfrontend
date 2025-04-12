@@ -7,7 +7,7 @@ import { useQuery } from '@apollo/client';
 import { taskRequirement, enrolment, recommendedStudent } from '../../types/tableProps';
 import { GET_RECOMMENDED_STUDENTS } from '../../../graphql/queries/getRecommendedStudents';
 import { GET_ALL_ENROLMENTS } from '../../../graphql/queries/getAllEnrolments';
-import { columns } from '../../types/userData';
+import { columns5 } from '../../types/userData';
 import { typeTranslations } from '../../types/translations';
 
 export default function StudentDashboard() {
@@ -45,10 +45,12 @@ export default function StudentDashboard() {
         : [],
       level: recommendedStudent.recommendedByRecommendedId?.taskByTaskId.level,
       type:
-        recommendedStudent.recommendedByRecommendedId?.type === 'exercise'
+        recommendedStudent.recommendedByRecommendedId?.type.toLowerCase() === 'exercise'
           ? typeTranslations.exercise
           : typeTranslations.obligatory,
       taskId: recommendedStudent.recommendedByRecommendedId?.taskByTaskId.taskId,
+      difficulty: recommendedStudent.recommendedByRecommendedId?.taskByTaskId.difficulty,
+      due: recommendedStudent.recommendedByRecommendedId?.taskByTaskId.due == null ? 'Ingen frist' : '',
     }));
   };
   return (
@@ -110,10 +112,10 @@ export default function StudentDashboard() {
               mt: -4,
             }}
           >
-            <Typography variant="h5" noWrap component="div" sx={{ mb: 0.5 }}>
+            <Typography variant="h5" noWrap component="div" sx={{ mb: 2 }}>
               Anbefalte oppgaver
             </Typography>
-            <Table rows={getRecommendedTasks()} columns={columns} selectable={false} />
+            <Table rows={getRecommendedTasks()} columns={columns5} selectable={false} />
           </Grid2>
         </Container>
       </Box>

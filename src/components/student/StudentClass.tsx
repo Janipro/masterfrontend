@@ -5,7 +5,7 @@ import Announcements from '../Announcements';
 import { announcement, recommendedStudent, taskRequirement } from '../../types/tableProps';
 import { useQuery } from '@apollo/client';
 import { GET_RECOMMENDED_STUDENTS } from '../../../graphql/queries/getRecommendedStudents';
-import { columns } from '../../types/userData';
+import { columns5 } from '../../types/userData';
 import { GET_ALL_ANNOUNCEMENTS } from '../../../graphql/queries/getAllAnnouncements';
 import { GET_STUDY_GROUP_BY_STUDY_GROUP_ID } from '../../../graphql/queries/getStudygroupByStudyGroupId';
 import { useParams } from 'react-router-dom';
@@ -50,9 +50,11 @@ export default function StudentClass() {
         : [],
       level: recommendedStudent.recommendedByRecommendedId?.taskByTaskId.level,
       type:
-        recommendedStudent.recommendedByRecommendedId?.type === 'exercise'
+        recommendedStudent.recommendedByRecommendedId?.type.toLowerCase() === 'exercise'
           ? typeTranslations.exercise
           : typeTranslations.obligatory,
+      difficulty: recommendedStudent.recommendedByRecommendedId?.taskByTaskId.difficulty,
+      due: recommendedStudent.recommendedByRecommendedId?.taskByTaskId.due == null ? 'Ingen frist' : '',
       taskId: recommendedStudent.recommendedByRecommendedId?.taskByTaskId.taskId,
     }));
   };
@@ -91,7 +93,7 @@ export default function StudentClass() {
                 Anbefalte oppgaver
               </Typography>
             </Grid2>
-            <Table rows={getRecommendedTasks()} columns={columns} selectable={false} />
+            <Table rows={getRecommendedTasks()} columns={columns5} selectable={false} />
           </Grid2>
         </Container>
       </Box>

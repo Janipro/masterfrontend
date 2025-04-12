@@ -24,7 +24,7 @@ const settings = ['Profil', 'Logg ut'];
 
 export default function NavBar() {
   const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(null);
-  const isTeacher = localStorage.getItem('is_admin');
+  const isTeacher = localStorage.getItem('is_admin') == 'true';
   const { isDarkmode, setDarkmode } = useDarkmodeStore();
   const { isDarkmodeEditor, setDarkmodeEditor } = useDarkmodeEditorStore();
 
@@ -82,7 +82,7 @@ export default function NavBar() {
               <FormControlLabel
                 control={
                   <Switch
-                    checked={isTeacher === 'true'}
+                    checked={isTeacher}
                     onChange={(e) => localStorage.setItem('is_admin', e.target.checked.toString())}
                   />
                 }
@@ -222,6 +222,10 @@ export default function NavBar() {
                       style={{ color: 'inherit' }}
                       onClick={() => {
                         localStorage.removeItem('id');
+                        localStorage.removeItem('school_id');
+                        localStorage.removeItem('class_id');
+                        localStorage.removeItem('admin');
+                        navigate('/');
                         navigate(0);
                       }}
                     >

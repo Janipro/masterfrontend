@@ -15,10 +15,9 @@ import { GET_ALL_TASKS } from '../../graphql/queries/getAllTasks';
 import { GET_RECOMMENDEDS } from '../../graphql/queries/getRecommendeds';
 import { GET_ACTIVE_RECOMMENDEDS } from '../../graphql/queries/getActiveRecommendeds';
 import { GET_TASK } from '../../graphql/queries/getTask';
-import client from '../apolloClient';
-import React from 'react';
 import TeacherPlaygroundCreateTaskModal from './teacher/TeacherPlaygroundCreateTaskModal';
 import { useNavigate } from 'react-router-dom';
+import React from 'react';
 
 const functions = ['Kjør', 'Publiser', 'Lagre endringer'];
 
@@ -26,6 +25,7 @@ export default function NavbarEditorCreateEditButtons() {
   const [openCreateTaskModal, setOpenCreateTaskModal] = React.useState(false);
   const { executeCode, selectedTaskId } = useTaskCodeStore();
   const { code } = useCodeStore();
+  const { resetNewTask } = useNewTaskStore();
   const { isDarkmodeEditor } = useDarkmodeEditorStore();
   const {
     newTitle,
@@ -66,6 +66,7 @@ export default function NavbarEditorCreateEditButtons() {
           publicAccess: newPublicAccess,
         },
       });
+      resetNewTask();
       navigate('/tasks');
     } catch (err) {
       console.error('Failed to update task:', err);
@@ -75,6 +76,20 @@ export default function NavbarEditorCreateEditButtons() {
   const [createTask] = useMutation(CREATE_TASK);
 
   const [createTaskRequirement] = useMutation(CREATE_TASK_REQUIREMENT);
+
+  // tables does not update even though all the tasks are refetched. It works when updating an already existing task.
+  // but reacting to a new task is not implemented, chatgpt said something about:
+  // "You're storing the rows in state with useState, which makes the table ignore any new data — remove that and use the rows prop directly in the DataGrid."
+  // a refresh updates the tables.
+  const [createLastTaskRequirement] = useMutation(CREATE_TASK_REQUIREMENT, {
+    refetchQueries: [
+      { query: GET_CREATED_TASKS, variables: { userId } },
+      { query: GET_ACTIVE_CREATED_TASKS, variables: { userId } },
+      { query: GET_RECOMMENDEDS, variables: { userId } },
+      { query: GET_ACTIVE_RECOMMENDEDS, variables: { userId } },
+      { query: GET_ALL_TASKS },
+    ],
+  });
 
   const handleCreateTask = async () => {
     try {
@@ -100,23 +115,25 @@ export default function NavbarEditorCreateEditButtons() {
 
       const requirementIds = newRequirements.map((req) => req.requirementId);
 
-      for (const requirementId of requirementIds) {
-        await createTaskRequirement({
-          variables: {
-            taskId: newTaskId,
-            requirementId,
-          },
-        });
-      }
+      for (let i = 0; i < requirementIds.length; i++) {
+        const requirementId = requirementIds[i];
 
-      await Promise.all([
-        client.query({ query: GET_CREATED_TASKS, variables: { userId } }),
-        client.query({ query: GET_ACTIVE_CREATED_TASKS, variables: { userId } }),
-        client.query({ query: GET_RECOMMENDEDS, variables: { userId } }),
-        client.query({ query: GET_ACTIVE_RECOMMENDEDS, variables: { userId } }),
-        client.query({ query: GET_ALL_TASKS }),
-        client.query({ query: GET_TASK, variables: { taskId: newTaskId } }),
-      ]);
+        if (i === requirementIds.length - 1) {
+          await createLastTaskRequirement({
+            variables: {
+              taskId: newTaskId,
+              requirementId,
+            },
+          });
+        } else {
+          await createTaskRequirement({
+            variables: {
+              taskId: newTaskId,
+              requirementId,
+            },
+          });
+        }
+      }
     } catch (err) {
       console.error('Failed to create task or requirements for the task:', err);
     }

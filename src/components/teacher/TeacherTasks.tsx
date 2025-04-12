@@ -14,7 +14,6 @@ import {
   Typography,
 } from '@mui/material';
 import Table from '../Table';
-import SearchBar from '../SearchBar';
 import DeleteIcon from '@mui/icons-material/Delete';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
@@ -23,25 +22,26 @@ import { useState } from 'react';
 import Backdrop from '@mui/material/Backdrop';
 import { NAV_COLORS, style } from '../../types/navColors';
 import CreateIcon from '@mui/icons-material/Create';
-import { columns, columns2, columns3, rows2 } from '../../types/userData';
-import { student, task, taskRequirement, user } from '../../types/tableProps';
-import { useMutation, useQuery } from '@apollo/client';
+import { columns, columns2, columns4 } from '../../types/userData';
+import { studygroup, task, taskRequirement } from '../../types/tableProps';
+import { useApolloClient, useMutation, useQuery } from '@apollo/client';
 import { GET_ALL_TASKS } from '../../../graphql/queries/getAllTasks';
 import { GET_ACTIVE_CREATED_TASKS } from '../../../graphql/queries/getActiveCreatedTasks';
 import { GET_CREATED_TASKS } from '../../../graphql/queries/getCreatedTasks';
-import { GET_ALL_STUDENTS } from '../../../graphql/queries/getAllStudents';
 import { CREATE_RECOMMENDED } from '../../../graphql/mutations/createRecommended';
 import { CREATE_RECOMMENDED_STUDENT } from '../../../graphql/mutations/createRecommendedStudent';
 import { useStore } from 'zustand';
 import useSelectedStore from '../../stores/useSelectedStore';
 import { UPDATE_TASK_VISIBILITY } from '../../../graphql/mutations/updateTaskVisibility';
 import { DELETE_TASK_BY_TASK_ID } from '../../../graphql/mutations/deleteTaskByTaskId';
-import { classTranslations, typeTranslations } from '../../types/translations';
 import CloseRoundedIcon from '@mui/icons-material/CloseRounded';
 import useDarkmodeStore from '../../stores/useDarkmodeStore';
 import { useNavigate } from 'react-router-dom';
 import { useCodeStore, useTaskCodeStore } from '../../stores/useTaskCodeStore';
 import useTeacherStore from '../../stores/useOwnerStore';
+import { classTranslations, courseTranslations, typeTranslations } from '../../types/translations';
+import { GET_ALL_STUDY_GROUPS } from '../../../graphql/queries/getAllStudygroups';
+import { GET_ENROLMENTS_BY_STUDY_GROUP_ID } from '../../../graphql/queries/getEnrolmentsByStudyGroupId';
 
 export default function TeacherTasks() {
   const [open, setOpen] = useState(false);
@@ -50,18 +50,21 @@ export default function TeacherTasks() {
   };
   const handleClose = () => setOpen(false);
   const [inactiveTasks, setInactiveTasks] = useState(false);
+  const client = useApolloClient();
   const userId = parseInt(localStorage.getItem('id')!);
-  const classId = parseInt(localStorage.getItem('class_id')!);
+  //const classId = parseInt(localStorage.getItem('class_id')!);
   const { setTaskId } = useTaskCodeStore();
-  const { allTasksSelectionModel, setAllTasksSelectionModel } = useStore(useSelectedStore);
   const { isDarkmode } = useDarkmodeStore();
   const { setIsOwner } = useTeacherStore();
   const { setCode } = useCodeStore();
   const {
+    allTasksSelectionModel,
+    studygroupSelectionModel,
     recommendedSelectionModel: createdTasksSelectionModel,
     setRecommendedSelectionModel: setCreatedTasksSelectionModel,
+    setAllTasksSelectionModel,
+    setStudygroupSelectionModel,
   } = useStore(useSelectedStore);
-  const { studentSelectionModel, setStudentSelectionModel } = useStore(useSelectedStore);
   const { loading: tasksLoading, error: tasksError, data: allTasks } = useQuery(GET_ALL_TASKS);
   const {
     loading: createdLoading,
@@ -71,8 +74,8 @@ export default function TeacherTasks() {
   const { loading: activeCreatedLoading, data: activeCreatedTasks } = useQuery(GET_ACTIVE_CREATED_TASKS, {
     variables: { userId: userId },
   });
-  const { loading: studentsLoading, data: studentsData } = useQuery(GET_ALL_STUDENTS, {
-    variables: { classId: classId },
+  const { loading: studygroupsLoading, data: studygroupsData } = useQuery(GET_ALL_STUDY_GROUPS, {
+    variables: { userId: userId },
   });
   const [createRecommended] = useMutation(CREATE_RECOMMENDED);
   const [createRecommendedStudent] = useMutation(CREATE_RECOMMENDED_STUDENT);
@@ -91,7 +94,7 @@ export default function TeacherTasks() {
 
   const navigate = useNavigate();
 
-  if (tasksLoading || createdLoading || studentsLoading || activeCreatedLoading) {
+  if (tasksLoading || createdLoading || studygroupsLoading || activeCreatedLoading) {
     return (
       <Box mt="30vh">
         <p> Laster inn... </p>
@@ -115,8 +118,9 @@ export default function TeacherTasks() {
           )
         : [],
       level: task.level,
-      type: task.type === 'exercise' ? typeTranslations.exercise : typeTranslations.obligatory,
       taskId: task.taskId,
+      type: task.type.toLowerCase() === 'exercise' ? typeTranslations.exercise : typeTranslations.obligatory,
+      difficulty: task.difficulty,
     }));
   };
 
@@ -132,8 +136,9 @@ export default function TeacherTasks() {
           )
         : [],
       level: task.level,
-      type: task.type === 'exercise' ? typeTranslations.exercise : typeTranslations.obligatory,
       taskId: task.taskId,
+      type: task.type.toLowerCase() === 'exercise' ? typeTranslations.exercise : typeTranslations.obligatory,
+      difficulty: task.difficulty,
     }));
   };
 
@@ -149,43 +154,55 @@ export default function TeacherTasks() {
           )
         : [],
       level: task.level,
-      type: task.type === 'exercise' ? typeTranslations.exercise : typeTranslations.obligatory,
       taskId: task.taskId,
+      type: task.type.toLowerCase() === 'exercise' ? typeTranslations.exercise : typeTranslations.obligatory,
+      difficulty: task.difficulty,
     }));
   };
 
-  const getClass = (): student[] => {
-    return studentsData.allUsers.nodes.map((student: user) => ({
-      id: student.userId,
-      title: `${student.firstname} ${student.lastname}`,
-      level: student.classByClassId?.grade in classTranslations ? classTranslations[student.classByClassId?.grade] : 0,
-      class: student.classByClassId?.className,
-      school: student.schoolBySchoolId?.schoolName,
+  const getStudygroups = (): studygroup[] => {
+    return studygroupsData.allStudygroups.nodes.map((studyGroup: studygroup) => ({
+      id: studyGroup.studyGroupId,
+      title: studyGroup.studyGroupName,
+      level:
+        studyGroup.courseByCourseId.courseName in courseTranslations
+          ? classTranslations[courseTranslations[studyGroup.courseByCourseId.courseName]]
+          : 'ukjent',
+      class: studyGroup.courseByCourseId?.courseName,
+      school: studyGroup.schoolBySchoolId?.schoolName,
     }));
   };
 
   const handleShare = async () => {
     try {
       for (const taskId in allTasksSelectionModel) {
-        const response = await createRecommended({
-          variables: {
-            userId: userId,
-            taskId: allTasksSelectionModel[taskId],
-            studyGroupId: 1, // Temp value (need to edit when figma implemented)
-          },
-        });
-        const recommendedId = response.data.createRecommended.recommended.recommendedId;
-        for (const studentId in studentSelectionModel) {
-          await createRecommendedStudent({
+        for (const studygroupId in studygroupSelectionModel) {
+          const response = await createRecommended({
             variables: {
-              userId: studentSelectionModel[studentId],
-              recommendedId: recommendedId,
+              userId: userId,
+              taskId: allTasksSelectionModel[taskId],
+              studyGroupId: studygroupSelectionModel[studygroupId],
             },
           });
+          const recommendedId = response.data.createRecommended.recommended.recommendedId;
+          const { data } = await client.query({
+            query: GET_ENROLMENTS_BY_STUDY_GROUP_ID,
+            variables: {
+              studyGroupId: studygroupSelectionModel[studygroupId],
+            },
+          });
+          for (const student of data.allEnrolments.nodes) {
+            await createRecommendedStudent({
+              variables: {
+                userId: student.userId,
+                recommendedId: recommendedId,
+              },
+            });
+          }
         }
       }
       setAllTasksSelectionModel([]);
-      setStudentSelectionModel([]);
+      setStudygroupSelectionModel([]);
       handleClose();
     } catch (error) {
       console.log('Could not share task: ', error);
@@ -293,12 +310,12 @@ export default function TeacherTasks() {
               setSelectionModel={setCreatedTasksSelectionModel}
             />
 
-            <Grid2 spacing={2} container direction="column">
-              <Typography variant="h5" noWrap component="div" sx={{ textAlign: 'left' }}>
-                Alle oppgaver
-              </Typography>
+            <Grid2 spacing={2} container direction="column" mt={2}>
               <Grid2 container direction="row">
-                <SearchBar options={rows2} prompt="Søk etter oppgaver" />
+                <Typography variant="h5" noWrap component="div" sx={{ textAlign: 'left' }}>
+                  Alle oppgaver
+                </Typography>
+                {/*<SearchBar options={rows2} prompt="Søk etter oppgaver" />*/}
                 <Grid2 container sx={{ flexGrow: 0, ml: 'auto' }} spacing={1}>
                   <Button
                     onClick={() => {
@@ -367,16 +384,16 @@ export default function TeacherTasks() {
                             </Typography>
                           </Stack>
                           <Typography id="keep-mounted-modal-description" sx={{ mt: 2, mb: 1 }}>
-                            Deler valgte oppgaver med:
+                            Del valgte oppgaver med følgende undervisningsgrupper:
                           </Typography>
                           {/*<SearchBar options={rows3} prompt="Søk etter elever" />
                           TODO: ADD SEARCH FUNCTIONALITY */}
                           <Table
-                            rows={getClass()}
-                            columns={columns3}
+                            rows={getStudygroups()}
+                            columns={columns4}
                             selectable
-                            selectionModel={studentSelectionModel}
-                            setSelectionModel={setStudentSelectionModel}
+                            selectionModel={studygroupSelectionModel}
+                            setSelectionModel={setStudygroupSelectionModel}
                           />
                           <Button
                             variant="contained"
