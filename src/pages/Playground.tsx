@@ -3,7 +3,7 @@ import { Box } from '@mui/material';
 import PlaygroundContent from '../components/PlaygroundContent';
 import NavBarEditor from '../components/NavBarEditor';
 import useOwnerStore from '../stores/useOwnerStore';
-import TeacherPlaygroundContent from '../components/teacher/TeacherPlayGroundContent';
+import TeacherPlaygroundContent from './teacher/TeacherPlayGroundContent';
 import { useTaskCodeStore } from '../stores/useTaskCodeStore';
 
 export default function EditorPage() {

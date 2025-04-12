@@ -1,8 +1,8 @@
 import { Box, Container, CssBaseline, Fade, Grid2, List, ListItem, Typography } from '@mui/material';
-import Table from '../Table';
-import InfoCard from '../InfoCard';
-import Calendar from '../Calendar';
-import Requirement from '../Requirement';
+import Table from '../../components/Table';
+import InfoCard from '../../components/InfoCard';
+import Calendar from '../../components/Calendar';
+import Requirement from '../../components/Requirement';
 import { useQuery } from '@apollo/client';
 import { taskRequirement, enrolment, recommendedStudent } from '../../types/tableProps';
 import { GET_RECOMMENDED_STUDENTS } from '../../../graphql/queries/getRecommendedStudents';

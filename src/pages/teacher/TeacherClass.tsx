@@ -17,9 +17,9 @@ import {
   TextField,
   Typography,
 } from '@mui/material';
-import Table from '../Table';
+import Table from '../../components/Table';
 import { NAV_COLORS, style } from '../../types/navColors';
-import Announcements from '../Announcements';
+import Announcements from '../../components/Announcements';
 import AnnouncementIcon from '@mui/icons-material/Announcement';
 import { useState } from 'react';
 import PostAddIcon from '@mui/icons-material/PostAdd';

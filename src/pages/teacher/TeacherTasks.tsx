@@ -13,7 +13,7 @@ import {
   Stack,
   Typography,
 } from '@mui/material';
-import Table from '../Table';
+import Table from '../../components/Table';
 import DeleteIcon from '@mui/icons-material/Delete';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
@@ -305,7 +305,7 @@ export default function TeacherTasks() {
               rows={inactiveTasks ? getCreatedTasks() : getActiveCreatedTasks()}
               columns={columns}
               selectable
-              key={inactiveTasks ? 'inactive' : 'active'}
+              key={(inactiveTasks ? 'inactive' : 'active') + getActiveCreatedTasks().length}
               selectionModel={createdTasksSelectionModel}
               setSelectionModel={setCreatedTasksSelectionModel}
             />
@@ -418,6 +418,7 @@ export default function TeacherTasks() {
               rows={getAllTasks()}
               columns={columns2}
               selectable
+              key={getAllTasks().length}
               selectionModel={allTasksSelectionModel}
               setSelectionModel={setAllTasksSelectionModel}
             />

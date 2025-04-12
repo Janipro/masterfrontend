@@ -1,7 +1,7 @@
 import { Box, Container, CssBaseline, Fade, Grid2, Stack, Typography } from '@mui/material';
-import Table from '../Table';
+import Table from '../../components/Table';
 import { NAV_COLORS } from '../../types/navColors';
-import Announcements from '../Announcements';
+import Announcements from '../../components/Announcements';
 import { announcement, recommendedStudent, taskRequirement } from '../../types/tableProps';
 import { useQuery } from '@apollo/client';
 import { GET_RECOMMENDED_STUDENTS } from '../../../graphql/queries/getRecommendedStudents';

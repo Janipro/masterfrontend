@@ -1,5 +1,5 @@
 import { Box, Container, CssBaseline, Fade, Grid2, Typography } from '@mui/material';
-import Table from '../Table';
+import Table from '../../components/Table';
 import { columns2, columns5 } from '../../types/userData';
 import { useQuery } from '@apollo/client';
 import { GET_ALL_TASKS } from '../../../graphql/queries/getAllTasks';

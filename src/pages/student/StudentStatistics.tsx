@@ -1,12 +1,12 @@
 import { Box, Container, CssBaseline, Fade, Grid2, List, ListItem, Stack, Typography } from '@mui/material';
-import Table from '../Table';
+import Table from '../../components/Table';
 import { NAV_COLORS } from '../../types/navColors';
 import { GridActionsCellItem, GridColDef } from '@mui/x-data-grid';
-import { renderRequirement } from '../renderRequirement';
+import { renderRequirement } from '../../components/renderRequirement';
 import CheckBoxIcon from '@mui/icons-material/CheckBox';
 import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
 import IndeterminateCheckBoxIcon from '@mui/icons-material/IndeterminateCheckBox';
-import Requirement from '../Requirement';
+import Requirement from '../../components/Requirement';
 import { colorMapping } from '../../types/requirementData';
 import { BarChart } from '@mui/x-charts/BarChart';
 import { axisClasses } from '@mui/x-charts/ChartsAxis';

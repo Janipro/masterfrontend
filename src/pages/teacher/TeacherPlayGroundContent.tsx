@@ -7,7 +7,7 @@ import TerminalIcon from '../../assets/terminal.svg?react';
 import DescriptionIcon from '../../assets/description.svg?react';
 import WbIncandescentRoundedIcon from '@mui/icons-material/WbIncandescentRounded';
 import ExpandLessRoundedIcon from '@mui/icons-material/ExpandLessRounded';
-import Editor from '../Editor';
+import Editor from '../../components/Editor';
 import {
   Container,
   CssBaseline,
@@ -21,18 +21,18 @@ import {
   useTheme,
 } from '@mui/material';
 import { NAV_COLORS } from '../../types/navColors';
-import Requirement from '../Requirement';
-import Terminal from '../Terminal';
+import Requirement from '../../components/Requirement';
+import Terminal from '../../components/Terminal';
 import useDarkmodeEditorStore from '../../stores/useDarkmodeEditorStore';
-import TeacherPlaygroundTitleField from './TeacherPlaygroundTitleField';
+import TeacherPlaygroundTitleField from '../../components/teacher/TeacherPlaygroundTitleField';
 import { useCodeStore, useNewTaskStore, useTaskCodeStore } from '../../stores/useTaskCodeStore';
 import { useQuery } from '@apollo/client';
 import { GET_ALL_REQUIREMENTS } from '../../../graphql/queries/getAllRequirements';
 import { requirement, task } from '../../types/tableProps';
 import React from 'react';
-import TeacherPlaygroundRequirementsModal from './TeacherPlaygroundRequirementsModal';
+import TeacherPlaygroundRequirementsModal from '../../components/teacher/TeacherPlaygroundRequirementsModal';
 import { GET_TASK } from '../../../graphql/queries/getTask';
-import TeacherPlaygroundDropdown from './TeacherPlayGroundDropdown';
+import TeacherPlaygroundDropdown from '../../components/teacher/TeacherPlayGroundDropdown';
 import { GET_ALL_COURSES } from '../../../graphql/queries/getAllCourses';
 import { course } from '../../types/tableProps';
 

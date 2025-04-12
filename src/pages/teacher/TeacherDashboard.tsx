@@ -24,8 +24,8 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 import CreateIcon from '@mui/icons-material/Create';
-import Table from '../Table';
-import InfoCard from '../InfoCard';
+import Table from '../../components/Table';
+import InfoCard from '../../components/InfoCard';
 import { useState } from 'react';
 import { NAV_COLORS, style } from '../../types/navColors';
 import { columns3, columns5 } from '../../types/userData';
@@ -435,7 +435,7 @@ export default function TeacherDashboard() {
               rows={inactiveTasks ? getGivenRecommendeds() : getActiveGivenRecommendeds()}
               columns={columns5}
               selectable
-              key={inactiveTasks ? 'inactive' : 'active'}
+              key={(inactiveTasks ? 'inactive' : 'active') + getActiveGivenRecommendeds().length}
               selectionModel={recommendedSelectionModel}
               setSelectionModel={setRecommendedSelectionModel}
             />
