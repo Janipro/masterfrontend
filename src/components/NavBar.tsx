@@ -12,7 +12,6 @@ import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import SettingsIcon from '@mui/icons-material/Settings';
 import { Link } from 'react-router-dom';
 import { CssBaseline, Fade, FormControlLabel, FormGroup, Modal, Stack, Switch } from '@mui/material';
-import useTeacherStore from '../stores/useTeacherStore';
 import { NAV_COLORS } from '../types/navColors';
 import NotificationsRoundedIcon from '@mui/icons-material/NotificationsRounded';
 import { useNavigate } from 'react-router-dom';
@@ -25,7 +24,7 @@ const settings = ['Profil', 'Logg ut'];
 
 export default function NavBar() {
   const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(null);
-  const { isTeacher, setTeacher } = useTeacherStore();
+  const isTeacher = localStorage.getItem('is_admin');
   const { isDarkmode, setDarkmode } = useDarkmodeStore();
   const { isDarkmodeEditor, setDarkmodeEditor } = useDarkmodeEditorStore();
 
@@ -79,9 +78,14 @@ export default function NavBar() {
             <PopUpMenu isEditor={false} />
           </Box>
           <Stack direction="row" sx={{ flexGrow: 0, ml: 'auto', alignItems: 'center' }}>
-            <FormGroup>
+            <FormGroup sx={{ display: 'none' }}>
               <FormControlLabel
-                control={<Switch checked={isTeacher} onChange={(e) => setTeacher(e.target.checked)} />}
+                control={
+                  <Switch
+                    checked={isTeacher === 'true'}
+                    onChange={(e) => localStorage.setItem('is_admin', e.target.checked.toString())}
+                  />
+                }
                 label="Lærermodus"
               />
             </FormGroup>
@@ -152,7 +156,50 @@ export default function NavBar() {
               <AccountCircleIcon />
             </IconButton>
             <Menu
-              sx={{ mt: '45px' }}
+              sx={{
+                mt: '35px',
+                display: { xs: 'none', sm: 'none', md: 'none', lg: 'block', xl: 'block' },
+                '& .MuiPaper-root': {
+                  backgroundColor: isDarkmode
+                    ? NAV_COLORS.editor_button_background_dark
+                    : NAV_COLORS.editor_button_background,
+                  color: isDarkmode ? NAV_COLORS.editor_icon_background_dark : NAV_COLORS.editor_icon_background,
+                },
+                '& .MuiMenuItem-root': {
+                  color: isDarkmode ? NAV_COLORS.editor_icon_background_dark : NAV_COLORS.editor_icon_background,
+                  '&:hover': {
+                    backgroundColor: isDarkmode
+                      ? NAV_COLORS.editor_menu_background_highlight_dark
+                      : NAV_COLORS.editor_menu_background_highlight,
+                  },
+                },
+                '& .MuiList-root': {
+                  padding: 0,
+                },
+              }}
+              slotProps={{
+                paper: {
+                  sx: {
+                    '&::-webkit-scrollbar': {
+                      width: '6px',
+                      borderRadius: '5px',
+                    },
+                    '&::-webkit-scrollbar-track': {
+                      backgroundColor: isDarkmode
+                        ? NAV_COLORS.editor_pane_background_dark
+                        : NAV_COLORS.editor_pane_background,
+                      borderRadius: '0 5px 5px 0',
+                    },
+                    '&::-webkit-scrollbar-thumb': {
+                      backgroundColor: '#B7B7B7',
+                      borderRadius: '5px',
+                    },
+                    '&::-webkit-scrollbar-thumb:hover': {
+                      backgroundColor: '#9E9E9E',
+                    },
+                  },
+                },
+              }}
               id="menu-appbar"
               anchorEl={anchorElUser}
               anchorOrigin={{
@@ -175,8 +222,6 @@ export default function NavBar() {
                       style={{ color: 'inherit' }}
                       onClick={() => {
                         localStorage.removeItem('id');
-                        localStorage.removeItem('school_id');
-                        localStorage.removeItem('class_id');
                         navigate(0);
                       }}
                     >

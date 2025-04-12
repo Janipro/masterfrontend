@@ -13,7 +13,7 @@ import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import SettingsIcon from '@mui/icons-material/Settings';
 import { Link } from 'react-router-dom';
 import { CssBaseline, Fade, FormControlLabel, FormGroup, Modal, Stack, Switch } from '@mui/material';
-import useTeacherStore from '../stores/useTeacherStore';
+import useOwnerStore from '../stores/useOwnerStore';
 import { NAV_COLORS } from '../types/navColors';
 import ReplayOutlinedIcon from '@mui/icons-material/ReplayOutlined';
 import HistoryRoundedIcon from '@mui/icons-material/HistoryRounded';
@@ -35,10 +35,11 @@ const settings = ['Profil', 'Logg ut'];
 export default function NavBarEditor() {
   const [anchorElUser, setAnchorElUser] = React.useState<null | HTMLElement>(null);
   const [anchorElNavbar, setAnchorElNavbar] = React.useState<null | HTMLElement>(null);
-  const { isTeacher, setTeacher, isOwner } = useTeacherStore();
+  const { isOwner } = useOwnerStore();
   const { isDarkmode, setDarkmode } = useDarkmodeStore();
   const { isDarkmodeEditor, setDarkmodeEditor } = useDarkmodeEditorStore();
   const { selectedTaskId } = useTaskCodeStore();
+  const isTeacher = localStorage.getItem('is_admin');
 
   const [open, setOpen] = React.useState(false);
   const handleOpen = () => setOpen(true);
@@ -343,12 +344,12 @@ export default function NavBarEditor() {
                 paddingX: '0px !important',
               }}
             >
-              <FormGroup sx={{ justifyContent: 'flex-end' }}>
+              <FormGroup sx={{ display: 'none', justifyContent: 'flex-end' }}>
                 <FormControlLabel
                   control={
                     <Switch
-                      checked={isTeacher}
-                      onChange={(e) => setTeacher(e.target.checked)}
+                      checked={isTeacher === 'true'}
+                      onChange={(e) => localStorage.setItem('is_admin', e.target.checked.toString())}
                       sx={{
                         '& .MuiSwitch-thumb': {
                           backgroundColor: isDarkmodeEditor ? '#e0e0e0' : '#FFFFFF',
@@ -495,6 +496,9 @@ export default function NavBarEditor() {
                       : NAV_COLORS.editor_menu_background_highlight,
                   },
                 },
+                '& .MuiList-root': {
+                  padding: 0,
+                },
               }}
               slotProps={{
                 paper: {
@@ -577,7 +581,7 @@ export default function NavBarEditor() {
 
             <Menu
               sx={{
-                mt: '35px',
+                mt: '43px',
                 display: {
                   xs: 'block',
                   sm: 'block',
@@ -598,6 +602,9 @@ export default function NavBarEditor() {
                       ? NAV_COLORS.editor_menu_background_highlight_dark
                       : NAV_COLORS.editor_menu_background_highlight,
                   },
+                },
+                '& .MuiList-root': {
+                  padding: 0,
                 },
               }}
               slotProps={{
@@ -674,6 +681,9 @@ export default function NavBarEditor() {
                       ? NAV_COLORS.editor_menu_background_highlight_dark
                       : NAV_COLORS.editor_menu_background_highlight,
                   },
+                },
+                '& .MuiList-root': {
+                  padding: 0,
                 },
               }}
               slotProps={{

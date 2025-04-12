@@ -16,8 +16,9 @@ export default function Requirement(text: { value: string; size: string }) {
         paddingY: '0.5px',
         borderRadius: '20px',
         fontWeight: 'medium',
-        boxShadow: 3,
+        boxShadow: 2,
         textAlign: 'center',
+        color: '#000000',
       }}
     >
       {text.value in requirementTranslations ? requirementTranslations[text.value] : text.value}

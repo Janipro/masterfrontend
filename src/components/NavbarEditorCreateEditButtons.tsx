@@ -4,23 +4,46 @@ import ShareRoundedIcon from '@mui/icons-material/ShareRounded';
 import SaveRoundedIcon from '@mui/icons-material/SaveRounded';
 import { NAV_COLORS } from '../types/navColors';
 import useDarkmodeEditorStore from '../stores/useDarkmodeEditorStore';
-import { useNewTaskStore, useTaskCodeStore } from '../stores/useTaskCodeStore';
+import { useCodeStore, useNewTaskStore, useTaskCodeStore } from '../stores/useTaskCodeStore';
 import { useMutation } from '@apollo/client';
 import { UPDATE_TASK } from '../../graphql/mutations/updateTask';
+import { CREATE_TASK } from '../../graphql/mutations/createTask';
+import { CREATE_TASK_REQUIREMENT } from '../../graphql/mutations/createTaskRequirement';
 import { GET_CREATED_TASKS } from '../../graphql/queries/getCreatedTasks';
 import { GET_ACTIVE_CREATED_TASKS } from '../../graphql/queries/getActiveCreatedTasks';
 import { GET_ALL_TASKS } from '../../graphql/queries/getAllTasks';
 import { GET_RECOMMENDEDS } from '../../graphql/queries/getRecommendeds';
 import { GET_ACTIVE_RECOMMENDEDS } from '../../graphql/queries/getActiveRecommendeds';
 import { GET_TASK } from '../../graphql/queries/getTask';
+import client from '../apolloClient';
+import React from 'react';
+import TeacherPlaygroundCreateTaskModal from './teacher/TeacherPlaygroundCreateTaskModal';
+import { useNavigate } from 'react-router-dom';
 
 const functions = ['Kjør', 'Publiser', 'Lagre endringer'];
 
 export default function NavbarEditorCreateEditButtons() {
+  const [openCreateTaskModal, setOpenCreateTaskModal] = React.useState(false);
   const { executeCode, selectedTaskId } = useTaskCodeStore();
+  const { code } = useCodeStore();
   const { isDarkmodeEditor } = useDarkmodeEditorStore();
-  const { newTitle, newDescription, newPublicAccess } = useNewTaskStore();
+  const {
+    newTitle,
+    newDescription,
+    newPublicAccess,
+    newCourseId,
+    newLevel,
+    newCodeTemplate,
+    newRequirements,
+    setNewExpectedOutput,
+    newExpectedOutput,
+  } = useNewTaskStore();
   const userId = parseInt(localStorage.getItem('id')!);
+
+  const navigate = useNavigate();
+
+  const handleOpenCreateTaskModal = () => setOpenCreateTaskModal(true);
+  const handleCloseCreateTaskModal = () => setOpenCreateTaskModal(false);
 
   const [updateTask] = useMutation(UPDATE_TASK, {
     refetchQueries: [
@@ -43,9 +66,65 @@ export default function NavbarEditorCreateEditButtons() {
           publicAccess: newPublicAccess,
         },
       });
+      navigate('/tasks');
     } catch (err) {
       console.error('Failed to update task:', err);
     }
+  };
+
+  const [createTask] = useMutation(CREATE_TASK);
+
+  const [createTaskRequirement] = useMutation(CREATE_TASK_REQUIREMENT);
+
+  const handleCreateTask = async () => {
+    try {
+      const response = await createTask({
+        variables: {
+          userId: userId,
+          taskName: newTitle,
+          taskDescription: newDescription,
+          expectedCode: code,
+          expectedOutput: newExpectedOutput,
+          codeTemplate: newCodeTemplate,
+          difficulty: 'Lett', // field in db is unecessary
+          type: 'exercise', // field in db is unecessary
+          level: newLevel,
+          courseId: newCourseId,
+          publicAccess: newPublicAccess,
+          imageUrl: 'img',
+          isActive: true,
+        },
+      });
+
+      const newTaskId = response.data.createTask.task.taskId;
+
+      const requirementIds = newRequirements.map((req) => req.requirementId);
+
+      for (const requirementId of requirementIds) {
+        await createTaskRequirement({
+          variables: {
+            taskId: newTaskId,
+            requirementId,
+          },
+        });
+      }
+
+      await Promise.all([
+        client.query({ query: GET_CREATED_TASKS, variables: { userId } }),
+        client.query({ query: GET_ACTIVE_CREATED_TASKS, variables: { userId } }),
+        client.query({ query: GET_RECOMMENDEDS, variables: { userId } }),
+        client.query({ query: GET_ACTIVE_RECOMMENDEDS, variables: { userId } }),
+        client.query({ query: GET_ALL_TASKS }),
+        client.query({ query: GET_TASK, variables: { taskId: newTaskId } }),
+      ]);
+    } catch (err) {
+      console.error('Failed to create task or requirements for the task:', err);
+    }
+  };
+
+  const handleCreateTaskModal = async () => {
+    setNewExpectedOutput(await executeCode());
+    handleOpenCreateTaskModal();
   };
 
   return (
@@ -148,9 +227,8 @@ export default function NavbarEditorCreateEditButtons() {
           key={selectedTaskId === null ? functions[1] : functions[2]}
           onClick={() => {
             if (selectedTaskId === null) {
-              console.log('Publish not implemented');
+              handleCreateTaskModal();
             } else {
-              console.log('ok');
               handleUpdateTask();
             }
           }}
@@ -202,6 +280,11 @@ export default function NavbarEditorCreateEditButtons() {
           </Typography>
         </Button>
       </Box>
+      <TeacherPlaygroundCreateTaskModal
+        openModal={openCreateTaskModal}
+        closeModal={handleCloseCreateTaskModal}
+        handleCreateTask={handleCreateTask}
+      />
     </Box>
   );
 }

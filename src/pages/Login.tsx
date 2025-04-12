@@ -74,6 +74,7 @@ export default function Login() {
       localStorage.setItem('school_id', result[0].school_id);
       localStorage.setItem('class_id', result[0].class_id);
       localStorage.setItem('email', result[0].email);
+      localStorage.setItem('full_name', result[0].firstname + ' ' + result[0].lastname);
     } catch (error) {
       console.log('Could not login', error);
     }

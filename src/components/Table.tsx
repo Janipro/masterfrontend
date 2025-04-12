@@ -3,7 +3,7 @@ import { DataGrid, GridCellParams, GridColDef, GridRowSelectionModel } from '@mu
 import { nbNO } from '@mui/x-data-grid/locales/nbNO';
 import { useMemo, useState } from 'react';
 import { task, student, recommended, recommendedStudent } from '../types/tableProps';
-import useTeacherStore from '../stores/useTeacherStore';
+import useOwnerStore from '../stores/useOwnerStore';
 import { useCodeStore, useTaskCodeStore } from '../stores/useTaskCodeStore';
 import { useNavigate } from 'react-router-dom';
 
@@ -24,7 +24,8 @@ export default function Table({
 }) {
   type Row = (typeof rows)[number];
   const [initialRows /*, setRows*/] = useState<Row[]>(rows);
-  const { isTeacher, setIsOwner } = useTeacherStore();
+  const { setIsOwner } = useOwnerStore();
+  const isTeacher = localStorage.getItem('is_admin');
   const { setTaskId, selectedTaskId } = useTaskCodeStore();
   const { setCode } = useCodeStore();
   const navigate = useNavigate();
@@ -64,7 +65,9 @@ export default function Table({
           columnVisibilityModel={columnVisibilityModel}
           density="compact"
           onRowSelectionModelChange={(newSelectionModel) => {
-            setSelectionModel(newSelectionModel);
+            if (setSelectionModel) {
+              setSelectionModel(newSelectionModel);
+            }
           }}
           rowSelectionModel={selectionModel}
           onCellClick={(params: GridCellParams) => {

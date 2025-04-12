@@ -10,7 +10,7 @@ import { useCodeStore, useNewTaskStore, useTaskCodeStore } from '../stores/useTa
 import useDarkmodeEditorStore from '../stores/useDarkmodeEditorStore';
 import { NAV_COLORS } from '../types/navColors';
 import useEditorViewStore from '../stores/useEditorViewStore';
-import useTeacherStore from '../stores/useTeacherStore';
+import useOwnerStore from '../stores/useOwnerStore';
 
 const lightTheme = EditorView.theme({
   '&': {
@@ -34,7 +34,9 @@ const lightTheme = EditorView.theme({
     backgroundColor: NAV_COLORS.editor_pane_background,
     color: '#9A9A9A',
     border: 'none',
-    padding: '0 10px',
+    padding: 0,
+    marginLeft: '10px',
+    marginRight: '0px',
     maxWidth: '50px',
   },
   '.cm-gutterElement': {
@@ -80,7 +82,9 @@ const darkTheme = EditorView.theme({
     backgroundColor: NAV_COLORS.editor_pane_background_dark,
     color: '#9A9A9A',
     border: 'none',
-    padding: '0 10px',
+    padding: 0,
+    marginLeft: '10px',
+    marginRight: '0px',
     maxWidth: '50px',
   },
   '.cm-gutterElement': {
@@ -119,7 +123,7 @@ export default function Editor({ showCode, currentCodeTemplate }: TerminalProps)
   const { isDarkmodeEditor } = useDarkmodeEditorStore();
   const { selectedTaskId } = useTaskCodeStore();
   const { newCodeTemplate, setNewCodeTemplate } = useNewTaskStore();
-  const { isOwner } = useTeacherStore();
+  const { isOwner } = useOwnerStore();
 
   const onChange = useCallback(
     (val: string) => {

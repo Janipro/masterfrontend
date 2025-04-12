@@ -28,7 +28,7 @@ interface RequirementsModalProps {
   closeModal: () => void;
   allRequirements: requirement[];
   requirements: requirement[];
-  setRequirements: React.Dispatch<React.SetStateAction<requirement[]>>;
+  setRequirements: (requirements: requirement[]) => void;
 }
 
 const TeacherPlaygroundRequirementsModal: React.FC<RequirementsModalProps> = ({
@@ -38,7 +38,6 @@ const TeacherPlaygroundRequirementsModal: React.FC<RequirementsModalProps> = ({
   allRequirements,
   setRequirements,
 }) => {
-  //const { isDarkmode, setDarkmode } = useDarkmodeStore();
   const { isDarkmodeEditor } = useDarkmodeEditorStore();
   const [searchTerm, setSearchTerm] = useState('');
 
@@ -46,9 +45,9 @@ const TeacherPlaygroundRequirementsModal: React.FC<RequirementsModalProps> = ({
 
   const handleToggle = (requirement: requirement) => {
     if (isChecked(requirement.requirementId)) {
-      setRequirements((prev) => prev.filter((req) => req.requirementId !== requirement.requirementId));
+      setRequirements(requirements.filter((req) => req.requirementId !== requirement.requirementId));
     } else {
-      setRequirements((prev) => [...prev, requirement]);
+      setRequirements([...requirements, requirement]);
     }
   };
   const filteredRequirements = allRequirements.filter(

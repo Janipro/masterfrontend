@@ -1,6 +1,6 @@
 import { Box } from '@mui/material';
 import NavBar from '../components/NavBar';
-import useTeacherStore from '../stores/useTeacherStore';
+import useTeacherStore from '../stores/useOwnerStore';
 import StudentClass from '../components/student/StudentClass';
 import TeacherClass from '../components/teacher/TeacherClass';
 

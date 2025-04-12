@@ -32,6 +32,9 @@ import { requirement, task } from '../../types/tableProps';
 import React from 'react';
 import TeacherPlaygroundRequirementsModal from './TeacherPlaygroundRequirementsModal';
 import { GET_TASK } from '../../../graphql/queries/getTask';
+import TeacherPlaygroundDropdown from './TeacherPlayGroundDropdown';
+import { GET_ALL_COURSES } from '../../../graphql/queries/getAllCourses';
+import { course } from '../../types/tableProps';
 
 export default function TeacherPlaygroundContent() {
   const theme = useTheme();
@@ -40,19 +43,22 @@ export default function TeacherPlaygroundContent() {
   const { setCode } = useCodeStore();
   const [currentTask, setCurrentTask] = useState<task>();
   const {
-    setNewTaskId,
+    setNewTaskId, // only used by edit task
     setNewTitle,
     newDescription,
     setNewDescription,
     setNewCodeTemplate,
     setNewExpectedOutput,
-    setNewPublicAccess,
+    newRequirements, // only used by create task
+    setNewRequirements, // only used by create task
+    setNewPublicAccess, // only used by create task
+    setNewLevel, // only used by create task
+    setNewCourseId, // only used by create task
     resetNewTask,
     newPublicAccess,
   } = useNewTaskStore();
 
-  const [openModal, setOpenModal] = React.useState(false);
-  const [newRequirements, setNewRequirements] = useState<requirement[]>([]);
+  const [openRequirementsModal, setOpenRequirementsModal] = React.useState(false);
   const [allRequirements, setAllRequirements] = useState<requirement[]>([]);
   const { selectedTaskId } = useTaskCodeStore();
   const [terminalCollapsed, setTerminalCollapsed] = useState(() => {
@@ -73,6 +79,29 @@ export default function TeacherPlaygroundContent() {
   const rightBottomPaneRef = useRef<HTMLDivElement | null>(null);
   const isResizingVertical = useRef(false);
   const isResizingHorizontal = useRef(false);
+  const userFullName = localStorage.getItem('full_name');
+
+  const [selectedLevel, setSelectedLevel] = useState('Velg nivå');
+  const levelOptions = [
+    // should have a grade/level table in db that the other tables references (for instance for the task table)
+    '1. klasse',
+    '2. klasse',
+    '3. klasse',
+    '4. klasse',
+    '5. klasse',
+    '6. klasse',
+    '7. klasse',
+    '8. klasse',
+    '9. klasse',
+    '10. klasse',
+    'VG1',
+    'VG2',
+    'VG3',
+  ];
+
+  const { loading: courseLoading, data: courseData } = useQuery(GET_ALL_COURSES);
+  const [selectedCourse, setSelectedCourse] = useState('Velg fag');
+  const courseOptions = courseData?.allCourses.nodes.map((course: course) => course.courseName);
 
   const { loading: requirementsLoading, data: requirementsData } = useQuery(GET_ALL_REQUIREMENTS);
 
@@ -328,13 +357,22 @@ export default function TeacherPlaygroundContent() {
     setShowCode(false);
   };
 
-  const handleOpenModal = () => setOpenModal(true);
-  const handleCloseModal = () => setOpenModal(false);
+  const handleOpenRequirementsModal = () => setOpenRequirementsModal(true);
+  const handleCloseRequirementsModal = () => setOpenRequirementsModal(false);
 
-  function onChangeRadio(value: string): void {
+  const onChangeRadio = (value: string): void => {
     setNewPublicAccess(value === 'Offentlig');
-  }
+  };
 
+  const handleSetSelectedLevel = (value: string): void => {
+    setSelectedLevel(value);
+    setNewLevel(value);
+  };
+
+  const handleSetSelectedCourse = (value: string): void => {
+    setSelectedCourse(value);
+    setNewCourseId(courseData.allCourses.nodes.find((course: course) => course.courseName === value).courseId);
+  };
   return (
     <Box
       ref={containerRef}
@@ -529,23 +567,26 @@ export default function TeacherPlaygroundContent() {
                           ))}
                     {selectedTaskId === null ? (
                       <Typography
-                        onClick={handleOpenModal}
+                        onClick={handleOpenRequirementsModal}
                         noWrap
                         component="div"
                         fontSize={'small'}
                         sx={{
+                          lineHeight: '1.4',
                           boxSizing: 'border-box',
-                          paddingX: '6.5px',
-                          paddingY: '0.5px',
+                          paddingX: '6.22px',
+                          paddingY: '0px',
+                          marginY: '1.57px',
                           borderRadius: '20px',
                           fontWeight: 'medium',
-                          boxShadow: 3,
+                          boxShadow: 2,
                           textAlign: 'center',
-                          backgroundColor: isDarkmodeEditor ? '#9d9d9d' : '#dcedff',
-                          border: isDarkmodeEditor ? '#989898 3px solid' : '#dbedff 3px solid',
+                          fontSize: '1.1em',
+                          backgroundColor: isDarkmodeEditor ? '#9d9d9d' : '#cbcbcb',
+                          border: isDarkmodeEditor ? '#989898 1px solid' : '#d0d0d0 1px solid',
                           '&:hover': {
-                            backgroundColor: isDarkmodeEditor ? '#888888' : '#cee0f4',
-                            border: isDarkmodeEditor ? '#868686 3px solid' : '#cee0f4 3px solid',
+                            backgroundColor: isDarkmodeEditor ? '#888888' : '#b8b8b8',
+                            border: isDarkmodeEditor ? '#868686 1px solid' : '#b5b5b5 1px solid',
                             cursor: 'pointer',
                           },
                         }}
@@ -554,29 +595,66 @@ export default function TeacherPlaygroundContent() {
                       </Typography>
                     ) : null}
                   </Box>
-                  <Box
-                    sx={{
-                      typography: 'body2',
-                      fontWeight: '600',
-                      display: 'flex',
-                      width: '100%',
-                      flexWrap: 'wrap',
-                      gap: '20px',
-                    }}
-                  >
-                    <Box sx={{ display: 'flex', flexDirection: 'row' }}>
-                      Nivå:&nbsp;<Box sx={{ fontWeight: 'medium' }}>{currentTask?.level}</Box>
-                    </Box>
-                    <Box sx={{ display: 'flex', flexDirection: 'row' }}>
-                      Fag:&nbsp;<Box sx={{ fontWeight: 'medium' }}>{currentTask?.courseByCourseId?.courseName}</Box>
-                    </Box>
-                    <Box sx={{ display: 'flex', flexDirection: 'row' }}>
-                      Lærer:&nbsp;
-                      <Box sx={{ fontWeight: 'medium' }}>
-                        {currentTask?.userByUserId?.firstname} {currentTask?.userByUserId?.lastname}
+                  {selectedTaskId === null ? (
+                    <Box
+                      sx={{
+                        typography: 'body2',
+                        fontWeight: '600',
+                        display: 'flex',
+                        width: '100%',
+                        flexWrap: 'wrap',
+                        gap: '20px',
+                        alignItems: 'center',
+                      }}
+                    >
+                      <Box sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
+                        Nivå:
+                        <TeacherPlaygroundDropdown
+                          itemList={levelOptions}
+                          selectedItem={selectedLevel}
+                          setSelectedItem={handleSetSelectedLevel}
+                        />
+                      </Box>
+                      {courseLoading ? null : (
+                        <Box sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
+                          Fag:
+                          <TeacherPlaygroundDropdown
+                            itemList={courseOptions}
+                            selectedItem={selectedCourse}
+                            setSelectedItem={handleSetSelectedCourse}
+                          />
+                        </Box>
+                      )}
+                      <Box sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
+                        Lærer:&nbsp;
+                        <Box sx={{ fontWeight: 'medium' }}>{userFullName}</Box>
                       </Box>
                     </Box>
-                  </Box>
+                  ) : (
+                    <Box
+                      sx={{
+                        typography: 'body2',
+                        fontWeight: '600',
+                        display: 'flex',
+                        width: '100%',
+                        flexWrap: 'wrap',
+                        gap: '20px',
+                      }}
+                    >
+                      <Box sx={{ display: 'flex', flexDirection: 'row' }}>
+                        Nivå:&nbsp;<Box sx={{ fontWeight: 'medium' }}>{currentTask?.level}</Box>
+                      </Box>
+                      <Box sx={{ display: 'flex', flexDirection: 'row' }}>
+                        Fag:&nbsp;<Box sx={{ fontWeight: 'medium' }}>{currentTask?.courseByCourseId?.courseName}</Box>
+                      </Box>
+                      <Box sx={{ display: 'flex', flexDirection: 'row' }}>
+                        Lærer:&nbsp;
+                        <Box sx={{ fontWeight: 'medium' }}>
+                          {currentTask?.userByUserId?.firstname} {currentTask?.userByUserId?.lastname}
+                        </Box>
+                      </Box>
+                    </Box>
+                  )}
                   <TextField
                     multiline
                     fullWidth
@@ -827,7 +905,7 @@ export default function TeacherPlaygroundContent() {
                       style={{ marginLeft: '0.4em', marginRight: '0.2em' }}
                     />
                     <Typography sx={{ fontWeight: 'medium', userSelect: 'none', fontSize: '0.95em' }}>
-                      Python Kode
+                      {showCode ? 'Python Kodefasit' : 'Python Kodemal'}
                     </Typography>
                   </Box>
                   <Box sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
@@ -1045,8 +1123,8 @@ export default function TeacherPlaygroundContent() {
         </Box>
       </Box>
       <TeacherPlaygroundRequirementsModal
-        openModal={openModal}
-        closeModal={handleCloseModal}
+        openModal={openRequirementsModal}
+        closeModal={handleCloseRequirementsModal}
         allRequirements={allRequirements}
         requirements={newRequirements}
         setRequirements={setNewRequirements}

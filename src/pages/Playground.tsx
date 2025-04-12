@@ -2,13 +2,14 @@ import { useEffect } from 'react';
 import { Box } from '@mui/material';
 import PlaygroundContent from '../components/PlaygroundContent';
 import NavBarEditor from '../components/NavBarEditor';
-import useTeacherStore from '../stores/useTeacherStore';
-import TeacherPlaygroundContent from '../components/teacher/TeacherPlaygroundContent';
+import useOwnerStore from '../stores/useOwnerStore';
+import TeacherPlaygroundContent from '../components/teacher/TeacherPlayGroundContent';
 import { useTaskCodeStore } from '../stores/useTaskCodeStore';
 
 export default function EditorPage() {
-  const { isTeacher, isOwner } = useTeacherStore();
+  const { isOwner } = useOwnerStore();
   const { selectedTaskId } = useTaskCodeStore();
+  const isTeacher = localStorage.getItem('is_admin');
 
   useEffect(() => {
     const rootElement = document.getElementById('root');

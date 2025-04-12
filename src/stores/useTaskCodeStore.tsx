@@ -22,7 +22,7 @@ interface execState {
   setOutput: (newOutput: string) => void;
   setAIOutput: (newAIOutput: string) => void;
   setTaskId: (taskId: number | null) => Promise<void>;
-  executeCode: () => Promise<void>;
+  executeCode: () => Promise<string>;
   codeHelp: () => Promise<void>;
 }
 
@@ -52,6 +52,7 @@ export const useTaskCodeStore = create<execState>((set, get) => ({
   setTaskId: async (taskId) => {
     const selectedTaskId = useTaskCodeStore.getState().selectedTaskId;
     const setCode = useCodeStore.getState().setCode;
+    const setOutput = useTaskCodeStore.getState().setOutput;
 
     if (taskId !== selectedTaskId) {
       set({ selectedTaskId: taskId });
@@ -61,6 +62,8 @@ export const useTaskCodeStore = create<execState>((set, get) => ({
         localStorage.removeItem('currentTaskId');
       }
       setCode('');
+      setOutput('');
+      localStorage.setItem('outputHistory', JSON.stringify([]));
       set({ outputHistory: [] });
     }
   },
@@ -89,10 +92,12 @@ export const useTaskCodeStore = create<execState>((set, get) => ({
 
       if (result.output === '') {
         setOutput(`Your code ran, but didn't produce any output. Did you forget a print()?`);
+        return;
       }
 
       if (result.output) {
         setOutput(result.output);
+        return result.output;
       }
     } catch (error) {
       console.error('Error executing code:', error);
@@ -159,7 +164,6 @@ interface newTaskState {
   setNewIsActive: (newIsActive: boolean) => void;
   setNewCourseId: (newCourseId: number) => void;
   setNewUserId: (newUserId: number) => void;
-  postNewTask: () => Promise<void>;
   resetNewTask: () => void;
 }
 
@@ -195,74 +199,5 @@ export const useNewTaskStore = create<newTaskState>((set) => ({
   setNewCourseId: (newCourseId: number) => set({ newCourseId: newCourseId }),
   setNewUserId: (newUserId: number) => set({ newUserId: newUserId }),
 
-  postNewTask: async () => {
-    const newCode = useCodeStore.getState().code;
-    const selectedTaskId = useTaskCodeStore.getState().selectedTaskId;
-
-    // must change from localhost to deployed server when server is online
-    try {
-      const response = await fetch('http://localhost:6001/help', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ newCode, taskId: selectedTaskId }),
-      });
-
-      const result = await response.json();
-      console.log(result.message);
-      /*
-      if (result.error) {
-        setAIOutput(`Error: ${result.error}`);
-        return;
-      }
-
-      if (result.message) {
-        setAIOutput(result.message);
-      }*/
-    } catch (error) {
-      console.error('Error analyzing code:', error);
-    }
-  },
-
   resetNewTask: () => set(initialNewTaskState),
-}));
-
-interface updateTaskState {
-  updateTask: () => Promise<void>;
-}
-
-export const useUpdateTaskStore = create<updateTaskState>(() => ({
-  updateTask: async () => {
-    const selectedTaskId = useTaskCodeStore.getState().selectedTaskId;
-    const updateTitle = useNewTaskStore.getState().newTitle;
-    const updateDescription = useNewTaskStore.getState().newDescription;
-    const updatePublicAccess = useNewTaskStore.getState().newPublicAccess;
-
-    // must change from localhost to deployed server when server is online
-    try {
-      const response = await fetch('http://localhost:6001/help', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          taskId: selectedTaskId,
-          taskDescription: updateDescription,
-          taskTitle: updateTitle,
-          publicAccess: updatePublicAccess,
-        }),
-      });
-
-      const result = await response.json();
-      console.log(result.message);
-      /*
-      if (result.error) {
-        setAIOutput(`Error: ${result.error}`);
-        return;
-      }
-
-      if (result.message) {
-        setAIOutput(result.message);
-      }*/
-    } catch (error) {
-      console.error('Error analyzing code:', error);
-    }
-  },
 }));

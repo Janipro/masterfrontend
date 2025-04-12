@@ -41,7 +41,7 @@ import CloseRoundedIcon from '@mui/icons-material/CloseRounded';
 import useDarkmodeStore from '../../stores/useDarkmodeStore';
 import { useNavigate } from 'react-router-dom';
 import { useCodeStore, useTaskCodeStore } from '../../stores/useTaskCodeStore';
-import useTeacherStore from '../../stores/useTeacherStore';
+import useTeacherStore from '../../stores/useOwnerStore';
 
 export default function TeacherTasks() {
   const [open, setOpen] = useState(false);
