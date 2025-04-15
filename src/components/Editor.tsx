@@ -204,7 +204,6 @@ export default function Editor({ showCode, currentCodeTemplate }: TerminalProps)
           },
         }}
       >
-        {console.log(isOwner)}
         <CodeMirror
           value={
             showCode
