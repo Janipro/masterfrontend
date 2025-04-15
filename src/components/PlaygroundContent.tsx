@@ -147,7 +147,7 @@ export default function PlaygroundContent() {
       const rightTopHeight = parseInt(getComputedStyle(containerRef.current).getPropertyValue('--top-right-height'));
       setTopRightHeight(rightTopHeight);
 
-      console.log('save both');
+      //console.log('save both');
       localStorage.setItem('leftWidth', leftWidth.toString());
       localStorage.setItem('rightTopHeight', rightTopHeight.toString());
     }

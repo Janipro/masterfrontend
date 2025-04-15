@@ -77,16 +77,16 @@ export default function Table({
             };
 
             if (hasTaskId(initialRows)) {
-              console.log('it has taskid');
+              //console.log('it has taskid');
               if (params.field === 'title') {
-                console.log('clicked on tht title');
+                //console.log('clicked on tht title');
                 if (params.row.taskId !== selectedTaskId) {
-                  console.log('not same taskid');
-                  console.log(params.row.taskId);
+                  //console.log('not same taskid');
+                  //console.log(params.row.taskId);
                   setTaskId(params.row.taskId);
                   setCode('');
                 }
-                console.log('last stsep');
+                //console.log('last stsep');
 
                 const email = localStorage.getItem('email') || '';
                 const isOwnerValue = params.row.owner.toLowerCase() === email.toLowerCase();

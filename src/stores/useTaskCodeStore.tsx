@@ -83,7 +83,7 @@ export const useTaskCodeStore = create<execState>((set, get) => ({
       });
 
       const result = await response.json();
-      console.log(result.output);
+      //console.log(result.output);
 
       if (result.error) {
         setOutput(`Error: ${result.error}`);
@@ -119,7 +119,7 @@ export const useTaskCodeStore = create<execState>((set, get) => ({
       });
 
       const result = await response.json();
-      console.log(result.message);
+      //console.log(result.message);
 
       if (result.error) {
         setAIOutput(`Error: ${result.error}`);
@@ -150,7 +150,7 @@ export const useTaskCodeStore = create<execState>((set, get) => ({
 
       const result = await response.json();
       //console.log(result.message);
-      console.log(result.isSolved);
+      //console.log(result.isSolved);
 
       if (result.error) {
         setOutput(`Error: ${result.error}`);
