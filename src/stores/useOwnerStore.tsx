@@ -9,7 +9,7 @@ type OwnerAction = {
 };
 
 const useOwnerStore = create<OwnerState & OwnerAction>()((set) => ({
-  isOwner: false,
+  isOwner: localStorage.getItem('isOwner') === 'true',
   setIsOwner: (updateOwnerState) => set(() => ({ isOwner: updateOwnerState })), // decides if user can edit in editor/template or not
 }));
 

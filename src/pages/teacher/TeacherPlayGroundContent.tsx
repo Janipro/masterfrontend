@@ -32,7 +32,7 @@ import { requirement, task } from '../../types/tableProps';
 import React from 'react';
 import TeacherPlaygroundRequirementsModal from '../../components/teacher/TeacherPlaygroundRequirementsModal';
 import { GET_TASK } from '../../../graphql/queries/getTask';
-import TeacherPlaygroundDropdown from '../../components/teacher/TeacherPlayGroundDropdown';
+import TeacherPlaygroundDropdown from '../../components/teacher/TeacherPlaygroundDropdown';
 import { GET_ALL_COURSES } from '../../../graphql/queries/getAllCourses';
 import { course } from '../../types/tableProps';
 
@@ -84,13 +84,13 @@ export default function TeacherPlaygroundContent() {
   const [selectedLevel, setSelectedLevel] = useState('Velg nivå');
   const levelOptions = [
     // should have a grade/level table in db that the other tables references (for instance for the task table)
-    '1. klasse',
+    /*'1. klasse',
     '2. klasse',
     '3. klasse',
     '4. klasse',
     '5. klasse',
     '6. klasse',
-    '7. klasse',
+    '7. klasse',*/
     '8. klasse',
     '9. klasse',
     '10. klasse',
@@ -208,7 +208,7 @@ export default function TeacherPlaygroundContent() {
       const rightTopHeight = parseInt(getComputedStyle(containerRef.current).getPropertyValue('--top-right-height'));
       setTopRightHeight(rightTopHeight);
 
-      console.log('save both');
+      //console.log('save both');
       localStorage.setItem('leftWidth', leftWidth.toString());
       localStorage.setItem('rightTopHeight', rightTopHeight.toString());
     }
@@ -676,7 +676,7 @@ export default function TeacherPlaygroundContent() {
                         userSelect: 'none',
                       },
                       '& .MuiInputBase-input': {
-                        overflowY: 'scroll !important',
+                        //overflowY: 'scroll !important',
                         maxHeight: '100%',
                         paddingRight: '8px',
                         boxSizing: 'border-box',

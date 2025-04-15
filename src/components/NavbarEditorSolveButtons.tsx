@@ -5,12 +5,26 @@ import CloudUploadRoundedIcon from '@mui/icons-material/CloudUploadRounded';
 import { NAV_COLORS } from '../types/navColors';
 import useDarkmodeEditorStore from '../stores/useDarkmodeEditorStore';
 import { useTaskCodeStore } from '../stores/useTaskCodeStore';
+import { useState } from 'react';
 
 const functions = ['Kjør', 'Hjelp', 'Lever', 'Innsendingshistorikk'];
 
 export default function NavbarEditorSolveButtons() {
   const { isDarkmodeEditor } = useDarkmodeEditorStore();
-  const { executeCode, codeHelp } = useTaskCodeStore();
+  const { executeCode, codeHelp, submitCode } = useTaskCodeStore();
+  const [isLoading, setIsLoading] = useState(false);
+
+  const handleButtonClick = async (fn: () => Promise<string | void>) => {
+    setIsLoading(true);
+    try {
+      await fn();
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   return (
     <Box
       sx={{
@@ -41,7 +55,8 @@ export default function NavbarEditorSolveButtons() {
         }}
       >
         <Button
-          onClick={executeCode}
+          onClick={() => handleButtonClick(executeCode)}
+          disabled={isLoading}
           key={functions[0]}
           sx={{
             color: isDarkmodeEditor ? NAV_COLORS.editor_text_dark : NAV_COLORS.editor_text,
@@ -64,6 +79,20 @@ export default function NavbarEditorSolveButtons() {
             width: 'fit-content',
           }}
         >
+          {isLoading && (
+            <Box
+              sx={{
+                position: 'absolute',
+                top: 0,
+                left: 0,
+                width: '100%',
+                height: '100%',
+                backgroundColor: 'rgba(0, 0, 0, 0.2)',
+                borderRadius: 'inherit',
+                zIndex: 1,
+              }}
+            />
+          )}
           <NavigationRoundedIcon
             sx={{
               mx: 0.2,
@@ -108,7 +137,8 @@ export default function NavbarEditorSolveButtons() {
         </Box>
 
         <Button
-          onClick={codeHelp}
+          onClick={() => handleButtonClick(codeHelp)}
+          disabled={isLoading}
           key={functions[1]}
           sx={{
             color: isDarkmodeEditor ? NAV_COLORS.editor_text_dark : NAV_COLORS.editor_text,
@@ -128,6 +158,20 @@ export default function NavbarEditorSolveButtons() {
             width: 'fit-content',
           }}
         >
+          {isLoading && (
+            <Box
+              sx={{
+                position: 'absolute',
+                top: 0,
+                left: 0,
+                width: '100%',
+                height: '100%',
+                backgroundColor: 'rgba(0, 0, 0, 0.2)',
+                borderRadius: 'inherit',
+                zIndex: 1,
+              }}
+            />
+          )}
           <WbIncandescentRoundedIcon
             sx={{
               mx: 0.2,
@@ -172,6 +216,8 @@ export default function NavbarEditorSolveButtons() {
         </Box>
 
         <Button
+          onClick={() => handleButtonClick(submitCode)}
+          disabled={isLoading}
           key={functions[2]}
           sx={{
             color: isDarkmodeEditor ? NAV_COLORS.editor_text_dark : NAV_COLORS.editor_text,
@@ -194,6 +240,20 @@ export default function NavbarEditorSolveButtons() {
             width: 'fit-content',
           }}
         >
+          {isLoading && (
+            <Box
+              sx={{
+                position: 'absolute',
+                top: 0,
+                left: 0,
+                width: '100%',
+                height: '100%',
+                backgroundColor: 'rgba(0, 0, 0, 0.2)',
+                borderRadius: 'inherit',
+                zIndex: 1,
+              }}
+            />
+          )}
           <CloudUploadRoundedIcon
             sx={{
               mx: 0.2,

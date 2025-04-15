@@ -66,13 +66,13 @@ export default function Register() {
       event.preventDefault();
       return;
     }
-    const data = new FormData(event.currentTarget);
-    console.log({
+    //const data = new FormData(event.currentTarget);
+    /*console.log({
       firstname: data.get('firstname'),
       lastname: data.get('lastname'),
       email: data.get('email'),
       password: data.get('password'),
-    });
+    });*/
     navigate('/');
   };
 

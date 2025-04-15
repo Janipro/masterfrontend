@@ -17,13 +17,14 @@ import { GET_ACTIVE_RECOMMENDEDS } from '../../graphql/queries/getActiveRecommen
 import { GET_TASK } from '../../graphql/queries/getTask';
 import TeacherPlaygroundCreateTaskModal from './teacher/TeacherPlaygroundCreateTaskModal';
 import { useNavigate } from 'react-router-dom';
-import React from 'react';
+import React, { useState } from 'react';
 
 const functions = ['Kjør', 'Publiser', 'Lagre endringer'];
 
 export default function NavbarEditorCreateEditButtons() {
   const [openCreateTaskModal, setOpenCreateTaskModal] = React.useState(false);
-  const { executeCode, selectedTaskId } = useTaskCodeStore();
+  const [isLoading, setIsLoading] = useState(false);
+  const { executeCode, selectedTaskId, setOutput } = useTaskCodeStore();
   const { code } = useCodeStore();
   const { resetNewTask } = useNewTaskStore();
   const { isDarkmodeEditor } = useDarkmodeEditorStore();
@@ -57,6 +58,21 @@ export default function NavbarEditorCreateEditButtons() {
   });
 
   const handleUpdateTask = async () => {
+    let isIncomplete = false;
+    let invalidMessage = '';
+    if (!newTitle.trim()) {
+      invalidMessage += 'Ny oppgavetittel er ugyldig.\n';
+      isIncomplete = true;
+    }
+    if (!newDescription.trim()) {
+      invalidMessage += 'Ny oppgavebeskrivelse er ugyldig.\n';
+      isIncomplete = true;
+    }
+    if (isIncomplete) {
+      setOutput(invalidMessage);
+      return;
+    }
+
     try {
       await updateTask({
         variables: {
@@ -141,7 +157,67 @@ export default function NavbarEditorCreateEditButtons() {
 
   const handleCreateTaskModal = async () => {
     setNewExpectedOutput(await executeCode());
+
+    let isIncomplete = false;
+    let invalidMessage = '';
+
+    if (!newTitle.trim()) {
+      invalidMessage += 'Ny oppgavetittel er ugyldig.\n';
+      isIncomplete = true;
+    }
+
+    if (!newDescription.trim()) {
+      invalidMessage += 'Ny oppgavebeskrivelse er ugyldig.\n';
+      isIncomplete = true;
+    }
+
+    if (!code.trim()) {
+      invalidMessage += 'Koden for oppgaven er ugyldig.\n';
+      isIncomplete = true;
+    }
+
+    if (!newExpectedOutput.trim()) {
+      invalidMessage += 'Forventet output for oppgaven er ugyldig\n';
+      isIncomplete = true;
+    }
+
+    if (!newCodeTemplate.trim()) {
+      invalidMessage += 'Kodefasitmalen er ugyldig.\n';
+      isIncomplete = true;
+    }
+
+    if (!newLevel.trim()) {
+      invalidMessage += 'Nivået for oppgaven er ugyldig.\n';
+      isIncomplete = true;
+    }
+
+    if (newRequirements.length === 0) {
+      invalidMessage += 'Kravene for oppgaven er ugyldig.\n';
+      isIncomplete = true;
+    }
+
+    if (!newCourseId) {
+      invalidMessage += 'Faget for oppgaven er ugyldig.\n';
+      isIncomplete = true;
+    }
+
+    if (isIncomplete) {
+      setOutput(invalidMessage);
+      return;
+    }
+
     handleOpenCreateTaskModal();
+  };
+
+  const handleButtonClick = async (fn: () => Promise<string | void>) => {
+    setIsLoading(true);
+    try {
+      await fn();
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -174,7 +250,8 @@ export default function NavbarEditorCreateEditButtons() {
         }}
       >
         <Button
-          onClick={executeCode}
+          onClick={() => handleButtonClick(executeCode)}
+          disabled={isLoading}
           key={functions[0]}
           sx={{
             color: isDarkmodeEditor ? NAV_COLORS.editor_text_dark : NAV_COLORS.editor_text,
@@ -197,6 +274,20 @@ export default function NavbarEditorCreateEditButtons() {
             width: 'fit-content',
           }}
         >
+          {isLoading && (
+            <Box
+              sx={{
+                position: 'absolute',
+                top: 0,
+                left: 0,
+                width: '100%',
+                height: '100%',
+                backgroundColor: 'rgba(0, 0, 0, 0.2)',
+                borderRadius: 'inherit',
+                zIndex: 1,
+              }}
+            />
+          )}
           <NavigationRoundedIcon
             sx={{
               mx: 0.2,
@@ -244,11 +335,12 @@ export default function NavbarEditorCreateEditButtons() {
           key={selectedTaskId === null ? functions[1] : functions[2]}
           onClick={() => {
             if (selectedTaskId === null) {
-              handleCreateTaskModal();
+              handleButtonClick(handleCreateTaskModal);
             } else {
-              handleUpdateTask();
+              handleButtonClick(handleUpdateTask);
             }
           }}
+          disabled={isLoading}
           sx={{
             color: isDarkmodeEditor ? NAV_COLORS.editor_text_dark : NAV_COLORS.editor_text,
             display: 'flex',
@@ -270,6 +362,20 @@ export default function NavbarEditorCreateEditButtons() {
             width: 'fit-content',
           }}
         >
+          {isLoading && (
+            <Box
+              sx={{
+                position: 'absolute',
+                top: 0,
+                left: 0,
+                width: '100%',
+                height: '100%',
+                backgroundColor: 'rgba(0, 0, 0, 0.2)',
+                borderRadius: 'inherit',
+                zIndex: 1,
+              }}
+            />
+          )}
           {selectedTaskId === null ? (
             <ShareRoundedIcon
               sx={{

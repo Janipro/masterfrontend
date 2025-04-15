@@ -147,7 +147,7 @@ export default function PlaygroundContent() {
       const rightTopHeight = parseInt(getComputedStyle(containerRef.current).getPropertyValue('--top-right-height'));
       setTopRightHeight(rightTopHeight);
 
-      console.log('save both');
+      //console.log('save both');
       localStorage.setItem('leftWidth', leftWidth.toString());
       localStorage.setItem('rightTopHeight', rightTopHeight.toString());
     }
@@ -418,7 +418,18 @@ export default function PlaygroundContent() {
                     },
                   }}
                 >
-                  <Box sx={{ typography: 'h3', fontWeight: 'medium', fontSize: '2em' }}>{currentTask?.taskName}</Box>
+                  <Box
+                    sx={{
+                      typography: 'h3',
+                      fontWeight: 'medium',
+                      fontSize: '2em',
+                      overflowWrap: 'break-word',
+                      wordBreak: 'break-word',
+                      hyphens: 'auto',
+                    }}
+                  >
+                    {currentTask?.taskName}
+                  </Box>
                   <Box
                     sx={{
                       typography: 'body2',
@@ -484,7 +495,7 @@ export default function PlaygroundContent() {
                         userSelect: 'none',
                       },
                       '& .MuiInputBase-input': {
-                        overflowY: 'scroll !important',
+                        //overflowY: 'auto !important',
                         maxHeight: '100%',
                         paddingRight: '8px',
                         boxSizing: 'border-box',
