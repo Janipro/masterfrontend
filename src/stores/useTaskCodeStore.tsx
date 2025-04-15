@@ -24,6 +24,7 @@ interface execState {
   setTaskId: (taskId: number | null) => Promise<void>;
   executeCode: () => Promise<string>;
   codeHelp: () => Promise<void>;
+  submitCode: () => Promise<void>;
 }
 
 export const useTaskCodeStore = create<execState>((set, get) => ({
@@ -68,7 +69,6 @@ export const useTaskCodeStore = create<execState>((set, get) => ({
     }
   },
 
-  // must send id of current task as well
   executeCode: async () => {
     const code = useCodeStore.getState().code;
 
@@ -105,7 +105,6 @@ export const useTaskCodeStore = create<execState>((set, get) => ({
     }
   },
 
-  // must send id of current task as well
   codeHelp: async () => {
     const code = useCodeStore.getState().code;
     const selectedTaskId = useTaskCodeStore.getState().selectedTaskId;
@@ -133,6 +132,37 @@ export const useTaskCodeStore = create<execState>((set, get) => ({
     } catch (error) {
       console.error('Error analyzing code:', error);
       setAIOutput('Error analyzing code');
+    }
+  },
+
+  submitCode: async () => {
+    const code = useCodeStore.getState().code;
+    const selectedTaskId = useTaskCodeStore.getState().selectedTaskId;
+    const { setOutput } = get();
+
+    // must change from localhost to deployed server when server is online
+    try {
+      const response = await fetch('http://localhost:6001/submit', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ code, taskId: selectedTaskId }),
+      });
+
+      const result = await response.json();
+      //console.log(result.message);
+      console.log(result.isSolved);
+
+      if (result.error) {
+        setOutput(`Error: ${result.error}`);
+        return;
+      }
+
+      if (result.message) {
+        setOutput(result.message);
+      }
+    } catch (error) {
+      console.error('Error analyzing code:', error);
+      setOutput('Error analyzing code');
     }
   },
 }));

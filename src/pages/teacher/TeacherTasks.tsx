@@ -322,6 +322,7 @@ export default function TeacherTasks() {
                       setTaskId(null);
                       setCode('');
                       setIsOwner(true);
+                      localStorage.setItem('isOwner', 'true');
                       navigate('/playground');
                     }}
                     variant="contained"
