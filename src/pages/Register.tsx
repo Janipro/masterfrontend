@@ -11,6 +11,7 @@ import MuiCard from '@mui/material/Card';
 import { styled } from '@mui/material/styles';
 import { useNavigate } from 'react-router-dom';
 //import { NAV_COLORS } from '../types/navColors';
+import logo from '../assets/educode.png';
 
 const Card = styled(MuiCard)(({ theme }) => ({
   display: 'flex',
@@ -130,7 +131,7 @@ export default function Register() {
         <Card variant="outlined">
           <Stack direction="row" gap={1} justifyContent="center" mb={2}>
             <img
-              src="src/assets/educode.png"
+              src={logo}
               width="40"
               height="auto"
               alt="EduCode logo"

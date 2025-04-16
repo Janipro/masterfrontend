@@ -28,6 +28,7 @@ import NavbarEditorSolveButtons from './NavbarEditorSolveButtons';
 import NavbarEditorCreateEditButtons from './NavbarEditorCreateEditButtons';
 import CloseRoundedIcon from '@mui/icons-material/CloseRounded';
 import { useTaskCodeStore } from '../stores/useTaskCodeStore';
+import logo from '../assets/educode.png';
 
 const functions = ['Kjør', 'Hjelp', 'Lever', 'Innsendingshistorikk'];
 const settings = ['Profil', 'Logg ut'];
@@ -97,7 +98,7 @@ export default function NavBarEditor() {
       <Container maxWidth={false}>
         <Toolbar disableGutters sx={{ minHeight: '50px !important' }}>
           <img
-            src="src/assets/educode.png"
+            src={logo}
             width="40"
             height="auto"
             alt="EduCode logo"
