@@ -641,7 +641,7 @@ export default function PlaygroundContent() {
                       style={{ marginLeft: '0.4em', marginRight: '0.2em' }}
                     />
                     <Typography sx={{ fontWeight: 'medium', userSelect: 'none', fontSize: '0.95em' }}>
-                      Python Kode
+                      {showCode ? 'Python Kodefasit' : 'Python Kodemal'}
                     </Typography>
                   </Box>
                   <Box sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
