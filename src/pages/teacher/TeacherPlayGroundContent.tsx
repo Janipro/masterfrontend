@@ -172,7 +172,7 @@ export default function TeacherPlaygroundContent() {
     if (isResizingVertical.current && containerRef.current) {
       requestAnimationFrame(() => {
         const newWidth = e.clientX;
-        if (newWidth > 200 && newWidth < window.innerWidth - 265) {
+        if (newWidth > 200 && newWidth < window.innerWidth - 294) {
           containerRef.current!.style.setProperty('--left-width', `${newWidth - 2}px`);
         }
       });
@@ -676,7 +676,7 @@ export default function TeacherPlaygroundContent() {
                         userSelect: 'none',
                       },
                       '& .MuiInputBase-input': {
-                        //overflowY: 'scroll !important',
+                        overflowY: 'scroll !important',
                         maxHeight: '100%',
                         paddingRight: '8px',
                         boxSizing: 'border-box',
