@@ -698,7 +698,7 @@ export default function PlaygroundContent() {
                         paddingY: '2.4px',
                         cursor: showCode ? null : 'pointer',
                         userSelect: 'none',
-                        borderRadius: 'o 5px 0 0',
+                        borderRadius: '0 5px 0 0',
                         backgroundColor: isDarkmodeEditor
                           ? showCode
                             ? NAV_COLORS.editor_button_template_selected_backgroundcolor_dark
