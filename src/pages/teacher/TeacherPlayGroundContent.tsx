@@ -172,7 +172,7 @@ export default function TeacherPlaygroundContent() {
     if (isResizingVertical.current && containerRef.current) {
       requestAnimationFrame(() => {
         const newWidth = e.clientX;
-        if (newWidth > 200 && newWidth < window.innerWidth - 294) {
+        if (newWidth > 200 && newWidth < window.innerWidth - 265) {
           containerRef.current!.style.setProperty('--left-width', `${newWidth - 2}px`);
         }
       });
@@ -883,7 +883,6 @@ export default function TeacherPlaygroundContent() {
                   position: 'relative',
                   borderTopRightRadius: '5px',
                   borderTopLeftRadius: '5px',
-                  minWidth: '272px',
                 }}
               >
                 <Grid2
@@ -905,8 +904,15 @@ export default function TeacherPlaygroundContent() {
                       height="1.35em"
                       style={{ marginLeft: '0.4em', marginRight: '0.2em' }}
                     />
-                    <Typography sx={{ fontWeight: 'medium', userSelect: 'none', fontSize: '0.95em' }}>
-                      {showCode ? 'Python Kodefasit' : 'Python Kodemal'}
+                    <Typography
+                      sx={{
+                        fontWeight: 'medium',
+                        userSelect: 'none',
+                        fontSize: '0.95em',
+                        display: { xs: 'none', sm: 'inline' },
+                      }}
+                    >
+                      Python {showCode ? 'Kodefasit' : 'Kodemal'}
                     </Typography>
                   </Box>
                   <Box sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>

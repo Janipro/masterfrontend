@@ -158,7 +158,7 @@ export default function NavBar() {
             <Menu
               sx={{
                 mt: '35px',
-                display: { xs: 'none', sm: 'none', md: 'none', lg: 'block', xl: 'block' },
+                display: 'block',
                 '& .MuiPaper-root': {
                   backgroundColor: isDarkmode
                     ? NAV_COLORS.editor_button_background_dark

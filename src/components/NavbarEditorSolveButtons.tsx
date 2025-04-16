@@ -7,7 +7,7 @@ import useDarkmodeEditorStore from '../stores/useDarkmodeEditorStore';
 import { useTaskCodeStore } from '../stores/useTaskCodeStore';
 import { useState } from 'react';
 
-const functions = ['Kjør', 'Hjelp', 'Lever', 'Innsendingshistorikk'];
+const functions = ['Kjør', 'Hjelp', 'Lever'];
 
 export default function NavbarEditorSolveButtons() {
   const { isDarkmodeEditor } = useDarkmodeEditorStore();

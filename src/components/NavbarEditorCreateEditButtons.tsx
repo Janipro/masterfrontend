@@ -172,6 +172,7 @@ export default function NavbarEditorCreateEditButtons() {
     }
 
     if (!code.trim()) {
+      // should send statuscode from python container all the way to frontend when code ran with errors and use it here
       invalidMessage += 'Koden for oppgaven er ugyldig.\n';
       isIncomplete = true;
     }
@@ -308,7 +309,6 @@ export default function NavbarEditorCreateEditButtons() {
 
         <Box
           sx={{
-            my: 2,
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
@@ -395,7 +395,7 @@ export default function NavbarEditorCreateEditButtons() {
           )}
           <Typography
             sx={{
-              display: { xs: 'none', sm: 'none', md: 'block', lg: 'block', xl: 'block' },
+              display: { xs: 'none', sm: 'block', md: 'block', lg: 'block', xl: 'block' },
               color: isDarkmodeEditor ? NAV_COLORS.editor_text_dark : NAV_COLORS.editor_text,
             }}
           >

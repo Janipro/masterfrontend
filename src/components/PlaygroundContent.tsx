@@ -111,7 +111,7 @@ export default function PlaygroundContent() {
     if (isResizingVertical.current && containerRef.current) {
       requestAnimationFrame(() => {
         const newWidth = e.clientX;
-        if (newWidth > 200 && newWidth < window.innerWidth - 294) {
+        if (newWidth > 200 && newWidth < window.innerWidth - 265) {
           containerRef.current!.style.setProperty('--left-width', `${newWidth - 2}px`);
         }
       });
@@ -222,8 +222,8 @@ export default function PlaygroundContent() {
       const computedWidth = parseInt(getComputedStyle(containerRef.current).getPropertyValue('--left-width'), 10);
 
       if (isNaN(computedWidth)) return;
-      if (computedWidth > containerWidth - 272 && containerWidth - 272 >= 82) {
-        const newWidth = containerWidth - 272;
+      if (computedWidth > containerWidth - 268 && containerWidth - 268 >= 82) {
+        const newWidth = containerWidth - 268;
         setLeftWidth(newWidth);
         containerRef.current.style.setProperty('--left-width', `${newWidth}px`);
       }
@@ -619,7 +619,6 @@ export default function PlaygroundContent() {
                   position: 'relative',
                   borderTopRightRadius: '5px',
                   borderTopLeftRadius: '5px',
-                  minWidth: '272px',
                 }}
               >
                 <Grid2
@@ -641,8 +640,15 @@ export default function PlaygroundContent() {
                       height="1.35em"
                       style={{ marginLeft: '0.4em', marginRight: '0.2em' }}
                     />
-                    <Typography sx={{ fontWeight: 'medium', userSelect: 'none', fontSize: '0.95em' }}>
-                      {showCode ? 'Python Kodefasit' : 'Python Kodemal'}
+                    <Typography
+                      sx={{
+                        fontWeight: 'medium',
+                        userSelect: 'none',
+                        fontSize: '0.95em',
+                        display: { xs: 'none', sm: 'inline' },
+                      }}
+                    >
+                      Python {showCode ? 'Kodesvar' : 'Kodemal'}
                     </Typography>
                   </Box>
                   <Box sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>

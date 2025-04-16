@@ -12,6 +12,8 @@ import { useNavigate } from 'react-router-dom';
 //import { NAV_COLORS } from '../types/navColors';
 import { backendUrl } from '../config';
 import logo from '../assets/educode.png';
+import { useTaskCodeStore } from '../stores/useTaskCodeStore';
+import useOwnerStore from '../stores/useOwnerStore';
 
 const Card = styled(MuiCard)(({ theme }) => ({
   display: 'flex',
@@ -58,6 +60,8 @@ export default function Login() {
   const [emailErrorMessage, setEmailErrorMessage] = React.useState('');
   const [passwordError, setPasswordError] = React.useState(false);
   const [passwordErrorMessage, setPasswordErrorMessage] = React.useState('');
+  const { setTaskId } = useTaskCodeStore();
+  const { setIsOwner } = useOwnerStore();
   const navigate = useNavigate();
 
   const handleSubmit = async () => {
@@ -79,9 +83,12 @@ export default function Login() {
       localStorage.setItem('email', result[0].email);
       localStorage.setItem('full_name', result[0].firstname + ' ' + result[0].lastname);
       localStorage.setItem('is_admin', result[0].is_admin);
+      setTaskId(null);
+      setIsOwner(false);
     } catch (error) {
       console.log('Could not login', error);
     }
+    navigate('/');
     navigate(0);
   };
 

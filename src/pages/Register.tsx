@@ -75,6 +75,7 @@ export default function Register() {
       password: data.get('password'),
     });*/
     navigate('/');
+    navigate(0);
   };
 
   const validateInputs = () => {
