@@ -4,12 +4,12 @@ import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
 import FormControl from '@mui/material/FormControl';
 import TextField from '@mui/material/TextField';
-import Typography from '@mui/material/Typography';
+//import Typography from '@mui/material/Typography';
 import Stack from '@mui/material/Stack';
 import MuiCard from '@mui/material/Card';
 import { styled } from '@mui/material/styles';
 import { useNavigate } from 'react-router-dom';
-import { NAV_COLORS } from '../types/navColors';
+//import { NAV_COLORS } from '../types/navColors';
 import { backendUrl } from '../config';
 
 const Card = styled(MuiCard)(({ theme }) => ({
@@ -129,9 +129,11 @@ export default function Login() {
                 zIndex: 100,
               }}
             />
+            {/*
             <Typography color={NAV_COLORS.text} typography="h6" fontWeight="medium" marginLeft={0.25}>
-              EduCode
+              website name
             </Typography>
+            */}
           </Stack>
           <Box
             sx={{

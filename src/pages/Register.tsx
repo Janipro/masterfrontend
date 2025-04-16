@@ -10,7 +10,7 @@ import Stack from '@mui/material/Stack';
 import MuiCard from '@mui/material/Card';
 import { styled } from '@mui/material/styles';
 import { useNavigate } from 'react-router-dom';
-import { NAV_COLORS } from '../types/navColors';
+//import { NAV_COLORS } from '../types/navColors';
 
 const Card = styled(MuiCard)(({ theme }) => ({
   display: 'flex',
@@ -143,9 +143,11 @@ export default function Register() {
                 WebkitUserSelect: 'none',
               }}
             ></img>
+            {/*
             <Typography color={NAV_COLORS.text} typography="h6" fontWeight="medium" marginLeft={0.25}>
-              EduCode
+              website name
             </Typography>
+            */}
           </Stack>
           <Box
             component="form"
