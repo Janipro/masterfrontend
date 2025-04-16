@@ -74,9 +74,9 @@ export const useTaskCodeStore = create<execState>((set, get) => ({
 
     const { setOutput } = get();
 
-    // must change from localhost to deployed server when server is online
     try {
-      const response = await fetch('http://localhost:6001/execute', {
+      //const response = await fetch('http://localhost:6001/execute', { When running local backend
+      const response = await fetch('https://masterbackend.fly.dev/execute', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ code }),
@@ -110,9 +110,9 @@ export const useTaskCodeStore = create<execState>((set, get) => ({
     const selectedTaskId = useTaskCodeStore.getState().selectedTaskId;
     const { setAIOutput } = get();
 
-    // must change from localhost to deployed server when server is online
     try {
-      const response = await fetch('http://localhost:6001/help', {
+      //const response = await fetch('http://localhost:6001/help', { When running local backend
+      const response = await fetch('https://masterbackend.fly.dev/help', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ code, taskId: selectedTaskId }),
@@ -140,9 +140,9 @@ export const useTaskCodeStore = create<execState>((set, get) => ({
     const selectedTaskId = useTaskCodeStore.getState().selectedTaskId;
     const { setOutput } = get();
 
-    // must change from localhost to deployed server when server is online
     try {
-      const response = await fetch('http://localhost:6001/submit', {
+      //const response = await fetch('http://localhost:6001/submit', { When running local backend
+      const response = await fetch('https://masterbackend.fly.dev/submit', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ code, taskId: selectedTaskId }),
