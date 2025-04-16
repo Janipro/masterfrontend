@@ -103,3 +103,14 @@ export type sclass = {
   className: string;
   grade: number;
 };
+
+export type statisticsDummyData = {
+  id: number;
+  title: string;
+  requirement: string[];
+  level: string;
+  course: string;
+  type: string;
+  due: string;
+  status: string;
+};

@@ -5,7 +5,7 @@ import { useMemo, useState } from 'react';
 import useOwnerStore from '../stores/useOwnerStore';
 import { useCodeStore, useTaskCodeStore } from '../stores/useTaskCodeStore';
 import { useNavigate } from 'react-router-dom';
-import { task, student, recommended, recommendedStudent, studygroup } from '../types/tableProps';
+import { task, student, recommended, recommendedStudent, studygroup, statisticsDummyData } from '../types/tableProps';
 
 const paginationModel = { page: 0, pageSize: 10 };
 
@@ -16,7 +16,7 @@ export default function Table({
   selectionModel,
   setSelectionModel,
 }: {
-  rows: task[] | student[] | recommended[] | recommendedStudent[] | studygroup[];
+  rows: task[] | student[] | recommended[] | recommendedStudent[] | studygroup[] | statisticsDummyData[];
   selectable: boolean;
   columns: GridColDef[];
   selectionModel?: GridRowSelectionModel;

@@ -206,7 +206,7 @@ export const columns: GridColDef[] = [
     field: 'requirement',
     display: 'flex',
     renderCell: renderRequirement,
-    valueGetter: (value, row) =>
+    valueGetter: (_, row) =>
       row.title == null || row.requirement == null ? null : { title: row.title, requirement: row.requirement },
     filterable: false,
     headerName: 'Krav',
@@ -225,7 +225,7 @@ export const columns2: GridColDef[] = [
     field: 'requirement',
     display: 'flex',
     renderCell: renderRequirement,
-    valueGetter: (value, row) =>
+    valueGetter: (_, row) =>
       row.title == null || row.requirement == null ? null : { title: row.title, requirement: row.requirement },
     filterable: false,
     headerName: 'Krav',
@@ -258,7 +258,7 @@ export const columns5: GridColDef[] = [
     field: 'requirement',
     display: 'flex',
     renderCell: renderRequirement,
-    valueGetter: (value, row) =>
+    valueGetter: (_, row) =>
       row.title == null || row.requirement == null ? null : { title: row.title, requirement: row.requirement },
     filterable: false,
     headerName: 'Krav',

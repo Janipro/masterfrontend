@@ -34,7 +34,7 @@ import { GET_ALL_COURSES } from '../../../graphql/queries/getAllCourses';
 import { GET_ALL_STUDENTS } from '../../../graphql/queries/getAllStudents';
 import { GET_ALL_STUDY_GROUPS } from '../../../graphql/queries/getAllStudygroups';
 import { GET_ALL_ACTIVE_STUDY_GROUPS } from '../../../graphql/queries/getAllActiveStudygroups';
-import { CREATE_STUDY_GROUP } from '../../../graphql/mutations/createStudygroup';
+import { CREATE_STUDY_GROUP } from '../../../graphql/mutations/createStudyGroup';
 import { CREATE_ENROLMENT } from '../../../graphql/mutations/createEnrolment';
 import { UPDATE_RECOMMENDED_VISIBILITY } from '../../../graphql/mutations/updateRecommendedVisibility';
 import { DELETE_RECOMMENDED_BY_RECOMMENDED_ID } from '../../../graphql/mutations/deleteRecommendedByRecommendedId';

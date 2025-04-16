@@ -1,3 +1,4 @@
+/*
 import TextField from '@mui/material/TextField';
 import Autocomplete from '@mui/material/Autocomplete';
 import { tableProps } from '../types/tableProps';
@@ -14,3 +15,6 @@ export default function SearchBar({ options, prompt }: { options: tableProps[]; 
     />
   );
 }
+*/
+
+// Commented out because it triggers the error that tableProps is not a type. Searchbar is not currently in use.
