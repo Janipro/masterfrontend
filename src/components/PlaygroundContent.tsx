@@ -111,7 +111,7 @@ export default function PlaygroundContent() {
     if (isResizingVertical.current && containerRef.current) {
       requestAnimationFrame(() => {
         const newWidth = e.clientX;
-        if (newWidth > 200 && newWidth < window.innerWidth - 265) {
+        if (newWidth > 200 && newWidth < window.innerWidth - 294) {
           containerRef.current!.style.setProperty('--left-width', `${newWidth - 2}px`);
         }
       });
@@ -222,8 +222,8 @@ export default function PlaygroundContent() {
       const computedWidth = parseInt(getComputedStyle(containerRef.current).getPropertyValue('--left-width'), 10);
 
       if (isNaN(computedWidth)) return;
-      if (computedWidth > containerWidth - 268 && containerWidth - 268 >= 82) {
-        const newWidth = containerWidth - 268;
+      if (computedWidth > containerWidth - 272 && containerWidth - 272 >= 82) {
+        const newWidth = containerWidth - 272;
         setLeftWidth(newWidth);
         containerRef.current.style.setProperty('--left-width', `${newWidth}px`);
       }
@@ -619,6 +619,7 @@ export default function PlaygroundContent() {
                   position: 'relative',
                   borderTopRightRadius: '5px',
                   borderTopLeftRadius: '5px',
+                  minWidth: '272px',
                 }}
               >
                 <Grid2

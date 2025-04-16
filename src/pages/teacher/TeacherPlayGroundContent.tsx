@@ -883,6 +883,7 @@ export default function TeacherPlaygroundContent() {
                   position: 'relative',
                   borderTopRightRadius: '5px',
                   borderTopLeftRadius: '5px',
+                  minWidth: '272px',
                 }}
               >
                 <Grid2
