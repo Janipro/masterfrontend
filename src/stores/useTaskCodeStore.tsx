@@ -1,5 +1,6 @@
 import { create } from 'zustand';
 import { requirement } from '../types/tableProps';
+import { backendUrl } from '../config';
 
 interface CodeState {
   code: string;
@@ -76,7 +77,7 @@ export const useTaskCodeStore = create<execState>((set, get) => ({
 
     try {
       //const response = await fetch('http://localhost:6001/execute', { When running local backend
-      const response = await fetch('https://masterbackend.fly.dev/execute', {
+      const response = await fetch(`${backendUrl}/execute`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ code }),
@@ -112,7 +113,7 @@ export const useTaskCodeStore = create<execState>((set, get) => ({
 
     try {
       //const response = await fetch('http://localhost:6001/help', { When running local backend
-      const response = await fetch('https://masterbackend.fly.dev/help', {
+      const response = await fetch(`${backendUrl}/help`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ code, taskId: selectedTaskId }),
@@ -142,7 +143,7 @@ export const useTaskCodeStore = create<execState>((set, get) => ({
 
     try {
       //const response = await fetch('http://localhost:6001/submit', { When running local backend
-      const response = await fetch('https://masterbackend.fly.dev/submit', {
+      const response = await fetch(`${backendUrl}/submit`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ code, taskId: selectedTaskId }),

@@ -10,6 +10,7 @@ import MuiCard from '@mui/material/Card';
 import { styled } from '@mui/material/styles';
 import { useNavigate } from 'react-router-dom';
 import { NAV_COLORS } from '../types/navColors';
+import { backendUrl } from '../config';
 
 const Card = styled(MuiCard)(({ theme }) => ({
   display: 'flex',
@@ -65,7 +66,7 @@ export default function Login() {
     const user = { email, password };
     try {
       //const response = await fetch('http://localhost:6001/login', { When running local backend
-      const response = await fetch('https://masterbackend.fly.dev/login', {
+      const response = await fetch(`${backendUrl}/login`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ user }),
