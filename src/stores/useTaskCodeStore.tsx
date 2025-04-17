@@ -207,7 +207,7 @@ const initialNewTaskState = {
   newExpectedCode: '',
   newRequirements: [] as requirement[],
   newLevel: '',
-  newPublicAccess: false,
+  newPublicAccess: true,
   newIsActive: false,
   newCourseId: 0,
   newUserId: 0,
