@@ -156,7 +156,8 @@ export default function NavbarEditorCreateEditButtons() {
   };
 
   const handleCreateTaskModal = async () => {
-    setNewExpectedOutput(await executeCode());
+    const expectedOutputValue = await executeCode();
+    setNewExpectedOutput(expectedOutputValue);
 
     let isIncomplete = false;
     let invalidMessage = '';
@@ -177,7 +178,7 @@ export default function NavbarEditorCreateEditButtons() {
       isIncomplete = true;
     }
 
-    if (!newExpectedOutput.trim()) {
+    if (!expectedOutputValue.trim()) {
       invalidMessage += 'Forventet output for oppgaven er ugyldig\n';
       isIncomplete = true;
     }
