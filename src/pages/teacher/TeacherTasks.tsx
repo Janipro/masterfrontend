@@ -42,6 +42,8 @@ import useTeacherStore from '../../stores/useOwnerStore';
 import { classTranslations, courseTranslations, typeTranslations } from '../../types/translations';
 import { GET_ALL_ACTIVE_STUDY_GROUPS } from '../../../graphql/queries/getAllActiveStudygroups';
 import { GET_ENROLMENTS_BY_STUDY_GROUP_ID } from '../../../graphql/queries/getEnrolmentsByStudyGroupId';
+import { GET_ACTIVE_RECOMMENDEDS } from '../../../graphql/queries/getActiveRecommendeds';
+import { GET_RECOMMENDEDS } from '../../../graphql/queries/getRecommendeds';
 
 export default function TeacherTasks() {
   const [open, setOpen] = useState(false);
@@ -77,7 +79,12 @@ export default function TeacherTasks() {
   const { loading: activeStudygroupsLoading, data: activeStudygroupsData } = useQuery(GET_ALL_ACTIVE_STUDY_GROUPS, {
     variables: { userId: userId },
   });
-  const [createRecommended] = useMutation(CREATE_RECOMMENDED);
+  const [createRecommended] = useMutation(CREATE_RECOMMENDED, {
+    refetchQueries: [
+      { query: GET_ACTIVE_RECOMMENDEDS, variables: { userId: userId } },
+      { query: GET_RECOMMENDEDS, variables: { userId: userId } },
+    ],
+  });
   const [createRecommendedStudent] = useMutation(CREATE_RECOMMENDED_STUDENT);
   const [updateTaskVisibility] = useMutation(UPDATE_TASK_VISIBILITY, {
     refetchQueries: [
