@@ -9,6 +9,14 @@ export const GET_ALL_ACTIVE_STUDY_GROUPS = gql`
         courseId
         studyGroupId
         studyGroupName
+        courseByCourseId {
+          courseName
+          courseId
+        }
+        schoolBySchoolId {
+          schoolId
+          schoolName
+        }
       }
     }
   }

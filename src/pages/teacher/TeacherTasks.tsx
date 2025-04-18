@@ -40,7 +40,7 @@ import { useNavigate } from 'react-router-dom';
 import { useCodeStore, useTaskCodeStore } from '../../stores/useTaskCodeStore';
 import useTeacherStore from '../../stores/useOwnerStore';
 import { classTranslations, courseTranslations, typeTranslations } from '../../types/translations';
-import { GET_ALL_STUDY_GROUPS } from '../../../graphql/queries/getAllStudygroups';
+import { GET_ALL_ACTIVE_STUDY_GROUPS } from '../../../graphql/queries/getAllActiveStudygroups';
 import { GET_ENROLMENTS_BY_STUDY_GROUP_ID } from '../../../graphql/queries/getEnrolmentsByStudyGroupId';
 
 export default function TeacherTasks() {
@@ -74,7 +74,7 @@ export default function TeacherTasks() {
   const { loading: activeCreatedLoading, data: activeCreatedTasks } = useQuery(GET_ACTIVE_CREATED_TASKS, {
     variables: { userId: userId },
   });
-  const { loading: studygroupsLoading, data: studygroupsData } = useQuery(GET_ALL_STUDY_GROUPS, {
+  const { loading: activeStudygroupsLoading, data: activeStudygroupsData } = useQuery(GET_ALL_ACTIVE_STUDY_GROUPS, {
     variables: { userId: userId },
   });
   const [createRecommended] = useMutation(CREATE_RECOMMENDED);
@@ -94,7 +94,7 @@ export default function TeacherTasks() {
 
   const navigate = useNavigate();
 
-  if (tasksLoading || createdLoading || studygroupsLoading || activeCreatedLoading) {
+  if (tasksLoading || createdLoading || activeStudygroupsLoading || activeCreatedLoading) {
     return (
       <Box mt="30vh">
         <p> Laster inn... </p>
@@ -161,7 +161,7 @@ export default function TeacherTasks() {
   };
 
   const getStudygroups = (): studygroup[] => {
-    return studygroupsData.allStudygroups.nodes.map((studyGroup: studygroup) => ({
+    return activeStudygroupsData.allStudygroups.nodes.map((studyGroup: studygroup) => ({
       id: studyGroup.studyGroupId,
       title: studyGroup.studyGroupName,
       level:

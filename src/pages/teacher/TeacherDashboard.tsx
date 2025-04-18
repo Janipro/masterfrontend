@@ -86,7 +86,10 @@ export default function TeacherDashboard() {
     variables: { classId: classId, schoolId: schoolId },
   });
   const [createStudygroup] = useMutation(CREATE_STUDY_GROUP, {
-    refetchQueries: [{ query: GET_ALL_ACTIVE_STUDY_GROUPS, variables: { userId: userId } }],
+    refetchQueries: [
+      { query: GET_ALL_STUDY_GROUPS, variables: { userId: userId } },
+      { query: GET_ALL_ACTIVE_STUDY_GROUPS, variables: { userId: userId } },
+    ],
   });
   const [createEnrolment] = useMutation(CREATE_ENROLMENT);
   const [updateRecommendedVisibility] = useMutation(UPDATE_RECOMMENDED_VISIBILITY, {
