@@ -1,3 +1,4 @@
+// Using translations to access nodes from graphQL is inspired by suggestions from ChatGPT (GPT-4o, 14.03.25)
 export const classTranslations: { [grade: number]: string } = {
   1: '1. klasse',
   2: '2. klasse',
