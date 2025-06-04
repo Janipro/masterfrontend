@@ -5,7 +5,7 @@ import { useMemo, useState } from 'react';
 import useOwnerStore from '../stores/useOwnerStore';
 import { useCodeStore, useTaskCodeStore } from '../stores/useTaskCodeStore';
 import { useNavigate } from 'react-router-dom';
-import { task, student, recommended, recommendedStudent, studygroup } from '../types/tableProps';
+import { task, student, recommended, recommendedStudent, studygroup, statisticsDummyData } from '../types/tableProps';
 
 const paginationModel = { page: 0, pageSize: 10 };
 
@@ -16,7 +16,7 @@ export default function Table({
   selectionModel,
   setSelectionModel,
 }: {
-  rows: task[] | student[] | recommended[] | recommendedStudent[] | studygroup[];
+  rows: task[] | student[] | recommended[] | recommendedStudent[] | studygroup[] | statisticsDummyData[];
   selectable: boolean;
   columns: GridColDef[];
   selectionModel?: GridRowSelectionModel;
@@ -77,19 +77,21 @@ export default function Table({
             };
 
             if (hasTaskId(initialRows)) {
-              console.log('it has taskid');
+              //console.log('it has taskid');
               if (params.field === 'title') {
-                console.log('clicked on tht title');
+                //console.log('clicked on tht title');
                 if (params.row.taskId !== selectedTaskId) {
-                  console.log('not same taskid');
-                  console.log(params.row.taskId);
+                  //console.log('not same taskid');
+                  //console.log(params.row.taskId);
                   setTaskId(params.row.taskId);
                   setCode('');
                 }
-                console.log('last stsep');
+                //console.log('last stsep');
 
                 const email = localStorage.getItem('email') || '';
-                setIsOwner(params.row.owner.toLowerCase() === email.toLowerCase()); //should probably compare user ids instead, but all the tables only has owner (email) atm
+                const isOwnerValue = params.row.owner.toLowerCase() === email.toLowerCase();
+                setIsOwner(isOwnerValue); //should probably compare user ids instead, but all the tables only has owner (email) atm
+                localStorage.setItem('isOwner', isOwnerValue.toString());
                 navigate('/playground');
               }
             }

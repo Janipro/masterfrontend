@@ -147,7 +147,7 @@ export default function PlaygroundContent() {
       const rightTopHeight = parseInt(getComputedStyle(containerRef.current).getPropertyValue('--top-right-height'));
       setTopRightHeight(rightTopHeight);
 
-      console.log('save both');
+      //console.log('save both');
       localStorage.setItem('leftWidth', leftWidth.toString());
       localStorage.setItem('rightTopHeight', rightTopHeight.toString());
     }
@@ -418,7 +418,18 @@ export default function PlaygroundContent() {
                     },
                   }}
                 >
-                  <Box sx={{ typography: 'h3', fontWeight: 'medium', fontSize: '2em' }}>{currentTask?.taskName}</Box>
+                  <Box
+                    sx={{
+                      typography: 'h3',
+                      fontWeight: 'medium',
+                      fontSize: '2em',
+                      overflowWrap: 'break-word',
+                      wordBreak: 'break-word',
+                      hyphens: 'auto',
+                    }}
+                  >
+                    {currentTask?.taskName}
+                  </Box>
                   <Box
                     sx={{
                       typography: 'body2',
@@ -484,7 +495,7 @@ export default function PlaygroundContent() {
                         userSelect: 'none',
                       },
                       '& .MuiInputBase-input': {
-                        overflowY: 'scroll !important',
+                        //overflowY: 'auto !important',
                         maxHeight: '100%',
                         paddingRight: '8px',
                         boxSizing: 'border-box',
@@ -629,8 +640,15 @@ export default function PlaygroundContent() {
                       height="1.35em"
                       style={{ marginLeft: '0.4em', marginRight: '0.2em' }}
                     />
-                    <Typography sx={{ fontWeight: 'medium', userSelect: 'none', fontSize: '0.95em' }}>
-                      Python Kode
+                    <Typography
+                      sx={{
+                        fontWeight: 'medium',
+                        userSelect: 'none',
+                        fontSize: '0.95em',
+                        display: { xs: 'none', sm: 'inline' },
+                      }}
+                    >
+                      Python {showCode ? 'Kodesvar' : 'Kodemal'}
                     </Typography>
                   </Box>
                   <Box sx={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
@@ -686,7 +704,7 @@ export default function PlaygroundContent() {
                         paddingY: '2.4px',
                         cursor: showCode ? null : 'pointer',
                         userSelect: 'none',
-                        borderRadius: 'o 5px 0 0',
+                        borderRadius: '0 5px 0 0',
                         backgroundColor: isDarkmodeEditor
                           ? showCode
                             ? NAV_COLORS.editor_button_template_selected_backgroundcolor_dark

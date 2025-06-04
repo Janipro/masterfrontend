@@ -81,7 +81,7 @@ const columns: GridColDef[] = [
     field: 'requirement',
     display: 'flex',
     renderCell: renderRequirement,
-    valueGetter: (value, row) =>
+    valueGetter: (_, row) =>
       row.title == null || row.requirement == null ? null : { title: row.title, requirement: row.requirement },
     filterable: false,
     headerName: 'Krav',
@@ -187,7 +187,7 @@ export default function StudentStatistics() {
                 <Grid2 container direction={'row'} spacing={2} sx={{ p: 1, maxWidth: 800 }}>
                   <BarChart
                     dataset={dataset}
-                    xAxis={[{ scaleType: 'band', dataKey: 'description', barGapRatio: 0.5 }]}
+                    xAxis={[{ scaleType: 'band', dataKey: 'description' }]}
                     series={[
                       { dataKey: 'if-statement', label: 'if-setning' },
                       { dataKey: 'for-loop', label: 'for-løkke' },

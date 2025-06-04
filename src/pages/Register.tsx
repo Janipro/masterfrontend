@@ -10,7 +10,8 @@ import Stack from '@mui/material/Stack';
 import MuiCard from '@mui/material/Card';
 import { styled } from '@mui/material/styles';
 import { useNavigate } from 'react-router-dom';
-import { NAV_COLORS } from '../types/navColors';
+//import { NAV_COLORS } from '../types/navColors';
+import logo from '../assets/educode.png';
 
 const Card = styled(MuiCard)(({ theme }) => ({
   display: 'flex',
@@ -66,14 +67,15 @@ export default function Register() {
       event.preventDefault();
       return;
     }
-    const data = new FormData(event.currentTarget);
-    console.log({
+    //const data = new FormData(event.currentTarget);
+    /*console.log({
       firstname: data.get('firstname'),
       lastname: data.get('lastname'),
       email: data.get('email'),
       password: data.get('password'),
-    });
+    });*/
     navigate('/');
+    navigate(0);
   };
 
   const validateInputs = () => {
@@ -130,7 +132,7 @@ export default function Register() {
         <Card variant="outlined">
           <Stack direction="row" gap={1} justifyContent="center" mb={2}>
             <img
-              src="src/assets/educode.png"
+              src={logo}
               width="40"
               height="auto"
               alt="EduCode logo"
@@ -143,9 +145,11 @@ export default function Register() {
                 WebkitUserSelect: 'none',
               }}
             ></img>
+            {/*
             <Typography color={NAV_COLORS.text} typography="h6" fontWeight="medium" marginLeft={0.25}>
-              EduCode
+              website name
             </Typography>
+            */}
           </Stack>
           <Box
             component="form"

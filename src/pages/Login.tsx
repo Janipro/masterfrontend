@@ -4,12 +4,16 @@ import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
 import FormControl from '@mui/material/FormControl';
 import TextField from '@mui/material/TextField';
-import Typography from '@mui/material/Typography';
+//import Typography from '@mui/material/Typography';
 import Stack from '@mui/material/Stack';
 import MuiCard from '@mui/material/Card';
 import { styled } from '@mui/material/styles';
 import { useNavigate } from 'react-router-dom';
-import { NAV_COLORS } from '../types/navColors';
+//import { NAV_COLORS } from '../types/navColors';
+import { backendUrl } from '../config';
+import logo from '../assets/educode.png';
+import { useTaskCodeStore } from '../stores/useTaskCodeStore';
+import useOwnerStore from '../stores/useOwnerStore';
 
 const Card = styled(MuiCard)(({ theme }) => ({
   display: 'flex',
@@ -56,6 +60,8 @@ export default function Login() {
   const [emailErrorMessage, setEmailErrorMessage] = React.useState('');
   const [passwordError, setPasswordError] = React.useState(false);
   const [passwordErrorMessage, setPasswordErrorMessage] = React.useState('');
+  const { setTaskId } = useTaskCodeStore();
+  const { setIsOwner } = useOwnerStore();
   const navigate = useNavigate();
 
   const handleSubmit = async () => {
@@ -64,7 +70,8 @@ export default function Login() {
     }
     const user = { email, password };
     try {
-      const response = await fetch('http://localhost:6001/login', {
+      //const response = await fetch('http://localhost:6001/login', { When running local backend
+      const response = await fetch(`${backendUrl}/login`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ user }),
@@ -76,9 +83,12 @@ export default function Login() {
       localStorage.setItem('email', result[0].email);
       localStorage.setItem('full_name', result[0].firstname + ' ' + result[0].lastname);
       localStorage.setItem('is_admin', result[0].is_admin);
+      setTaskId(null);
+      setIsOwner(false);
     } catch (error) {
       console.log('Could not login', error);
     }
+    navigate('/');
     navigate(0);
   };
 
@@ -116,7 +126,7 @@ export default function Login() {
         <Card variant="outlined">
           <Stack direction="row" gap={1} justifyContent="center" mb={2}>
             <img
-              src="src/assets/educode.png"
+              src={logo}
               width="40"
               height="auto"
               alt="EduCode logo"
@@ -127,9 +137,11 @@ export default function Login() {
                 zIndex: 100,
               }}
             />
+            {/*
             <Typography color={NAV_COLORS.text} typography="h6" fontWeight="medium" marginLeft={0.25}>
-              EduCode
+              website name
             </Typography>
+            */}
           </Stack>
           <Box
             sx={{

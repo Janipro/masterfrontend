@@ -1,5 +1,6 @@
 import { create } from 'zustand';
 import { requirement } from '../types/tableProps';
+import { backendUrl } from '../config';
 
 interface CodeState {
   code: string;
@@ -24,6 +25,7 @@ interface execState {
   setTaskId: (taskId: number | null) => Promise<void>;
   executeCode: () => Promise<string>;
   codeHelp: () => Promise<void>;
+  submitCode: () => Promise<void>;
 }
 
 export const useTaskCodeStore = create<execState>((set, get) => ({
@@ -68,22 +70,21 @@ export const useTaskCodeStore = create<execState>((set, get) => ({
     }
   },
 
-  // must send id of current task as well
   executeCode: async () => {
     const code = useCodeStore.getState().code;
 
     const { setOutput } = get();
 
-    // must change from localhost to deployed server when server is online
     try {
-      const response = await fetch('http://localhost:6001/execute', {
+      //const response = await fetch('http://localhost:6001/execute', { When running local backend
+      const response = await fetch(`${backendUrl}/execute`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ code }),
       });
 
       const result = await response.json();
-      console.log(result.output);
+      //console.log(result.output);
 
       if (result.error) {
         setOutput(`Error: ${result.error}`);
@@ -105,22 +106,21 @@ export const useTaskCodeStore = create<execState>((set, get) => ({
     }
   },
 
-  // must send id of current task as well
   codeHelp: async () => {
     const code = useCodeStore.getState().code;
     const selectedTaskId = useTaskCodeStore.getState().selectedTaskId;
     const { setAIOutput } = get();
 
-    // must change from localhost to deployed server when server is online
     try {
-      const response = await fetch('http://localhost:6001/help', {
+      //const response = await fetch('http://localhost:6001/help', { When running local backend
+      const response = await fetch(`${backendUrl}/help`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ code, taskId: selectedTaskId }),
       });
 
       const result = await response.json();
-      console.log(result.message);
+      //console.log(result.message);
 
       if (result.error) {
         setAIOutput(`Error: ${result.error}`);
@@ -133,6 +133,37 @@ export const useTaskCodeStore = create<execState>((set, get) => ({
     } catch (error) {
       console.error('Error analyzing code:', error);
       setAIOutput('Error analyzing code');
+    }
+  },
+
+  submitCode: async () => {
+    const code = useCodeStore.getState().code;
+    const selectedTaskId = useTaskCodeStore.getState().selectedTaskId;
+    const { setOutput } = get();
+
+    try {
+      //const response = await fetch('http://localhost:6001/submit', { When running local backend
+      const response = await fetch(`${backendUrl}/submit`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ code, taskId: selectedTaskId }),
+      });
+
+      const result = await response.json();
+      //console.log(result.message);
+      //console.log(result.isSolved);
+
+      if (result.error) {
+        setOutput(`Error: ${result.error}`);
+        return;
+      }
+
+      if (result.message) {
+        setOutput(result.message);
+      }
+    } catch (error) {
+      console.error('Error analyzing code:', error);
+      setOutput('Error analyzing code');
     }
   },
 }));
@@ -176,7 +207,7 @@ const initialNewTaskState = {
   newExpectedCode: '',
   newRequirements: [] as requirement[],
   newLevel: '',
-  newPublicAccess: false,
+  newPublicAccess: true,
   newIsActive: false,
   newCourseId: 0,
   newUserId: 0,

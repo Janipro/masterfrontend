@@ -28,6 +28,7 @@ import NavbarEditorSolveButtons from './NavbarEditorSolveButtons';
 import NavbarEditorCreateEditButtons from './NavbarEditorCreateEditButtons';
 import CloseRoundedIcon from '@mui/icons-material/CloseRounded';
 import { useTaskCodeStore } from '../stores/useTaskCodeStore';
+import logo from '../assets/educode.png';
 
 const functions = ['Kjør', 'Hjelp', 'Lever', 'Innsendingshistorikk'];
 const settings = ['Profil', 'Logg ut'];
@@ -97,7 +98,7 @@ export default function NavBarEditor() {
       <Container maxWidth={false}>
         <Toolbar disableGutters sx={{ minHeight: '50px !important' }}>
           <img
-            src="src/assets/educode.png"
+            src={logo}
             width="40"
             height="auto"
             alt="EduCode logo"
@@ -339,7 +340,7 @@ export default function NavBarEditor() {
 
             <Container
               sx={{
-                display: { xs: 'none', sm: 'none', md: 'none', lg: 'flex' },
+                display: { xs: 'none', sm: 'none', md: 'flex', lg: 'flex', xl: 'flex' },
                 flexDirection: 'row',
                 paddingX: '0px !important',
               }}
@@ -405,7 +406,7 @@ export default function NavBarEditor() {
             <Box
               sx={{
                 flexGrow: 1,
-                display: { xs: 'flex', sm: 'flex', md: 'flex', lg: 'none', xl: 'none' },
+                display: { xs: 'flex', sm: 'flex', md: 'none', lg: 'none', xl: 'none' },
                 justifyContent: 'center',
               }}
             >
@@ -477,7 +478,7 @@ export default function NavBarEditor() {
                 display: {
                   xs: 'block',
                   sm: 'block',
-                  md: 'block',
+                  md: 'none',
                   lg: 'none',
                   xl: 'none',
                 },
@@ -585,7 +586,7 @@ export default function NavBarEditor() {
                 display: {
                   xs: 'block',
                   sm: 'block',
-                  md: 'block',
+                  md: 'none',
                   lg: 'none',
                   xl: 'none',
                 },
@@ -667,7 +668,7 @@ export default function NavBarEditor() {
             <Menu
               sx={{
                 mt: '35px',
-                display: { xs: 'none', sm: 'none', md: 'none', lg: 'block', xl: 'block' },
+                display: { xs: 'none', sm: 'none', md: 'block', lg: 'block', xl: 'block' },
                 '& .MuiPaper-root': {
                   backgroundColor: isDarkmodeEditor
                     ? NAV_COLORS.editor_button_background_dark

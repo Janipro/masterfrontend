@@ -4,13 +4,14 @@ import CardMedia from '@mui/material/CardMedia';
 import Typography from '@mui/material/Typography';
 import CardActionArea from '@mui/material/CardActionArea';
 import { Link } from 'react-router-dom';
+import mathImage from '../assets/math.jpg';
 
 export default function InfoCard({ title, id }: { title: string; id: number }) {
   return (
     <Card sx={{ height: 130, width: 160 }}>
       <CardActionArea>
         <Link to={`/class/${id}`} style={{ color: 'inherit', textDecoration: 'none' }}>
-          <CardMedia component="img" height="70" image="src/assets/math.jpg" alt="math" />
+          <CardMedia component="img" height="70" image={mathImage} alt="math" />
           <CardContent>
             <Typography
               gutterBottom

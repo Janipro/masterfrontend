@@ -3,6 +3,11 @@ import CodeMirror from '@uiw/react-codemirror';
 import { python } from '@codemirror/lang-python';
 import { indentUnit } from '@codemirror/language';
 import { EditorView } from '@codemirror/view';
+import { vscodeDark, vscodeLight } from '@uiw/codemirror-theme-vscode';
+//import { atomone } from '@uiw/codemirror-theme-atomone'
+//import { oneDark } from '@codemirror/theme-one-dark'
+//import { okaidia } from '@uiw/codemirror-theme-okaidia';
+//import { quietlight } from '@uiw/codemirror-theme-quietlight';
 import { indentationMarkers } from '@replit/codemirror-indentation-markers';
 import { highlightSelectionMatches } from '@codemirror/search';
 import Box from '@mui/material/Box';
@@ -235,6 +240,7 @@ export default function Editor({ showCode, currentCodeTemplate }: TerminalProps)
                   ? true
                   : false
             ),
+            isDarkmodeEditor ? vscodeDark : vscodeLight,
           ]}
           onChange={onChange}
           theme={isDarkmodeEditor ? darkTheme : lightTheme}
